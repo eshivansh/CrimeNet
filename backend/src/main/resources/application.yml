@@ -61,6 +61,7 @@ minio:
   endpoint: http://localhost:9000
   access-key: minioadmin
   secret-key: minioadmin123
+  sse-enabled: ${MINIO_SSE_ENABLED:false} # Standalone MinIO lacks KES; set to true in production with AWS S3 KMS or MinIO KES
   buckets:
     quarantine: crimenet-quarantine
     documents: crimenet-documents

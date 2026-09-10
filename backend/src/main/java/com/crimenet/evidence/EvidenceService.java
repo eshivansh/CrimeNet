@@ -116,7 +116,8 @@ public class EvidenceService {
      */
     @Transactional
     public CustodyEvent transferCustody(UUID evidenceId, TransferCustodyRequest request) {
-        Evidence evidence = evidenceRepository.findById(evidenceId)
+        // Acquire row-level lock (SELECT ... FOR UPDATE) to eliminate TOCTOU race conditions
+        Evidence evidence = evidenceRepository.findByIdForUpdate(evidenceId)
                 .orElseThrow(() -> new EntityNotFoundException("Evidence not found: " + evidenceId));
 
         policyService.enforceCaseAccess(evidence.getCaseId());
@@ -135,11 +136,12 @@ public class EvidenceService {
                     "Custody transfer rejected: Only the current recorded custodian can transfer this evidence.");
         }
 
-        if (request.previousEventId() != null && !currentHead.getId().equals(request.previousEventId())) {
-            log.warn("Stale custody transfer rejected for evidence {}: expected head {}, got {}",
+        // Mandatory optimistic lock: previousEventId MUST be supplied and must match current head
+        if (request.previousEventId() == null || !currentHead.getId().equals(request.previousEventId())) {
+            log.warn("Stale or unversioned custody transfer rejected for evidence {}: expected head {}, got {}",
                     evidenceId, currentHead.getId(), request.previousEventId());
-            throw new IllegalStateException("Stale custody transfer — concurrent modification detected. " +
-                    "Expected previous event: " + currentHead.getId());
+            throw new IllegalStateException("Custody transfer rejected: previousEventId is mandatory and must match current chain head (" +
+                    currentHead.getId() + ")");
         }
 
         if (currentUser.getId().equals(request.toActorId())) {

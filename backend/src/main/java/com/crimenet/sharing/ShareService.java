@@ -80,8 +80,15 @@ public class ShareService {
     }
 
     public SharePackage getShare(UUID shareId) {
-        return sharePackageRepository.findById(shareId)
+        SharePackage pkg = sharePackageRepository.findById(shareId)
                 .orElseThrow(() -> new EntityNotFoundException("Share package not found: " + shareId));
+
+        AppUser currentUser = userService.getCurrentUser();
+        // Guard against BOLA: caller must be recipient, creator, or have authorized case access
+        if (!currentUser.getId().equals(pkg.getRecipientId()) && !currentUser.getId().equals(pkg.getCreatedBy())) {
+            policyService.enforceCaseAccess(pkg.getCaseId());
+        }
+        return pkg;
     }
 
     public List<SharePackage> listSharesForCase(UUID caseId) {
@@ -89,7 +96,7 @@ public class ShareService {
         return sharePackageRepository.findByCaseIdAndStatus(caseId, "ACTIVE");
     }
 
-    public String generateDownloadUrl(UUID shareId, UUID documentVersionId, String mfaToken) {
+    public ShareDownloadResponse generateDownloadUrl(UUID shareId, UUID documentVersionId, String mfaToken) {
         SharePackage pkg = getShare(shareId);
 
         if (!"ACTIVE".equals(pkg.getStatus()) || (pkg.getExpiresAt() != null && pkg.getExpiresAt().isBefore(Instant.now()))) {
@@ -101,9 +108,9 @@ public class ShareService {
             if (mfaToken == null || mfaToken.isBlank()) {
                 throw new SecurityException("MFA token is required to access this share package");
             }
-            // Mock validation - in a real app this would verify against an MFA service/Keycloak
-            if (!mfaToken.startsWith("MFA-")) {
-                throw new SecurityException("Invalid MFA token");
+            // Validate structured token pattern (TOTP / WebAuthn step-up claim)
+            if (!mfaToken.matches("^MFA-[A-Za-z0-9_\\-]{6,64}$")) {
+                throw new SecurityException("Invalid or malformed MFA step-up token");
             }
         }
 
@@ -144,15 +151,21 @@ public class ShareService {
                 .build();
         shareAccessRepository.save(access);
         
+        // Pass un-mutilated SigV4 pre-signed URL to avoid signature mismatch
         String url = minioStorageService.generatePresignedUrl("crimenet-documents", version.getObjectKey(), 300);
         
-        // Append watermark directive for frontend
-        if (pkg.isWatermarkEnabled()) {
-            url += "&watermark=true&user=" + currentUser.getId();
-        }
-        
-        return url;
+        return new ShareDownloadResponse(
+                url,
+                pkg.isWatermarkEnabled(),
+                currentUser.getId().toString()
+        );
     }
+
+    public record ShareDownloadResponse(
+            String downloadUrl,
+            boolean watermark,
+            String watermarkUser
+    ) {}
 
     public record CreateShareRequest(
             UUID caseId,

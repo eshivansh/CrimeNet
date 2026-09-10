@@ -39,11 +39,11 @@ public class ShareController {
     }
 
     @GetMapping("/{id}/download/{documentVersionId}")
-    public ResponseEntity<ApiResponse<Map<String, String>>> download(
+    public ResponseEntity<ApiResponse<ShareService.ShareDownloadResponse>> download(
             @PathVariable UUID id,
             @PathVariable UUID documentVersionId,
             @RequestParam(required = false) String mfaToken) {
-        String url = shareService.generateDownloadUrl(id, documentVersionId, mfaToken);
-        return ResponseEntity.ok(ApiResponse.ok(Map.of("downloadUrl", url)));
+        ShareService.ShareDownloadResponse response = shareService.generateDownloadUrl(id, documentVersionId, mfaToken);
+        return ResponseEntity.ok(ApiResponse.ok(response));
     }
 }

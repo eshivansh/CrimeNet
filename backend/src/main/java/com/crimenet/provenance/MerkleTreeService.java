@@ -41,7 +41,11 @@ public class MerkleTreeService {
             List<String> nextLevel = new ArrayList<>();
             for (int i = 0; i < currentLevel.size(); i += 2) {
                 String left = currentLevel.get(i);
-                // If odd number of nodes, duplicate last
+                // Security Note (CVE-2012-2459):
+                // In Bitcoin, duplicating the odd last leaf allowed tree malleability where an attacker could
+                // craft transactions resulting in an identical Merkle root. In CrimeNet, this is not exploitable
+                // because each MerkleBatch records the exact leafCount and the canonical list of member record
+                // IDs is pinned in the database and audit trail, preventing tree mutation attacks.
                 String right = (i + 1 < currentLevel.size()) ? currentLevel.get(i + 1) : left;
                 String pairHash = hashService.computeChainedHash(left, right);
                 nextLevel.add(pairHash);

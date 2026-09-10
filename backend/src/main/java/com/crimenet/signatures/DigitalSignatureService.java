@@ -42,16 +42,20 @@ public class DigitalSignatureService {
     private final UserService userService;
     private final AuditService auditService;
 
-    // Ephemeral officer keypair used when signing in-session without external hardware token (HSM/eMudhra)
-    private static final KeyPair DEMO_KEYPAIR;
-    static {
-        try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(2048);
-            DEMO_KEYPAIR = kpg.generateKeyPair();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize cryptographic signature provider", e);
-        }
+    // Per-officer identity keystore: binds each discrete officer identity to their own private/public keypair
+    // when signing in-session without an external hardware PKCS#11/eMudhra token.
+    private final java.util.concurrent.ConcurrentMap<UUID, KeyPair> officerKeyStore = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private KeyPair getOrCreateOfficerKeyPair(UUID officerId) {
+        return officerKeyStore.computeIfAbsent(officerId, id -> {
+            try {
+                KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
+                kpg.initialize(2048);
+                return kpg.generateKeyPair();
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to generate cryptographic keypair for officer " + id, e);
+            }
+        });
     }
 
     @Transactional
@@ -79,15 +83,16 @@ public class DigitalSignatureService {
         } else {
             // Generate valid cryptographic signature using officer identity session key
             try {
+                KeyPair officerKeyPair = getOrCreateOfficerKeyPair(currentUser.getId());
                 Signature sig = Signature.getInstance(sigAlgo, BouncyCastleProvider.PROVIDER_NAME);
-                sig.initSign(DEMO_KEYPAIR.getPrivate());
+                sig.initSign(officerKeyPair.getPrivate());
                 sig.update(docHash.getBytes(StandardCharsets.UTF_8));
                 byte[] signatureBytes = sig.sign();
                 finalSignature = Base64.getEncoder().encodeToString(signatureBytes);
-                finalPublicKey = Base64.getEncoder().encodeToString(DEMO_KEYPAIR.getPublic().getEncoded());
+                finalPublicKey = Base64.getEncoder().encodeToString(officerKeyPair.getPublic().getEncoded());
                 isValid = true;
             } catch (Exception e) {
-                log.error("Failed to generate digital signature: {}", e.getMessage());
+                log.error("Failed to generate digital signature for officer {}: {}", currentUser.getId(), e.getMessage());
                 throw new RuntimeException("Digital signature generation failed", e);
             }
         }

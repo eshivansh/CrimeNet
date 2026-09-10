@@ -27,12 +27,15 @@ public class CasePerson extends BaseEntity {
     @Column(name = "id_type")
     private String idType;  // AADHAAR | PAN | PASSPORT | OTHER
 
+    @Convert(converter = com.crimenet.security.EncryptedStringConverter.class)
     @Column(name = "id_number_encrypted")
     private String idNumberEncrypted;
 
+    @Convert(converter = com.crimenet.security.EncryptedStringConverter.class)
     @Column(name = "contact_encrypted")
     private String contactEncrypted;
 
+    @Convert(converter = com.crimenet.security.EncryptedStringConverter.class)
     @Column(name = "address_encrypted")
     private String addressEncrypted;
 

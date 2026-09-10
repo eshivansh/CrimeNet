@@ -16,10 +16,11 @@ public class BreakGlassController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<BreakGlassGrant>> request(@RequestBody BreakGlassRequest request) {
-        String token = request.mfaToken() != null && !request.mfaToken().isBlank()
-                ? request.mfaToken()
-                : "MFA-STEPUP-VERIFIED";
-        BreakGlassGrant grant = breakGlassService.requestBreakGlass(request.caseId(), request.reason(), token);
+        if (request.mfaToken() == null || request.mfaToken().isBlank()) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Step-up MFA verification is mandatory to request emergency break-glass access");
+        }
+        BreakGlassGrant grant = breakGlassService.requestBreakGlass(request.caseId(), request.reason(), request.mfaToken());
         return ResponseEntity.ok(ApiResponse.ok(grant));
     }
 

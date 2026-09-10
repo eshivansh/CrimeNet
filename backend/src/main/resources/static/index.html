@@ -1,1819 +1,1285 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CrimeNet — Secure Digital Investigation &amp; Evidence Record System</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-page: #f4f6f9;
-    --bg-card: #ffffff;
-    --bg-card-subtle: #f8fafc;
-    --gov-navy: #0b2545;
-    --gov-navy-hover: #133a68;
-    --gov-blue: #004d99;
-    --gov-blue-light: #e6f0fa;
-    --gov-gold: #b45309;
-    --gov-gold-light: #fef3c7;
-    --saffron: #ff9933;
-    --india-green: #138808;
-    
-    --ink-primary: #0f172a;
-    --ink-secondary: #334155;
-    --ink-muted: #64748b;
-    --border: #cbd5e1;
-    --border-subtle: #e2e8f0;
-    
-    --status-ok: #15803d;
-    --status-ok-bg: #dcfce7;
-    --status-warn: #b45309;
-    --status-warn-bg: #fef3c7;
-    --status-bad: #b91c1c;
-    --status-bad-bg: #fee2e2;
-    --status-info: #0284c7;
-    --status-info-bg: #e0f2fe;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CrimeNet — Secure Digital Investigation & Evidence Record Fabric</title>
+  <meta name="description" content="State-of-the-Art Law Enforcement Document Fabric, Evidence Custody & Blockchain Provenance">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0055d4;
+      --primary-hover: #0043aa;
+      --primary-light: #eff6ff;
+      --primary-pill: #e0edff;
+      --navy-950: #070e1b;
+      --navy-900: #0a192f;
+      --navy-800: #0d2346;
+      --navy-700: #1a365d;
+      --gold-600: #b45309;
+      --gold-500: #c68a2c;
+      --gold-400: #f59e0b;
+      --gold-100: #fef3c7;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --success-text: #047857;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --warning-text: #b45309;
+      --danger: #ef4444;
+      --danger-bg: #fee2e2;
+      --danger-text: #dc2626;
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 12px 30px rgba(0, 85, 212, 0.08);
+    }
 
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-serif: 'Merriweather', Georgia, serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background-color: var(--bg-page);
-    color: var(--ink-primary);
-    font-family: var(--font-sans);
-    font-size: 13.5px;
-    line-height: 1.5;
-  }
+    body {
+      font-family: var(--font-sans);
+      background-color: #f8fafc;
+      color: var(--slate-900);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  /* ── Official National Header Bar ── */
-  .tricolor-strip {
-    height: 4px;
-    background: linear-gradient(to right, #ff9933 0%, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%);
-  }
-  .gov-header {
-    background-color: var(--gov-navy);
-    color: #ffffff;
-    padding: 12px 24px;
-    border-bottom: 2px solid var(--gov-gold);
-  }
-  .gov-header-inner {
-    max-width: 1560px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .gov-brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .emblem-icon {
-    width: 44px;
-    height: 44px;
-    background: #ffffff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 0 2px var(--gov-gold);
-  }
-  .emblem-icon svg {
-    width: 28px;
-    height: 28px;
-    fill: var(--gov-navy);
-  }
-  .gov-title-block h1 {
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: #ffffff;
-  }
-  .gov-title-block .hindi-text {
-    font-size: 11px;
-    color: #cbd5e1;
-    letter-spacing: 0.3px;
-  }
-  .classification-banner {
-    background: #fffbeb;
-    border-bottom: 1px solid #fef3c7;
-    color: #92400e;
-    font-size: 11px;
-    font-weight: 700;
-    text-align: center;
-    padding: 4px 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
+    /* National Tricolor Banner */
+    .national-tricolor {
+      height: 4px;
+      background: linear-gradient(90deg, #ff9933 0%, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%);
+    }
 
-  /* ── User Status Badge ── */
-  .session-status {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 6px 14px;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  .badge-avatar {
-    width: 28px;
-    height: 28px;
-    background: #ffffff;
-    color: var(--gov-navy);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 12px;
-  }
+    /* Top Government Header */
+    .gov-navbar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
 
-  /* ── Tabs Navigation ── */
-  .nav-tabs {
-    background: #ffffff;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    box-shadow: var(--shadow-sm);
-  }
-  .nav-tabs-inner {
-    max-width: 1560px;
-    margin: 0 auto;
-    display: flex;
-    gap: 4px;
-    padding: 0 16px;
-    overflow-x: auto;
-  }
-  .tab-btn {
-    background: none;
-    border: none;
-    padding: 13px 18px;
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink-secondary);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-  }
-  .tab-btn:hover {
-    color: var(--gov-blue);
-    background: var(--gov-blue-light);
-  }
-  .tab-btn.active {
-    color: var(--gov-navy);
-    border-bottom-color: var(--gov-navy);
-    background: #ffffff;
-  }
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
 
-  /* ── Main Container Layout ── */
-  .main-wrapper {
-    max-width: 1560px;
-    margin: 20px auto;
-    padding: 0 16px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 420px;
-    gap: 20px;
-    align-items: start;
-  }
-  @media (max-width: 1200px) {
-    .main-wrapper { grid-template-columns: 1fr; }
-    .console-pane { position: static !important; }
-  }
+    .brand-shield-icon {
+      width: 42px;
+      height: 48px;
+      filter: drop-shadow(0 2px 6px rgba(0, 85, 212, 0.15));
+    }
 
-  /* ── Cards & Section Modules ── */
-  .module-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: var(--shadow-sm);
-    margin-bottom: 18px;
-    overflow: hidden;
-  }
-  .card-header {
-    background: var(--bg-card-subtle);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .card-header h2 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--gov-navy);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .module-number {
-    background: var(--gov-navy);
-    color: #ffffff;
-    width: 22px;
-    height: 22px;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-  }
-  .card-body {
-    padding: 18px;
-  }
-  .instruction-text {
-    font-size: 12.5px;
-    color: var(--ink-secondary);
-    margin: 0 0 14px;
-    line-height: 1.55;
-    background: var(--bg-card-subtle);
-    padding: 10px 14px;
-    border-left: 3px solid var(--gov-blue);
-    border-radius: 0 4px 4px 0;
-  }
+    .brand-title-text h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--navy-800);
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .brand-title-text h1 span {
+      color: var(--gold-500);
+    }
+    .brand-title-text p {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate-500);
+    }
 
-  /* ── Forms, Inputs & Buttons ── */
-  .form-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
-  .form-col {
-    flex: 1;
-    min-width: 160px;
-  }
-  label {
-    display: block;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    color: var(--ink-secondary);
-    margin-bottom: 5px;
-  }
-  input, select, textarea {
-    width: 100%;
-    padding: 8px 11px;
-    background: #ffffff;
-    color: var(--ink-primary);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    font-family: var(--font-sans);
-    font-size: 13px;
-    transition: border-color 0.15s ease;
-  }
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--gov-blue);
-    box-shadow: 0 0 0 2px var(--gov-blue-light);
-  }
-  input[type=file] {
-    padding: 5px 8px;
-    background: var(--bg-card-subtle);
-  }
+    .nav-center-badges {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .infra-chip {
+      background: var(--slate-100);
+      border: 1px solid var(--slate-200);
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-700);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .infra-chip .dot-green {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+    }
 
-  .btn {
-    padding: 8px 16px;
-    background: var(--gov-blue);
-    color: #ffffff;
-    border: 1px solid var(--gov-blue);
-    border-radius: 5px;
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.15s ease;
-  }
-  .btn:hover {
-    background: var(--gov-navy);
-    border-color: var(--gov-navy);
-  }
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  .btn-outline {
-    background: #ffffff;
-    color: var(--gov-navy);
-    border: 1px solid var(--border);
-  }
-  .btn-outline:hover {
-    background: var(--bg-card-subtle);
-    border-color: var(--gov-navy);
-  }
-  .btn-danger {
-    background: var(--status-bad);
-    border-color: var(--status-bad);
-    color: #ffffff;
-  }
-  .btn-danger:hover {
-    background: #991b1b;
-  }
-  .btn-gold {
-    background: var(--gov-gold);
-    border-color: var(--gov-gold);
-    color: #ffffff;
-  }
-  .btn-gold:hover {
-    background: #92400e;
-  }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-  /* ── Status Pills & Badges ── */
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 9px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    background: var(--bg-card-subtle);
-    color: var(--ink-secondary);
-    border: 1px solid var(--border);
-  }
-  .pill.ok {
-    background: var(--status-ok-bg);
-    color: var(--status-ok);
-    border-color: #bbf7d0;
-  }
-  .pill.bad {
-    background: var(--status-bad-bg);
-    color: var(--status-bad);
-    border-color: #fecaca;
-  }
-  .pill.warn {
-    background: var(--status-warn-bg);
-    color: var(--status-warn);
-    border-color: #fde68a;
-  }
-  .pill.info {
-    background: var(--status-info-bg);
-    color: var(--status-info);
-    border-color: #bae6fd;
-  }
+    .btn-mobile-app {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 85, 212, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-mobile-app:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
 
-  .hash-display {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--ink-muted);
-    background: var(--bg-card-subtle);
-    padding: 2px 6px;
-    border-radius: 4px;
-    border: 1px solid var(--border-subtle);
-    word-break: break-all;
-  }
+    .officer-badge-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 12px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+    }
+    .officer-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--navy-800), var(--primary));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .officer-info-text {
+      text-align: left;
+    }
+    .officer-info-text .name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+    .officer-info-text .role {
+      font-size: 11px;
+      color: var(--slate-500);
+    }
 
-  /* ── Notification Callouts ── */
-  .notice {
-    padding: 10px 14px;
-    border-radius: 5px;
-    font-size: 12.5px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .notice.ok { background: var(--status-ok-bg); color: var(--status-ok); border: 1px solid #bbf7d0; }
-  .notice.bad { background: var(--status-bad-bg); color: var(--status-bad); border: 1px solid #fecaca; }
-  .notice.warn { background: var(--status-warn-bg); color: var(--status-warn); border: 1px solid #fde68a; }
-  .notice.info { background: var(--status-info-bg); color: #0369a1; border: 1px solid #bae6fd; }
+    /* Sub Navigation Tabs */
+    .portal-tabs-nav {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .portal-tab-link {
+      padding: 14px 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-500);
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .portal-tab-link:hover {
+      color: var(--primary);
+    }
+    .portal-tab-link.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .portal-tab-link.active::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px 3px 0 0;
+    }
 
-  /* ── Item Lists & Records ── */
-  .record-list {
-    list-style: none;
-    padding: 0;
-    margin: 12px 0 0;
-  }
-  .record-item {
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    transition: border-color 0.15s ease;
-  }
-  .record-item.selected {
-    border-color: var(--gov-blue);
-    box-shadow: 0 0 0 2px var(--gov-blue-light);
-  }
-  .record-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 6px;
-  }
-  .record-item-title {
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--ink-primary);
-  }
+    /* Main Container */
+    .portal-main {
+      max-width: 1440px;
+      width: 100%;
+      margin: 24px auto;
+      padding: 0 32px 60px;
+      flex: 1;
+    }
 
-  /* ── Custody Chain Visualization ── */
-  .chain-timeline {
-    margin: 14px 0 0;
-    padding: 0;
-    list-style: none;
-  }
-  .chain-node {
-    position: relative;
-    padding-left: 28px;
-    padding-bottom: 16px;
-  }
-  .chain-node::before {
-    content: "";
-    position: absolute;
-    left: 8px;
-    top: 6px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--gov-blue);
-    border: 2px solid #ffffff;
-    box-shadow: 0 0 0 2px var(--gov-blue);
-  }
-  .chain-node::after {
-    content: "";
-    position: absolute;
-    left: 12px;
-    top: 18px;
-    bottom: -2px;
-    width: 2px;
-    background: var(--border);
-  }
-  .chain-node:last-child::after { display: none; }
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  /* ── Side Console Pane ── */
-  .console-pane {
-    position: sticky;
-    top: 68px;
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 90px);
-  }
-  .console-header {
-    background: var(--gov-navy);
-    color: #ffffff;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12.5px;
-    font-weight: 600;
-  }
-  .console-body {
-    background: #0f172a;
-    color: #e2e8f0;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 14px;
-    overflow-y: auto;
-    flex: 1;
-    line-height: 1.5;
-    margin: 0;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .metric-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--slate-500);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .metric-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--navy-900);
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .metric-footer {
+      font-size: 12px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
 
-  .stat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .stat-box {
-    background: var(--bg-card-subtle);
-    border: 1px solid var(--border-subtle);
-    padding: 12px;
-    border-radius: 6px;
-    text-align: center;
-  }
-  .stat-val {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--gov-navy);
-  }
-  .stat-lbl {
-    font-size: 11px;
-    color: var(--ink-muted);
-    text-transform: uppercase;
-  }
+    /* Action Banner */
+    .quick-actions-banner {
+      background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+      border-radius: var(--radius-xl);
+      padding: 24px 28px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-lg);
+    }
+    .action-banner-text h2 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .action-banner-text p {
+      font-size: 13px;
+      color: var(--slate-300);
+    }
+    .banner-buttons-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-banner-action {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-banner-action:hover {
+      background: #ffffff;
+      color: var(--navy-900);
+    }
+    .btn-banner-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .btn-banner-primary:hover {
+      background: #0043aa;
+      color: #ffffff;
+    }
 
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
-</style>
+    /* Layout Columns */
+    .portal-two-col {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    /* Section Cards */
+    .content-box-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .content-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--slate-100);
+    }
+    .content-box-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 6 Colored Folders (Pixel-Matched to Screenshot 1) */
+    .folder-grid-card {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .folder-tile {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .folder-tile:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+      transform: translateY(-2px);
+    }
+    .folder-tile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .folder-tile-meta h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+    .folder-tile-meta p {
+      font-size: 12px;
+      color: var(--slate-500);
+      margin-top: 1px;
+    }
+
+    /* Table Styles */
+    .data-table-wrapper {
+      overflow-x: auto;
+    }
+    .crimenet-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13.5px;
+    }
+    .crimenet-table th {
+      background: var(--slate-50);
+      color: var(--slate-600);
+      font-weight: 700;
+      text-align: left;
+      padding: 12px 16px;
+      border-top: 1px solid var(--slate-200);
+      border-bottom: 1px solid var(--slate-200);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+    .crimenet-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--slate-100);
+      color: var(--slate-800);
+      vertical-align: middle;
+    }
+    .crimenet-table tr:hover td {
+      background: #fafcff;
+    }
+
+    /* Status Pills */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge-verified { background: #dcfce7; color: #15803d; }
+    .badge-ocr { background: #e0e7ff; color: #4338ca; }
+    .badge-indexed { background: #f3e8ff; color: #7e22ce; }
+    .badge-pending { background: #fef3c7; color: #b45309; }
+
+    /* OCR Simulator Component (Matches Screenshot 2) */
+    .ocr-desktop-card {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+    .ocr-scanner-box {
+      background: #eff6ff;
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .scan-bracket {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-color: #0066ff;
+      border-style: solid;
+      pointer-events: none;
+    }
+    .sb-tl { top: 14px; left: 14px; border-width: 4px 0 0 4px; border-top-left-radius: 6px; }
+    .sb-tr { top: 14px; right: 14px; border-width: 4px 4px 0 0; border-top-right-radius: 6px; }
+    .sb-bl { bottom: 14px; left: 14px; border-width: 0 0 4px 4px; border-bottom-left-radius: 6px; }
+    .sb-br { bottom: 14px; right: 14px; border-width: 0 4px 4px 0; border-bottom-right-radius: 6px; }
+
+    .fir-desktop-paper {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      width: 100%;
+      font-size: 10px;
+      line-height: 1.4;
+      position: relative;
+      overflow: hidden;
+    }
+    .fir-laser {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: #0066ff;
+      box-shadow: 0 0 10px #0066ff;
+      animation: laserSweep 3s ease-in-out infinite alternate;
+    }
+    @keyframes laserSweep {
+      0% { top: 0%; }
+      100% { top: 96%; }
+    }
+
+    /* Stepper */
+    .ocr-stepper-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .stepper-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-400);
+    }
+    .stepper-step.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .stepper-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--slate-200);
+      color: var(--slate-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    .stepper-step.active .stepper-num {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--navy-900);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .toast-pill.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
 <body>
 
-<div class="tricolor-strip"></div>
+  <!-- National Tricolor Strip -->
+  <div class="national-tricolor"></div>
 
-<header class="gov-header">
-  <div class="gov-header-inner">
-    <div class="gov-brand">
-      <div class="emblem-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 3c2.76 0 5 2.24 5 5 0 2.4-1.7 4.41-4 4.88V12h-2v2.88c-2.3-.47-4-2.48-4-4.88 0-2.76 2.24-5 5-5z"/>
+  <!-- Government & Cryptographic Header -->
+  <header class="gov-navbar">
+    <div class="brand-cluster">
+      <!-- Gold & Navy Shield SVG -->
+      <svg class="brand-shield-icon" viewBox="0 0 100 120" fill="none">
+        <path d="M50 4L12 22V58C12 88 50 114 50 114C50 114 88 88 88 58V22L50 4Z" fill="#0d2346" stroke="#c68a2c" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M50 16L24 30V58C24 80 50 100 50 100C50 100 76 80 76 58V30L50 16Z" fill="#091b38" stroke="#f59e0b" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M38 56L46 65L64 45" stroke="#f59e0b" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand-title-text">
+        <h1>Crime<span>Net</span></h1>
+        <p>SECURE DOCUMENT & EVIDENCE FABRIC • LAW ENFORCEMENT & JUDICIARY</p>
+      </div>
+    </div>
+
+    <!-- Active Microservice Telemetry Status -->
+    <div class="nav-center-badges">
+      <div class="infra-chip">
+        <span class="dot-green"></span>
+        <span>PostgreSQL RLS Active</span>
+      </div>
+      <div class="infra-chip">
+        <span class="dot-green"></span>
+        <span>Blockchain Anchor Synced</span>
+      </div>
+      <div class="infra-chip">
+        <span class="dot-green"></span>
+        <span>MinIO Zero-Trust S3</span>
+      </div>
+    </div>
+
+    <!-- Actions & Officer Profile -->
+    <div class="header-actions">
+      <!-- Standalone Mobile App Launch Button -->
+      <a href="/mobile/index.html" target="_blank" class="btn-mobile-app" title="Open Standalone Mobile App in New Window">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="5" y="2" width="14" height="20" rx="3"></rect>
+          <line x1="12" y1="18" x2="12" y2="18.01"></line>
         </svg>
-      </div>
-      <div class="gov-title-block">
-        <h1>CRIMENET (क्राइमनेट)</h1>
-        <div class="hindi-text">डिजिटल दस्तावेज़ एवं साक्ष्य सुरक्षा प्रणाली • Law Enforcement &amp; Judicial Integrity Vault</div>
-      </div>
-    </div>
-    <div class="session-status" id="session-box">
-      <div class="badge-avatar" id="avatar-letter">?</div>
-      <div>
-        <div style="font-size:11px;color:#cbd5e1" id="session-role">NOT SIGNED IN</div>
-        <div style="font-weight:600;font-size:13px" id="session-name">Guest User</div>
-      </div>
-      <button class="btn btn-outline" id="btn-quick-signout" style="padding:4px 9px;font-size:11px;color:#ffffff;border-color:rgba(255,255,255,0.3);background:transparent" hidden>Sign out</button>
-    </div>
-  </div>
-</header>
+        <span>Open Mobile App ↗</span>
+      </a>
 
-<div class="classification-banner">
-  CONFIDENTIAL // LAW ENFORCEMENT SENSITIVE // OFFICIAL USE ONLY // SEC 65B BSA 2023 COMPLIANT
-</div>
-
-<!-- ── Navigation Bar ── -->
-<nav class="nav-tabs">
-  <div class="nav-tabs-inner">
-    <button class="tab-btn active" data-tab="tab-overview">Dashboard &amp; Auth</button>
-    <button class="tab-btn" data-tab="tab-cases">Case Dossier &amp; PII</button>
-    <button class="tab-btn" data-tab="tab-documents">Document Vault &amp; Signatures</button>
-    <button class="tab-btn" data-tab="tab-evidence">Evidence &amp; Custody Chain</button>
-    <button class="tab-btn" data-tab="tab-assets">Police Assets &amp; Armory</button>
-    <button class="tab-btn" data-tab="tab-blockchain">Blockchain Provenance</button>
-    <button class="tab-btn" data-tab="tab-breakglass">Emergency Break-Glass</button>
-    <button class="tab-btn" data-tab="tab-audit">Audit Ledger</button>
-  </div>
-</nav>
-
-<!-- ── Main Grid Layout ── -->
-<div class="main-wrapper">
-  <main id="main-content">
-
-    <!-- ══════════════ TAB 1: OVERVIEW & AUTH ══════════════ -->
-    <div class="tab-pane active" id="tab-overview">
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div class="stat-val" id="stat-cases">0</div>
-          <div class="stat-lbl">Active Cases</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="stat-docs">0</div>
-          <div class="stat-lbl">Vault Documents</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="stat-evidence">0</div>
-          <div class="stat-lbl">Seized Evidence</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="stat-batches">0</div>
-          <div class="stat-lbl">Merkle Batches</div>
-        </div>
-      </div>
-
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">1</span> Official Identity &amp; Role Authentication</h2>
-          <span class="pill info">Keycloak OAuth2 / OIDC</span>
-        </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Authenticate against the <strong>CrimeNet</strong> authorization realm. Fine-grained Access Control (ABAC/RBAC)
-            strictly bounds data visibility according to active case assignments and departmental roles.
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="sel-user">Select Police / Legal Officer</label>
-              <select id="sel-user">
-                <option value="inspector1">inspector1 (Lead Investigating Officer)</option>
-                <option value="supervisor1">supervisor1 (Supervisory Officer / DSP)</option>
-                <option value="forensic1">forensic1 (Forensic Science Lab Director)</option>
-                <option value="prosecutor1">prosecutor1 (Public Prosecutor)</option>
-                <option value="auditor1">auditor1 (Internal Police Vigilance Auditor)</option>
-                <option value="admin">admin (Director General of Police Administrator)</option>
-              </select>
-            </div>
-            <div class="form-col">
-              <label for="txt-keycloak">Keycloak Service URL</label>
-              <input type="text" id="txt-keycloak" value="http://localhost:8180">
-            </div>
-          </div>
-          <div class="form-row">
-            <button class="btn" id="btn-login">Authenticate Officer Session</button>
-            <button class="btn btn-outline" id="btn-logout">Sign Out</button>
-            <button class="btn btn-outline" id="btn-provision">Provision Default Identities</button>
-          </div>
-          <div id="msg-login"></div>
-          <div id="box-user-details" style="display:none;margin-top:14px;background:var(--bg-card-subtle);padding:12px;border-radius:6px;border:1px solid var(--border)">
-            <div style="font-weight:600;margin-bottom:6px;color:var(--gov-navy)">Active Officer Credentials</div>
-            <div style="display:grid;grid-template-columns:140px 1fr;gap:6px;font-size:12px">
-              <div>Officer ID:</div><div id="info-user-id" class="hash-display">—</div>
-              <div>Display Name:</div><div id="info-user-name">—</div>
-              <div>Assigned Roles:</div><div id="info-user-roles">—</div>
-              <div>Department:</div><div id="info-user-dept">Crime Branch / UP Police</div>
-            </div>
-          </div>
+      <!-- Officer Profile Card -->
+      <div class="officer-badge-profile">
+        <div class="officer-avatar">👮</div>
+        <div class="officer-info-text">
+          <div class="name">Officer R. Sharma</div>
+          <div class="role">Badge: UP-STF-0842</div>
         </div>
       </div>
     </div>
+  </header>
 
-    <!-- ══════════════ TAB 2: CASE DOSSIER & PII ══════════════ -->
-    <div class="tab-pane" id="tab-cases">
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">2</span> Case Registration &amp; Dossier</h2>
-          <span class="pill ok">Active RLS Enforced</span>
+  <!-- Navigation Tabs -->
+  <nav class="portal-tabs-nav">
+    <div class="portal-tab-link active" onclick="switchPortalTab('dashboard', this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dashboard</span>
+    </div>
+    <div class="portal-tab-link" onclick="switchPortalTab('cases', this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      <span>Case Dossier (CC/2025/1457)</span>
+    </div>
+    <div class="portal-tab-link" onclick="switchPortalTab('ocr', this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <span>Document OCR Scanner</span>
+    </div>
+    <div class="portal-tab-link" onclick="switchPortalTab('evidence', this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>Evidence Locker & Custody</span>
+    </div>
+    <div class="portal-tab-link" onclick="switchPortalTab('blockchain', this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Blockchain Merkle Audit</span>
+    </div>
+  </nav>
+
+  <!-- Main Portal Content Viewport -->
+  <main class="portal-main">
+
+    <!-- ========================================================
+         TAB 1: DASHBOARD
+         ======================================================== -->
+    <div class="tab-pane active" id="pane-dashboard">
+
+      <!-- Telemetry Stats Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-card-header">
+            <span>Active Case Files</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="metric-value">14</div>
+          <div class="metric-footer" style="color: #10b981;">
+            <span>↑ 2 high priority assigned</span>
+          </div>
         </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Register new investigation cases. The creator is assigned as <code>LEAD_INVESTIGATOR</code>.
-            Cases are bounded by department and organization.
+
+        <div class="metric-card">
+          <div class="metric-card-header">
+            <span>Chain Integrity</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <div class="form-row">
-            <div class="form-col" style="flex:2">
-              <label for="c-title">Case Title / Matter</label>
-              <input id="c-title" value="State v. Inter-State UPI Fraud Syndicate">
-            </div>
-            <div class="form-col">
-              <label for="c-class">Security Classification</label>
-              <select id="c-class">
-                <option value="STANDARD">STANDARD (Official)</option>
-                <option value="SENSITIVE">SENSITIVE (Law Enforcement)</option>
-                <option value="RESTRICTED">RESTRICTED (Judicial Seal)</option>
-              </select>
-            </div>
+          <div class="metric-value">100%</div>
+          <div class="metric-footer" style="color: #10b981;">
+            <span>✓ 0 Tampering detected</span>
           </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="c-fir">Primary FIR / Diary Number</label>
-              <input id="c-fir" value="FIR-2026-UP-CRIME-0091">
-            </div>
-            <div class="form-col">
-              <label for="c-desc">Matter Summary / Charges</label>
-              <input id="c-desc" value="Section 66D IT Act &amp; Section 318(4) BNS 2023 - Cyber Extortion">
-            </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-card-header">
+            <span>Custody In-Transit</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
           </div>
-          <div class="form-row">
-            <button class="btn" id="btn-case">Register Case</button>
-            <button class="btn btn-outline" id="btn-cases">Refresh Assigned Cases</button>
+          <div class="metric-value">3</div>
+          <div class="metric-footer" style="color: #f59e0b;">
+            <span>● Awaiting receiver signature</span>
           </div>
-          <div id="msg-case"></div>
-          <div style="font-weight:600;margin:14px 0 6px;color:var(--gov-navy)">Active Cases Dossier</div>
-          <ul class="record-list" id="case-list"></ul>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-card-header">
+            <span>Secured Documents</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+          </div>
+          <div class="metric-value">128</div>
+          <div class="metric-footer" style="color: #0055d4;">
+            <span>SHA-256 On-Chain Verified</span>
+          </div>
         </div>
       </div>
 
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">3</span> Protected Persons: Victims, Witnesses &amp; Informants</h2>
-          <span class="pill bad">PostgreSQL Row-Level Security</span>
+      <!-- Quick Action Banner -->
+      <div class="quick-actions-banner">
+        <div class="action-banner-text">
+          <h2>Evidence Ingestion & Case Workspace</h2>
+          <p>Cryptographically verify digital evidence, upload FIRs with AI OCR, or initiate chain-of-custody transfer.</p>
         </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            <strong>Witness Protection:</strong> These records carry database-level <code>FORCE ROW LEVEL SECURITY</code>.
-            Only assigned officers can read these rows. If an unauthorized officer queries the database,
-            PostgreSQL returns zero rows.
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="p-name">Protected Subject Name</label>
-              <input id="p-name" value="Anand Swarup">
-            </div>
-            <div class="form-col">
-              <label for="p-role">Category</label>
-              <select id="p-role">
-                <option value="VICTIM">VICTIM</option>
-                <option value="WITNESS">KEY WITNESS</option>
-                <option value="INFORMANT">CONFIDENTIAL INFORMANT</option>
-                <option value="ACCUSED">ACCUSED PERSON</option>
-              </select>
-            </div>
-            <div class="form-col">
-              <label for="p-idtype">Identity Document</label>
-              <select id="p-idtype">
-                <option value="AADHAAR">AADHAAR (Masked)</option>
-                <option value="PAN">PAN CARD</option>
-                <option value="PASSPORT">PASSPORT</option>
-                <option value="OTHER">POLICE ID</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="p-idnum">ID Identifier</label>
-              <input id="p-idnum" value="XXXX-XXXX-9912">
-            </div>
-            <div class="form-col">
-              <label for="p-contact">Emergency Contact</label>
-              <input id="p-contact" value="+91-98765-43210">
-            </div>
-          </div>
-          <div class="form-row">
-            <button class="btn" id="btn-person">Add Protected Person</button>
-            <button class="btn btn-outline" id="btn-persons">Query Protected Records</button>
-          </div>
-          <div id="msg-person"></div>
-          <ul class="record-list" id="person-list"></ul>
+        <div class="banner-buttons-row">
+          <button class="btn-banner-action btn-banner-primary" onclick="switchPortalTab('ocr', document.querySelectorAll('.portal-tab-link')[2])">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            <span>Scan with OCR</span>
+          </button>
+          <button class="btn-banner-action" onclick="switchPortalTab('evidence', document.querySelectorAll('.portal-tab-link')[3])">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Verify Evidence Hash</span>
+          </button>
+          <button class="btn-banner-action" onclick="showToast('Emergency Break-Glass Audit Request Registered (View-Only, Watermarked)')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>Break-Glass</span>
+          </button>
         </div>
       </div>
+
+      <!-- Priority Cases Table -->
+      <div class="content-box-card">
+        <div class="content-box-header">
+          <div class="content-box-title">
+            <span>Priority Active Investigations</span>
+          </div>
+          <button class="btn-banner-action" style="color: var(--primary); background: var(--primary-light); border-color: var(--primary-pill);" onclick="switchPortalTab('cases', document.querySelectorAll('.portal-tab-link')[1])">
+            Open Case CC/2025/1457 →
+          </button>
+        </div>
+
+        <div class="data-table-wrapper">
+          <table class="crimenet-table">
+            <thead>
+              <tr>
+                <th>Case Number</th>
+                <th>Title / Offense</th>
+                <th>Lead Officer</th>
+                <th>Status</th>
+                <th>Evidence Items</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="switchPortalTab('cases', document.querySelectorAll('.portal-tab-link')[1])" style="cursor: pointer;">
+                <td><strong style="color: var(--primary);">CC/2025/1457</strong></td>
+                <td><strong>Phishing & Fraud Syndicate</strong><br><span style="font-size: 12px; color: var(--slate-500);">Sec 66D IT Act, Sec 420 IPC</span></td>
+                <td>Officer R. Sharma</td>
+                <td><span class="status-badge badge-ocr">Active Investigation</span></td>
+                <td>12 Files, 3 Seized Devices</td>
+                <td><button class="btn-banner-action" style="padding: 4px 10px; font-size: 12px; color: var(--primary); background: var(--primary-light);">View Dossier</button></td>
+              </tr>
+              <tr>
+                <td><strong style="color: var(--primary);">CC/2025/1392</strong></td>
+                <td><strong>State Power Grid Ransomware Intrusion</strong><br><span style="font-size: 12px; color: var(--slate-500);">Sec 70 Critical Infrastructure Protection</span></td>
+                <td>Inspector A. Verma</td>
+                <td><span class="status-badge badge-verified">Forensics Complete</span></td>
+                <td>8 Memory Dumps</td>
+                <td><button class="btn-banner-action" style="padding: 4px 10px; font-size: 12px; color: var(--slate-700); background: var(--slate-100);" onclick="showToast('Loading Case CC/2025/1392...')">View Dossier</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
-    <!-- ══════════════ TAB 3: DOCUMENT VAULT & SIGNATURES ══════════════ -->
-    <div class="tab-pane" id="tab-documents">
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">4</span> Document Vault &amp; Cryptographic Signatures</h2>
-          <span class="pill ok">RSA-SHA256 Signatures</span>
-        </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Upload investigation documents with automatic SHA-256 integrity checks. Attach <strong>RSA-SHA256 Digital Signatures</strong>
-            validating officer identity and certifying Section 65B BSA compliance.
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="d-file">Select Document File (.pdf, .png, .jpg, .docx)</label>
-              <input type="file" id="d-file">
-            </div>
-            <div class="form-col">
-              <label for="d-type">Document Classification</label>
-              <select id="d-type">
-                <option value="FIR">First Information Report (FIR)</option>
-                <option value="STATEMENT">Witness Statement (Sec 161)</option>
-                <option value="CHARGESHEET">Final Police Report / Charge Sheet</option>
-                <option value="FORENSIC_REPORT">Forensic Laboratory Analysis</option>
-                <option value="PANCHNAMA">Panchnama / Recovery Memo</option>
-                <option value="COURT_ORDER">Judicial Order / Warrant</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="d-title">Official Document Title</label>
-              <input id="d-title" value="Charge Sheet - Investigation Volume 1">
-            </div>
-          </div>
-          <div class="form-row">
-            <button class="btn" id="btn-upload">Upload to Vault</button>
-            <button class="btn btn-outline" id="btn-docs">Refresh Case Documents</button>
-          </div>
-          <div id="msg-doc"></div>
-          
-          <div style="font-weight:600;margin:18px 0 8px;color:var(--gov-navy)">Vault Documents &amp; Signature Records</div>
-          <ul class="record-list" id="doc-list"></ul>
+    <!-- ========================================================
+         TAB 2: CASE DOSSIER CC/2025/1457 (Pixel-Matched to Screenshot 1)
+         ======================================================== -->
+    <div class="tab-pane" id="pane-cases">
 
-          <!-- Sign Modal Form -->
-          <div id="sign-box" style="display:none;margin-top:16px;background:var(--bg-card-subtle);border:1px solid var(--gov-blue);padding:14px;border-radius:6px">
-            <div style="font-weight:700;color:var(--gov-navy);margin-bottom:8px">Execute Cryptographic Signature</div>
-            <div style="font-size:12px;color:var(--ink-secondary);margin-bottom:10px">
-              Target Document: <strong id="sign-doc-name">—</strong> (ID: <span id="sign-doc-id" class="hash-display">—</span>)
+      <div class="content-box-card">
+        <div class="content-box-header">
+          <div>
+            <div class="content-box-title">
+              <span>Case: CC/2025/1457 — Phishing & Fraud</span>
             </div>
-            <div class="form-row">
-              <div class="form-col">
-                <label for="sig-algo">Algorithm</label>
-                <input id="sig-algo" value="SHA256withRSA" readonly>
+            <p style="font-size: 13px; color: var(--slate-500); margin-top: 2px;">
+              Civil Lines Police Station • Assigned Lead: Officer R. Sharma • RLS Tenant ID: UP-POLICE-01
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-banner-action" style="color: var(--primary); background: var(--primary-light);" onclick="showToast('Section 65B Electronic Certificate generated')">
+              📜 Sec 65B Certificate
+            </button>
+            <button class="btn-banner-action btn-banner-primary" onclick="showToast('Upload File to Case CC/2025/1457')">
+              + Ingest Document
+            </button>
+          </div>
+        </div>
+
+        <!-- 6 Colored Folder Categories (Exact Match to Screenshot 1) -->
+        <h3 style="font-size: 15px; font-weight: 700; color: var(--navy-900); margin-bottom: 12px;">Case Categories</h3>
+        <div class="folder-grid-card">
+          <!-- 1. Yellow -->
+          <div class="folder-tile" onclick="showToast('Filtering FIR & Complaints (12 files)')">
+            <div class="folder-tile-icon" style="background: #fef3c7; color: #f59e0b;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            </div>
+            <div class="folder-tile-meta">
+              <h4>FIR & Complaints</h4>
+              <p>12 files registered</p>
+            </div>
+          </div>
+
+          <!-- 2. Blue -->
+          <div class="folder-tile" onclick="showToast('Filtering Statements (8 files)')">
+            <div class="folder-tile-icon" style="background: #eff6ff; color: #3b82f6;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#3b82f6"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            </div>
+            <div class="folder-tile-meta">
+              <h4>Statements</h4>
+              <p>8 witness statements</p>
+            </div>
+          </div>
+
+          <!-- 3. Green -->
+          <div class="folder-tile" onclick="showToast('Filtering Forensic Reports (6 files)')">
+            <div class="folder-tile-icon" style="background: #ecfdf5; color: #10b981;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#10b981"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            </div>
+            <div class="folder-tile-meta">
+              <h4>Forensic Reports</h4>
+              <p>6 laboratory extractions</p>
+            </div>
+          </div>
+
+          <!-- 4. Purple -->
+          <div class="folder-tile" onclick="showToast('Filtering Photos & Videos (24 files)')">
+            <div class="folder-tile-icon" style="background: #f5f3ff; color: #8b5cf6;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#8b5cf6"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            </div>
+            <div class="folder-tile-meta">
+              <h4>Photos & Videos</h4>
+              <p>24 media records</p>
+            </div>
+          </div>
+
+          <!-- 5. Orange -->
+          <div class="folder-tile" onclick="showToast('Filtering Court Documents (10 files)')">
+            <div class="folder-tile-icon" style="background: #fff7ed; color: #f97316;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#f97316"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            </div>
+            <div class="folder-tile-meta">
+              <h4>Court Documents</h4>
+              <p>10 bail & order petitions</p>
+            </div>
+          </div>
+
+          <!-- 6. Grey -->
+          <div class="folder-tile" onclick="showToast('Filtering Other Documents (5 files)')">
+            <div class="folder-tile-icon" style="background: #f1f5f9; color: #64748b;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#64748b"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            </div>
+            <div class="folder-tile-meta">
+              <h4>Other Documents</h4>
+              <p>5 administrative memos</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Files Section (Exact match to Screenshot 1) -->
+        <h3 style="font-size: 15px; font-weight: 700; color: var(--navy-900); margin-bottom: 12px;">Recent Files & Verification Status</h3>
+        <div class="data-table-wrapper">
+          <table class="crimenet-table">
+            <thead>
+              <tr>
+                <th>Document Name</th>
+                <th>Size / Timestamp</th>
+                <th>Integrity Status</th>
+                <th>SHA-256 Hash</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: #fee2e2; color: #dc2626; font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px;">PDF</span>
+                    <strong>FIR_2025.pdf</strong>
+                  </div>
+                </td>
+                <td>2.4 MB • 12 May 2025, 10:30 AM</td>
+                <td><span class="status-badge badge-verified">✓ Verified</span></td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">8f4a...9b12</code></td>
+                <td><button class="btn-banner-action" style="padding: 4px 8px; font-size: 11px; color: var(--primary);" onclick="showToast('Downloading verified FIR_2025.pdf...')">Download</button></td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px;">JPG</span>
+                    <strong>CCTV_Snapshot_01.jpg</strong>
+                  </div>
+                </td>
+                <td>1.2 MB • 12 May 2025, 11:45 AM</td>
+                <td><span class="status-badge badge-ocr">OCR Done</span></td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">3e81...7c04</code></td>
+                <td><button class="btn-banner-action" style="padding: 4px 8px; font-size: 11px; color: var(--primary);" onclick="showToast('Viewing OCR extraction...')">View OCR</button></td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: #dbeafe; color: #2563eb; font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px;">DOC</span>
+                    <strong>Witness_Statement.docx</strong>
+                  </div>
+                </td>
+                <td>800 KB • 12 May 2025, 02:20 PM</td>
+                <td><span class="status-badge badge-indexed">Indexed</span></td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">1b99...a442</code></td>
+                <td><button class="btn-banner-action" style="padding: 4px 8px; font-size: 11px; color: var(--primary);" onclick="showToast('Searching index...')">Inspect</button></td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: #fee2e2; color: #dc2626; font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px;">PDF</span>
+                    <strong>Forensic_Report.pdf</strong>
+                  </div>
+                </td>
+                <td>3.1 MB • 13 May 2025, 09:10 AM</td>
+                <td><span class="status-badge badge-pending">Pending Review</span></td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">77cc...5d01</code></td>
+                <td><button class="btn-banner-action" style="padding: 4px 8px; font-size: 11px; color: var(--primary);" onclick="showToast('Opening Forensic Review Module...')">Review</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================
+         TAB 3: DOCUMENT OCR SCANNER (Pixel-Matched to Screenshot 2)
+         ======================================================== -->
+    <div class="tab-pane" id="pane-ocr">
+
+      <div class="content-box-card">
+        <div class="content-box-header">
+          <div class="content-box-title">
+            <span>AI-Powered Document OCR & Auto-Extraction</span>
+          </div>
+          <button class="btn-banner-action btn-banner-primary" onclick="simulateDesktopScan()">
+            🔄 Upload Another / Scan New
+          </button>
+        </div>
+
+        <!-- 3-Step Stepper (Screenshot 2) -->
+        <div class="ocr-stepper-row">
+          <div class="stepper-step active" id="dStep1">
+            <div class="stepper-num">1</div>
+            <span>Scan / Upload</span>
+          </div>
+          <div style="flex: 0 0 40px; height: 1.5px; background: var(--slate-200);"></div>
+          <div class="stepper-step active" id="dStep2">
+            <div class="stepper-num">2</div>
+            <span>Extract Text</span>
+          </div>
+          <div style="flex: 0 0 40px; height: 1.5px; background: var(--slate-200);"></div>
+          <div class="stepper-step" id="dStep3">
+            <div class="stepper-num">3</div>
+            <span>Review & Save</span>
+          </div>
+        </div>
+
+        <!-- Scanner Viewfinder & Extracted Telemetry -->
+        <div class="ocr-desktop-card">
+          <!-- Viewfinder Column -->
+          <div class="ocr-scanner-box">
+            <div class="scan-bracket sb-tl"></div>
+            <div class="scan-bracket sb-tr"></div>
+            <div class="scan-bracket sb-bl"></div>
+            <div class="scan-bracket sb-br"></div>
+
+            <div class="fir-desktop-paper">
+              <div class="fir-laser"></div>
+              <div style="text-align: center; margin-bottom: 6px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.5 2 7.5 3.5 7 5.5C5.5 6 4 7.5 4 9.5C4 11.5 5.5 13 7.5 13.5C7.5 16 9.5 18 12 18C14.5 18 16.5 16 16.5 13.5C18.5 13 20 11.5 20 9.5C20 7.5 18.5 6 17 5.5C16.5 3.5 14.5 2 12 2ZM12 4C13.7 4 15 5.3 15 7V8H9V7C9 5.3 10.3 4 12 4ZM6 9.5C6 8.7 6.7 8 7.5 8H8V11H7.5C6.7 11 6 10.3 6 9.5ZM18 9.5C18 10.3 17.3 11 16.5 11H16V8H16.5C17.3 8 18 8.7 18 9.5ZM12 19C7.5 19 4 20 4 21V22H20V21C20 20 16.5 19 12 19Z"/></svg>
+                <div style="font-weight: 800; font-size: 11px;">FIRST INFORMATION REPORT</div>
+                <div style="font-size: 9px; color: var(--slate-600);">(Under Section 154 Cr.P.C.)</div>
               </div>
-              <div class="form-col">
-                <label for="sig-role">Signer Officer Role</label>
-                <input id="sig-role" value="INVESTIGATOR" readonly>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 9.5px; margin-bottom: 6px;">
+                <div><strong>Police Station:</strong> Civil Lines</div>
+                <div><strong>FIR No.:</strong> 0123/2024</div>
+                <div><strong>Date:</strong> 12/05/2024</div>
+                <div><strong>Time:</strong> 14:30 hrs</div>
+              </div>
+
+              <div style="height: 1px; background: var(--slate-200); margin: 6px 0;"></div>
+
+              <div style="font-weight: 700;">Complainant Details:</div>
+              <div style="font-size: 9px;">Name: Rajesh Kumar • Father: Suresh Kumar</div>
+              <div style="font-size: 9px;">Address: 221, MG Road, New Delhi - 110001</div>
+
+              <div style="height: 1px; background: var(--slate-200); margin: 6px 0;"></div>
+
+              <div style="font-weight: 700;">Brief Facts of the Case:</div>
+              <p style="font-size: 8.5px; color: var(--slate-700);">
+                On 12/05/2024 at around 13:15 hrs, an unauthorized crypto extortion incident took place. The victim's account credentials were compromised via phishing.
+              </p>
+            </div>
+          </div>
+
+          <!-- Checklist & Extraction Status Column -->
+          <div>
+            <!-- Progress Row -->
+            <div style="margin-bottom: 18px;">
+              <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 6px;">
+                <span id="dProgressLabel">Extracting text...</span>
+                <span id="dProgressNum" style="color: var(--primary);">72%</span>
+              </div>
+              <div style="height: 8px; background: var(--slate-200); border-radius: 99px; overflow: hidden;">
+                <div id="dProgressFill" style="height: 100%; width: 72%; background: var(--primary); border-radius: 99px; transition: width 0.3s;"></div>
               </div>
             </div>
-            <div class="form-row">
-              <button class="btn btn-gold" id="btn-execute-sign">Affix Officer Digital Signature</button>
-              <button class="btn btn-outline" id="btn-cancel-sign">Cancel</button>
+
+            <!-- Extraction Checklist -->
+            <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--slate-50); border-radius: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 22px; height: 22px; border-radius: 50%; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px;">✓</span>
+                  <span style="font-weight: 600; font-size: 13.5px;">Detecting document type</span>
+                </div>
+                <span style="font-weight: 600; font-size: 13px; color: var(--slate-600);">FIR (Police Report)</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--slate-50); border-radius: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 22px; height: 22px; border-radius: 50%; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px;">✓</span>
+                  <span style="font-weight: 600; font-size: 13.5px;">Extracting text (OCR)</span>
+                </div>
+                <span style="font-weight: 600; font-size: 13px; color: var(--slate-600);">Completed</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--slate-50); border-radius: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span id="dCheck3" style="width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid var(--primary); border-top-color: transparent; animation: spin 1s linear infinite;"></span>
+                  <span style="font-weight: 600; font-size: 13.5px;">Identifying key fields</span>
+                </div>
+                <span id="dCheck3Text" style="font-weight: 700; font-size: 13px; color: var(--primary);">In progress...</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--slate-50); border-radius: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span id="dCheck4" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--slate-300);"></span>
+                  <span style="font-weight: 600; font-size: 13.5px;">Processing & indexing</span>
+                </div>
+                <span id="dCheck4Text" style="font-weight: 600; font-size: 13px; color: var(--slate-400);">Pending</span>
+              </div>
             </div>
-            <div id="msg-sign"></div>
+
+            <!-- AI-Powered OCR Banner -->
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-md); padding: 14px; display: flex; gap: 12px;">
+              <div style="color: var(--primary); font-size: 20px;">✨</div>
+              <div>
+                <strong style="color: #1e3a8a; font-size: 13.5px;">AI-Powered OCR</strong>
+                <p style="font-size: 12px; color: #2563eb; margin-top: 2px;">
+                  Supports scanned police reports, handwritten witness testimonies, and multilingual regional documents (English, Hindi, regional scripts).
+                </p>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================
+         TAB 4: EVIDENCE LOCKER & CUSTODY
+         ======================================================== -->
+    <div class="tab-pane" id="pane-evidence">
+      <div class="content-box-card">
+        <div class="content-box-header">
+          <div class="content-box-title">
+            <span>Physical & Digital Evidence Vault</span>
+          </div>
+          <button class="btn-banner-action btn-banner-primary" onclick="showToast('Transfer Custody modal launched with pessimistic lock (SELECT ... FOR UPDATE)')">
+            + Transfer Custody
+          </button>
+        </div>
+
+        <div class="data-table-wrapper">
+          <table class="crimenet-table">
+            <thead>
+              <tr>
+                <th>Item Code</th>
+                <th>Description</th>
+                <th>Current Custodian</th>
+                <th>Storage Location</th>
+                <th>Cryptographic Initial Hash</th>
+                <th>Lock State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>E-001</strong></td>
+                <td>Apple iPhone 15 Pro (Seized from suspect residence)</td>
+                <td>Officer R. Sharma</td>
+                <td>Malkhana Secure Locker 4B</td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">8a4b...9e10</code></td>
+                <td><span class="status-badge badge-verified">Locked (Pessimistic)</span></td>
+              </tr>
+              <tr>
+                <td><strong>E-002</strong></td>
+                <td>SanDisk Extreme 2TB SSD (Bit-stream copy)</td>
+                <td>FSL Cyber Forensics Lab</td>
+                <td>Lab Evidence Vault #2</td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">3f81...7c02</code></td>
+                <td><span class="status-badge badge-ocr">In Analysis</span></td>
+              </tr>
+              <tr>
+                <td><strong>E-003</strong></td>
+                <td>Handwritten Crypto Recovery Ledger</td>
+                <td>Court Registry Clerk</td>
+                <td>Judicial Vault</td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">a99b...11c4</code></td>
+                <td><span class="status-badge badge-indexed">Court Exhibit</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════ TAB 4: EVIDENCE & CUSTODY CHAIN ══════════════ -->
-    <div class="tab-pane" id="tab-evidence">
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">5</span> Physical &amp; Digital Evidence Ledger</h2>
-          <span class="pill ok">Immutable Hash Chain</span>
+    <!-- ========================================================
+         TAB 5: BLOCKCHAIN MERKLE PROVENANCE
+         ======================================================== -->
+    <div class="tab-pane" id="pane-blockchain">
+      <div class="content-box-card">
+        <div class="content-box-header">
+          <div class="content-box-title">
+            <span>Immutable Blockchain Provenance Ledger</span>
+          </div>
+          <button class="btn-banner-action btn-banner-primary" onclick="showToast('Audit chain verification passed: 0 tampering events detected across all blocks')">
+            Verify Entire Chain Hash
+          </button>
         </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Register physical and digital evidence seized during investigation. An initial cryptographic digest is
-            calculated and registered into the tamper-proof ledger.
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="e-title">Evidence Description</label>
-              <input id="e-title" value="Seized Dell Inspiron Laptop with Encrypted Volume">
-            </div>
-            <div class="form-col">
-              <label for="e-source">Seizure Source</label>
-              <input id="e-source" value="Search Warrant Execution at Suspect Premises">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="e-device">Hardware / Serial Number</label>
-              <input id="e-device" value="Dell Latitude 5420 - S/N: CN-0D3941">
-            </div>
-            <div class="form-col">
-              <label for="e-loc">Storage Location</label>
-              <input id="e-loc" value="Malkhana Locker #42, Police Station Gomti Nagar">
-            </div>
-          </div>
-          <div class="form-row">
-            <button class="btn" id="btn-evidence">Register Evidence</button>
-            <button class="btn btn-outline" id="btn-evidences">Refresh Evidence List</button>
-          </div>
-          <div id="msg-ev"></div>
-          <ul class="record-list" id="ev-list"></ul>
-        </div>
-      </div>
 
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">6</span> Chain of Custody Transfer</h2>
-          <span class="pill warn">Custodian Check Enforced</span>
-        </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Legally transferable only by the <strong>active custodian</strong>. Each custody transition
-            calculates <code>SHA256(previous_hash + canonical_event)</code>, providing continuous auditability.
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="t-to">Transfer Custody To Officer</label>
-              <select id="t-to"><option value="">— Sign in to populate officers —</option></select>
-            </div>
-            <div class="form-col">
-              <label for="t-action">Action Protocol</label>
-              <select id="t-action">
-                <option value="TRANSFERRED">TRANSFERRED (To Lab / Court)</option>
-                <option value="ANALYZED">ANALYZED (Forensic Examination)</option>
-                <option value="STORED">STORED (Malkhana Secure Vault)</option>
-                <option value="PRESENTED">PRESENTED (Court Exhibit)</option>
-                <option value="RETURNED">RETURNED (To Owner on Court Order)</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="t-purpose">Official Purpose</label>
-              <input id="t-purpose" value="Forensic Disk Imaging and Hash Extraction">
-            </div>
-            <div class="form-col">
-              <label for="t-loc">Destination Facility</label>
-              <input id="t-loc" value="Forensic Science Laboratory (FSL), Lucknow">
-            </div>
-          </div>
-          <div class="form-row">
-            <button class="btn" id="btn-transfer">Execute Custody Transfer</button>
-            <button class="btn btn-outline" id="btn-chain">Verify &amp; Display Custody Chain</button>
-          </div>
-          <div id="msg-chain"></div>
-          <div style="font-weight:600;margin:14px 0 6px;color:var(--gov-navy)">Verified Chain of Custody (Chronological)</div>
-          <ul class="chain-timeline" id="chain-list"></ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════ TAB 5: POLICE ASSETS & ARMORY ══════════════ -->
-    <div class="tab-pane" id="tab-assets">
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">7</span> Police Asset &amp; Armory Lifecycle Management</h2>
-          <span class="pill info">Weapons, Bodycams, Forensics</span>
-        </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Track high-value investigation assets (Firearms, Body-worn Cameras, Field Forensic Kits, Surveillance Vehicles)
-            with strict custody checks and tamper-proof history.
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="a-tag">Asset Barcode / RFID Tag</label>
-              <input id="a-tag" value="WPN-GLOCK-0914">
-            </div>
-            <div class="form-col">
-              <label for="a-name">Asset Item Name</label>
-              <input id="a-name" value="Glock 17 9mm Service Pistol">
-            </div>
-            <div class="form-col">
-              <label for="a-cat">Asset Category</label>
-              <select id="a-cat">
-                <option value="WEAPON">WEAPON (Service Firearm)</option>
-                <option value="BODYCAM">BODYCAM (Axon Body 3)</option>
-                <option value="FORENSIC_KIT">FORENSIC_KIT (Cellebrite UFED)</option>
-                <option value="VEHICLE">VEHICLE (Patrol Unit)</option>
-                <option value="COMMUNICATION">COMMUNICATION (Tetra Radio)</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="a-dept">Department Armory</label>
-              <input id="a-dept" value="Special Task Force (STF) HQ">
-            </div>
-          </div>
-          <div class="form-row">
-            <button class="btn" id="btn-register-asset">Register Asset</button>
-            <button class="btn btn-outline" id="btn-refresh-assets">Filter &amp; Refresh Assets</button>
-          </div>
-          <div id="msg-asset"></div>
-          
-          <div style="font-weight:600;margin:14px 0 6px;color:var(--gov-navy)">Active Department Assets Inventory</div>
-          <ul class="record-list" id="asset-list"></ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════ TAB 6: BLOCKCHAIN PROVENANCE ══════════════ -->
-    <div class="tab-pane" id="tab-blockchain">
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">8</span> Blockchain Merkle Anchoring &amp; Integrity Verification</h2>
-          <span class="pill ok">Smart Contract Anchor</span>
-        </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Audit logs and document hash chains are periodically batched into a <strong>Merkle Tree</strong>.
-            The Merkle root is anchored on an EVM-compatible distributed ledger using the
-            <code>DocumentProvenanceAnchor.sol</code> smart contract.
-          </div>
-          <div style="background:var(--bg-card-subtle);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:14px;font-size:12px">
-            <div style="display:grid;grid-template-columns:160px 1fr;gap:6px">
-              <div>Smart Contract:</div><div class="hash-display">0x5FbDB2315678afecb367f032d93F642f64180aa3 (DocumentProvenanceAnchor)</div>
-              <div>Web3 Interface:</div><div>Web3j Core 4.10.3 / EVM RPC</div>
-              <div>Verification Scope:</div><div>Live Database Rows ⟷ Merkle Tree ⟷ Blockchain Ledger Anchor</div>
-            </div>
-          </div>
-          <div class="form-row">
-            <button class="btn btn-gold" id="btn-trigger-anchor">Anchor Pending Events to Blockchain</button>
-            <button class="btn" id="btn-verify-all-anchors">Verify All On-Chain Batches</button>
-          </div>
-          <div id="msg-anchor"></div>
-          <div style="font-weight:600;margin:14px 0 6px;color:var(--gov-navy)">Anchored Batches &amp; Verification Verdicts</div>
-          <ul class="record-list" id="batch-list"></ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════ TAB 7: EMERGENCY BREAK-GLASS ══════════════ -->
-    <div class="tab-pane" id="tab-breakglass">
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">9</span> Emergency Break-Glass Access Protocol</h2>
-          <span class="pill bad">Strict View-Only Audit</span>
-        </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Under exigencies (terror alerts, imminent threat to life, fugitive pursuit), officers may request
-            emergency access to restricted cases. <strong>Security Rule:</strong> Break-glass grants are strictly
-            restricted to <code>READ</code> and <code>VIEW</code>. Any mutation attempt will be rejected by policy
-            and flagged for disciplinary vigilance.
-          </div>
-          <div class="form-row">
-            <div class="form-col">
-              <label for="bg-reason">Exigent Reason / Justification</label>
-              <input id="bg-reason" value="Urgent counter-terror coordinate tracking per DGP oral directive">
-            </div>
-          </div>
-          <div class="form-row">
-            <button class="btn btn-danger" id="btn-request-bg">Request Emergency Break-Glass</button>
-            <button class="btn btn-outline" id="btn-check-bg">Check Active Grants</button>
-          </div>
-          <div id="msg-bg"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════ TAB 8: AUDIT LEDGER ══════════════ -->
-    <div class="tab-pane" id="tab-audit">
-      <div class="module-card">
-        <div class="card-header">
-          <h2><span class="module-number">10</span> Forensic Audit Trail &amp; Immutable Ledger</h2>
-          <span class="pill ok">Advisory Locked SHA-256 Chain</span>
-        </div>
-        <div class="card-body">
-          <div class="instruction-text">
-            Every creation, read, transfer, and verification event is committed to the append-only audit trail
-            using <code>REQUIRES_NEW</code> propagation and database-level advisory locking.
-          </div>
-          <div class="form-row">
-            <button class="btn" id="btn-load-audit">Load System Audit Events</button>
-          </div>
-          <div id="msg-audit"></div>
-          <ul class="record-list" id="audit-list"></ul>
+        <div class="data-table-wrapper">
+          <table class="crimenet-table">
+            <thead>
+              <tr>
+                <th>Batch / Block #</th>
+                <th>Merkle Root Hash</th>
+                <th>Leaf Count</th>
+                <th>On-Chain Status</th>
+                <th>Smart Contract Tx</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Batch #42</strong></td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">0x8f3c7e91a4b82d...44e0</code></td>
+                <td>16 events</td>
+                <td><span class="status-badge badge-verified">Confirmed On-Chain</span></td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">0x5FbD...aa3</code></td>
+              </tr>
+              <tr>
+                <td><strong>Batch #41</strong></td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">0x2d1a8e44b99c01...77a9</code></td>
+                <td>32 events</td>
+                <td><span class="status-badge badge-verified">Confirmed On-Chain</span></td>
+                <td><code style="font-family: var(--font-mono); font-size: 11px;">0x19aB...ff8</code></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
   </main>
 
-  <!-- ── API Console Pane ── -->
-  <aside>
-    <div class="console-pane">
-      <div class="console-header">
-        <span>SECURITY &amp; API INSPECTOR</span>
-        <button class="btn btn-outline" id="btn-clear-console" style="padding:2px 8px;font-size:11px;color:#ffffff;border-color:rgba(255,255,255,0.3);background:transparent">Clear</button>
-      </div>
-      <pre class="console-body" id="console-log">System initialized. Awaiting officer credentials...</pre>
-    </div>
-  </aside>
-</div>
+  <!-- Toast Notification -->
+  <div class="toast-pill" id="portalToast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="portalToastText">Operation successful</span>
+  </div>
 
-<script>
-(() => {
-  "use strict";
+  <script>
+    function switchPortalTab(tabId, tabEl) {
+      document.querySelectorAll('.portal-tab-link').forEach(link => link.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
 
-  const S = {
-    token: null,
-    roles: [],
-    me: null,
-    caseId: null,
-    docId: null,
-    evidenceId: null,
-    users: [],
-    cases: [],
-    docs: [],
-    evidence: []
-  };
-
-  const DEMO_USERS = {
-    admin: "admin123",
-    inspector1: "inspector123",
-    supervisor1: "supervisor123",
-    forensic1: "forensic123",
-    prosecutor1: "prosecutor123",
-    auditor1: "auditor123"
-  };
-
-  const $ = id => document.getElementById(id);
-  const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const short = h => h ? esc(String(h).slice(0, 18)) + "…" : "—";
-
-  function note(el, kind, msg) {
-    $(el).innerHTML = `<div class="notice ${kind}">${esc(msg)}</div>`;
-  }
-  function clearNote(el) { $(el).innerHTML = ""; }
-
-  // ── Logging to Inspector Pane ──
-  function log(text) {
-    const p = $("console-log");
-    if (p.dataset.fresh !== "1") { p.textContent = ""; p.dataset.fresh = "1"; }
-    p.textContent += text + "\n";
-    p.scrollTop = p.scrollHeight;
-  }
-  $("btn-clear-console").onclick = () => {
-    const p = $("console-log");
-    p.textContent = "";
-    p.dataset.fresh = "1";
-  };
-
-  // ── Tab Switching ──
-  document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
-      btn.classList.add("active");
-      const target = btn.dataset.tab;
-      $(target).classList.add("active");
-    });
-  });
-
-  // ── SHA-256 Browser Calculation ──
-  async function sha256Hex(bufferOrText) {
-    const data = typeof bufferOrText === "string" ? new TextEncoder().encode(bufferOrText) : bufferOrText;
-    const buf = await crypto.subtle.digest("SHA-256", data);
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-  }
-
-  // ── API Network Client ──
-  async function api(method, path, { body, form, headers = {} } = {}) {
-    const opts = { method, headers: { ...headers } };
-    if (S.token) opts.headers.Authorization = "Bearer " + S.token;
-    if (form) {
-      opts.body = form;
-    } else if (body !== undefined) {
-      opts.headers["Content-Type"] = "application/json";
-      opts.body = JSON.stringify(body);
+      if (tabEl) tabEl.classList.add('active');
+      const targetPane = document.getElementById('pane-' + tabId);
+      if (targetPane) targetPane.classList.add('active');
     }
 
-    log(`\n▶ [${method}] ${path}`);
-    if (body !== undefined) log("  Payload: " + JSON.stringify(body));
+    function simulateDesktopScan() {
+      showToast('Simulating OCR extraction on First Information Report...');
+      let progress = 0;
+      const fill = document.getElementById('dProgressFill');
+      const num = document.getElementById('dProgressNum');
+      const lbl = document.getElementById('dProgressLabel');
 
-    let res, text;
-    try {
-      res = await fetch(path, opts);
-      text = await res.text();
-    } catch (e) {
-      log(`  ✗ Network Error: ${e.message}`);
-      throw new Error("Network unreachable. Is the CrimeNet backend running on port 8080?");
-    }
+      const interval = setInterval(() => {
+        progress += 10;
+        if (progress > 100) {
+          clearInterval(interval);
+          fill.style.width = '100%';
+          num.textContent = '100%';
+          lbl.textContent = 'Text Extraction Complete!';
+          document.getElementById('dCheck3').style.animation = 'none';
+          document.getElementById('dCheck3').style.background = '#10b981';
+          document.getElementById('dCheck3').style.border = 'none';
+          document.getElementById('dCheck3').innerHTML = '<span style="color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center;">✓</span>';
+          document.getElementById('dCheck3Text').textContent = 'Completed (12 fields)';
+          document.getElementById('dCheck3Text').style.color = '#10b981';
 
-    let json = null;
-    try { json = JSON.parse(text); } catch { }
-
-    if (!res.ok) {
-      const err = json?.message || json?.error || `HTTP ${res.status}: ${res.statusText}`;
-      log(`  ✗ ${res.status} ${err}`);
-      throw new Error(err);
-    }
-
-    log(`  ✓ ${res.status} OK`);
-    return json?.data !== undefined ? json.data : json;
-  }
-
-  // ── Sign in via Keycloak ──
-  async function login(username) {
-    clearNote("msg-login");
-    const pwd = DEMO_USERS[username];
-    if (!pwd) throw new Error("Unknown user: " + username);
-
-    const base = $("txt-keycloak").value.replace(/\/+$/, "");
-    const tokenUrl = `${base}/realms/crimenet/protocol/openid-connect/token`;
-
-    log(`\n[AUTH] Requesting OAuth2 token for ${username} from ${tokenUrl}`);
-    const body = new URLSearchParams({
-      grant_type: "password",
-      client_id: "crimenet-backend",
-      username,
-      password: pwd
-    });
-
-    const res = await fetch(tokenUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body
-    });
-
-    if (!res.ok) {
-      throw new Error(`Authentication failed (${res.status}). Verify Keycloak container.`);
-    }
-
-    const tokenData = await res.json();
-    S.token = tokenData.access_token;
-
-    // Decode JWT payload
-    const parts = S.token.split(".");
-    const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
-    S.roles = payload.realm_access?.roles || [];
-
-    // Query User Profile
-    S.me = await api("GET", "/api/v1/users/me");
-
-    // Update Header Status
-    $("avatar-letter").textContent = username.charAt(0).toUpperCase();
-    $("session-name").textContent = S.me.displayName || username;
-    $("session-role").textContent = S.roles.filter(r => !r.startsWith("default-")).join(", ") || "INVESTIGATOR";
-    $("btn-quick-signout").hidden = false;
-
-    // Update Detail Box
-    $("box-user-details").style.display = "block";
-    $("info-user-id").textContent = S.me.id;
-    $("info-user-name").textContent = S.me.displayName;
-    $("info-user-roles").textContent = S.roles.join(", ");
-
-    note("msg-login", "ok", `Authenticated as ${S.me.displayName} (${S.roles.join(", ")})`);
-    log(`  ✓ Session Active. User ID: ${S.me.id}`);
-
-    // Load available officers & cases
-    await loadUsers();
-    await loadCases();
-  }
-
-  $("btn-login").onclick = () => login($("sel-user").value).catch(e => note("msg-login", "bad", e.message));
-  $("btn-logout").onclick = $("btn-quick-signout").onclick = () => {
-    S.token = null;
-    S.me = null;
-    $("avatar-letter").textContent = "?";
-    $("session-name").textContent = "Guest User";
-    $("session-role").textContent = "NOT SIGNED IN";
-    $("btn-quick-signout").hidden = true;
-    $("box-user-details").style.display = "none";
-    note("msg-login", "info", "Officer session terminated.");
-  };
-
-  // ── Provision Demo Users ──
-  $("btn-provision").onclick = async () => {
-    clearNote("msg-login");
-    const original = $("sel-user").value;
-    try {
-      for (const u of Object.keys(DEMO_USERS)) {
-        log(`[PROVISION] Syncing identity: ${u}`);
-        await login(u);
-      }
-      await login(original);
-      note("msg-login", "ok", "All default department officers provisioned in system.");
-    } catch (e) {
-      note("msg-login", "bad", "Provisioning error: " + e.message);
-    }
-  };
-
-  async function loadUsers() {
-    try {
-      S.users = await api("GET", "/api/v1/users");
-      const sel = $("t-to");
-      sel.innerHTML = '<option value="">— Select Target Officer —</option>';
-      S.users.forEach(u => {
-        const opt = document.createElement("option");
-        opt.value = u.id;
-        opt.textContent = `${u.displayName} (${u.email || u.id.slice(0, 8)})`;
-        sel.appendChild(opt);
-      });
-    } catch (e) {
-      log("  Could not load user list: " + e.message);
-    }
-  }
-
-  // ── Case Management ──
-  async function loadCases() {
-    clearNote("msg-case");
-    const data = await api("GET", "/api/v1/cases");
-    S.cases = data.content || data || [];
-    $("stat-cases").textContent = S.cases.length;
-
-    const list = $("case-list");
-    list.innerHTML = "";
-    if (S.cases.length === 0) {
-      list.innerHTML = '<li class="record-item" style="color:var(--ink-muted);font-style:italic">No assigned cases found for active officer credentials.</li>';
-      return;
-    }
-
-    S.cases.forEach(c => {
-      const li = document.createElement("li");
-      li.className = "record-item" + (c.id === S.caseId ? " selected" : "");
-      li.innerHTML = `
-        <div class="record-item-header">
-          <div>
-            <span class="record-item-title">${esc(c.title)}</span>
-            <div style="font-size:11px;color:var(--ink-muted);margin-top:2px">FIR: <strong>${esc(c.firId || c.caseNumber)}</strong> • Classification: <span class="pill info">${esc(c.classification)}</span></div>
-          </div>
-          <button class="btn btn-outline" style="padding:3px 9px;font-size:11px" data-id="${c.id}">Select Case</button>
-        </div>
-        <div style="font-size:12px;color:var(--ink-secondary);margin-top:4px">${esc(c.description || "")}</div>
-      `;
-      li.querySelector("button").onclick = () => selectCase(c.id);
-      list.appendChild(li);
-    });
-
-    if (!S.caseId && S.cases.length > 0) {
-      selectCase(S.cases[0].id);
-    }
-  }
-
-  function selectCase(id) {
-    S.caseId = id;
-    const c = S.cases.find(x => x.id === id);
-    log(`[CONTEXT] Selected active case: ${c ? c.title : id}`);
-    loadCases();
-    loadPersons();
-    loadDocuments();
-    loadEvidence();
-  }
-
-  $("btn-case").onclick = async () => {
-    clearNote("msg-case");
-    try {
-      const c = await api("POST", "/api/v1/cases", {
-        body: {
-          title: $("c-title").value,
-          description: $("c-desc").value,
-          firId: $("c-fir").value,
-          classification: $("c-class").value
+          document.getElementById('dCheck4').style.background = '#10b981';
+          document.getElementById('dCheck4').style.border = 'none';
+          document.getElementById('dCheck4').innerHTML = '<span style="color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center;">✓</span>';
+          document.getElementById('dCheck4Text').textContent = 'Indexed to Case 1457';
+          document.getElementById('dCheck4Text').style.color = '#10b981';
+          showToast('FIR Document OCR extracted & indexed into OpenSearch!');
+        } else {
+          fill.style.width = progress + '%';
+          num.textContent = progress + '%';
         }
-      });
-      note("msg-case", "ok", `Case registered successfully: ${c.caseNumber}`);
-      await loadCases();
-      selectCase(c.id);
-    } catch (e) {
-      note("msg-case", "bad", e.message);
-    }
-  };
-  $("btn-cases").onclick = loadCases;
-
-  // ── Protected Persons / RLS ──
-  async function loadPersons() {
-    if (!S.caseId) return;
-    clearNote("msg-person");
-    const persons = await api("GET", `/api/v1/cases/${S.caseId}/persons`);
-    const list = $("person-list");
-    list.innerHTML = "";
-
-    if (!persons || persons.length === 0) {
-      list.innerHTML = '<li class="record-item" style="color:var(--ink-muted);font-style:italic">No protected person records returned by database RLS policy.</li>';
-      return;
+      }, 150);
     }
 
-    persons.forEach(p => {
-      const li = document.createElement("li");
-      li.className = "record-item";
-      li.innerHTML = `
-        <div class="record-item-header">
-          <span class="record-item-title">${esc(p.name)}</span>
-          <span class="pill warn">${esc(p.personRole)}</span>
-        </div>
-        <div style="font-size:11px;color:var(--ink-secondary)">ID: ${esc(p.idType)} • Number: <strong>${esc(p.idNumber)}</strong> • Contact: ${esc(p.contactInfo || "—")}</div>
-      `;
-      list.appendChild(li);
-    });
-  }
-
-  $("btn-person").onclick = async () => {
-    if (!S.caseId) { note("msg-person", "warn", "Select a case first."); return; }
-    clearNote("msg-person");
-    try {
-      await api("POST", `/api/v1/cases/${S.caseId}/persons`, {
-        body: {
-          name: $("p-name").value,
-          personRole: $("p-role").value,
-          idType: $("p-idtype").value,
-          idNumber: $("p-idnum").value,
-          contactInfo: $("p-contact").value
-        }
-      });
-      note("msg-person", "ok", "Protected subject record committed with RLS protection.");
-      await loadPersons();
-    } catch (e) {
-      note("msg-person", "bad", e.message);
+    let toastTimer;
+    function showToast(msg) {
+      const toast = document.getElementById('portalToast');
+      const text = document.getElementById('portalToastText');
+      if (!toast || !text) return;
+      text.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2600);
     }
-  };
-  $("btn-persons").onclick = loadPersons;
-
-  // ── Documents & Digital Signatures ──
-  async function loadDocuments() {
-    if (!S.caseId) return;
-    clearNote("msg-doc");
-    const docs = await api("GET", `/api/v1/cases/${S.caseId}/documents`);
-    S.docs = docs || [];
-    $("stat-docs").textContent = S.docs.length;
-
-    const list = $("doc-list");
-    list.innerHTML = "";
-    if (S.docs.length === 0) {
-      list.innerHTML = '<li class="record-item" style="color:var(--ink-muted);font-style:italic">No documents registered in this case vault.</li>';
-      return;
-    }
-
-    for (const d of S.docs) {
-      const li = document.createElement("li");
-      li.className = "record-item";
-
-      // Query signatures attached to this document
-      let sigs = [];
-      try {
-        sigs = await api("GET", `/api/v1/documents/${d.id}/signatures`);
-      } catch {}
-
-      const sigHtml = sigs.length > 0
-        ? sigs.map(s => `
-            <div style="font-size:11px;margin-top:4px;padding:4px 8px;background:var(--status-ok-bg);color:var(--status-ok);border-radius:4px">
-              ✓ Signed by <strong>${esc(s.signerName)}</strong> (${esc(s.signerRole)}) • ${esc(s.signatureAlgorithm)} •
-              <button class="btn btn-outline" style="padding:1px 6px;font-size:10px" onclick="window.verifySig('${d.id}', '${s.id}')">Verify Sig</button>
-            </div>
-          `).join("")
-        : `<div style="font-size:11px;color:var(--ink-muted);margin-top:4px">No digital signatures affixed.</div>`;
-
-      li.innerHTML = `
-        <div class="record-item-header">
-          <div>
-            <span class="record-item-title">${esc(d.title)}</span>
-            <div style="font-size:11px;color:var(--ink-muted);margin-top:2px">ID: <span class="hash-display">${d.businessId}</span> • Type: <span class="pill info">${esc(d.docType)}</span></div>
-          </div>
-          <div style="display:flex;gap:6px">
-            <button class="btn btn-outline" style="padding:3px 9px;font-size:11px" onclick="window.downloadDoc('${d.id}')">Download</button>
-            <button class="btn btn-gold" style="padding:3px 9px;font-size:11px" onclick="window.openSignModal('${d.id}', '${esc(d.title)}')">Affix Signature</button>
-            <button class="btn btn-outline" style="padding:3px 9px;font-size:11px" onclick="window.verifyDocIntegrity('${d.id}')">Check Hash</button>
-          </div>
-        </div>
-        ${sigHtml}
-      `;
-      list.appendChild(li);
-    }
-  }
-
-  window.downloadDoc = async id => {
-    try {
-      const url = await api("GET", `/api/v1/documents/${id}/download`);
-      log(`[DOWNLOAD] Opening secure presigned download link: ${url}`);
-      window.open(url, "_blank");
-    } catch (e) {
-      note("msg-doc", "bad", "Download failed: " + e.message);
-    }
-  };
-
-  window.openSignModal = (id, title) => {
-    S.docId = id;
-    $("sign-doc-name").textContent = title;
-    $("sign-doc-id").textContent = id;
-    $("sign-box").style.display = "block";
-    clearNote("msg-sign");
-  };
-
-  $("btn-cancel-sign").onclick = () => {
-    $("sign-box").style.display = "none";
-  };
-
-  $("btn-execute-sign").onclick = async () => {
-    if (!S.docId) return;
-    clearNote("msg-sign");
-    try {
-      const sig = await api("POST", `/api/v1/documents/${S.docId}/signatures`, {
-        body: {
-          algorithm: $("sig-algo").value
-        }
-      });
-      note("msg-sign", "ok", `Digital signature successfully attached. ID: ${sig.id}`);
-      log(`  ✓ Signature valid: ${sig.signatureValue.slice(0, 24)}...`);
-      $("sign-box").style.display = "none";
-      await loadDocuments();
-    } catch (e) {
-      note("msg-sign", "bad", "Signature error: " + e.message);
-    }
-  };
-
-  window.verifySig = async (docId, sigId) => {
-    try {
-      const res = await api("GET", `/api/v1/documents/${docId}/signatures/${sigId}/verify`);
-      if (res.isValid) {
-        alert(`VERIFICATION SUCCESSFUL\n\nSigner: ${res.signerName} (${res.signerRole})\nAlgorithm: ${res.algorithm}\nDocument Hash: MATCHED\nCryptographic Signature: VALID`);
-      } else {
-        alert(`VERIFICATION WARNING!\n\nVerdict: ${res.verdict}\nDocument Hash Matched: ${res.documentHashMatched}\nCrypto Verified: ${res.cryptoVerified}`);
-      }
-    } catch (e) {
-      alert("Verification failed: " + e.message);
-    }
-  };
-
-  window.verifyDocIntegrity = async id => {
-    try {
-      const res = await api("GET", `/api/v1/documents/${id}/integrity`);
-      if (res.valid) {
-        alert(`DOCUMENT INTEGRITY VERIFIED\n\nStored Hash: ${res.storedHash}\nRecomputed Hash: ${res.recomputedHash}\nStatus: TAMPER-FREE`);
-      } else {
-        alert(`CRITICAL ALERT: HASH MISMATCH!\n\nStored Hash: ${res.storedHash}\nRecomputed: ${res.recomputedHash}\nStatus: FILE CORRUPTED OR TAMPERED`);
-      }
-    } catch (e) {
-      alert("Integrity verification failed: " + e.message);
-    }
-  };
-
-  $("btn-upload").onclick = async () => {
-    if (!S.caseId) { note("msg-doc", "warn", "Select a case first."); return; }
-    const file = $("d-file").files[0];
-    if (!file) { note("msg-doc", "warn", "Select a file to upload."); return; }
-
-    clearNote("msg-doc");
-    const form = new FormData();
-    form.append("file", file);
-    form.append("docType", $("d-type").value);
-    form.append("title", $("d-title").value);
-
-    try {
-      await api("POST", `/api/v1/cases/${S.caseId}/documents`, { form });
-      note("msg-doc", "ok", "Document uploaded, malware-scanned, and committed to vault.");
-      await loadDocuments();
-    } catch (e) {
-      note("msg-doc", "bad", e.message);
-    }
-  };
-  $("btn-docs").onclick = loadDocuments;
-
-  // ── Evidence & Custody Chain ──
-  async function loadEvidence() {
-    if (!S.caseId) return;
-    clearNote("msg-ev");
-    const ev = await api("GET", `/api/v1/cases/${S.caseId}/evidence`);
-    S.evidence = ev || [];
-    $("stat-evidence").textContent = S.evidence.length;
-
-    const list = $("ev-list");
-    list.innerHTML = "";
-    if (S.evidence.length === 0) {
-      list.innerHTML = '<li class="record-item" style="color:var(--ink-muted);font-style:italic">No seized evidence registered for this case.</li>';
-      return;
-    }
-
-    S.evidence.forEach(item => {
-      const li = document.createElement("li");
-      li.className = "record-item" + (item.id === S.evidenceId ? " selected" : "");
-      li.innerHTML = `
-        <div class="record-item-header">
-          <div>
-            <span class="record-item-title">${esc(item.title)}</span>
-            <div style="font-size:11px;color:var(--ink-muted);margin-top:2px">Code: <strong>${item.evidenceCode}</strong> • Initial Hash: <span class="hash-display">${short(item.initialHash)}</span></div>
-          </div>
-          <button class="btn btn-outline" style="padding:3px 9px;font-size:11px" data-id="${item.id}">Select Item</button>
-        </div>
-        <div style="font-size:11px;color:var(--ink-secondary)">Location: ${esc(item.location || "—")} • Device: ${esc(item.sourceDevice || "—")}</div>
-      `;
-      li.querySelector("button").onclick = () => selectEvidence(item.id);
-      list.appendChild(li);
-    });
-
-    if (!S.evidenceId && S.evidence.length > 0) {
-      selectEvidence(S.evidence[0].id);
-    }
-  }
-
-  function selectEvidence(id) {
-    S.evidenceId = id;
-    loadEvidence();
-    loadCustodyChain();
-  }
-
-  $("btn-evidence").onclick = async () => {
-    if (!S.caseId) { note("msg-ev", "warn", "Select a case first."); return; }
-    clearNote("msg-ev");
-
-    // Client-side SHA-256 calculation
-    const hash = await sha256Hex($("e-title").value + ":" + $("e-device").value + ":" + Date.now());
-
-    try {
-      const item = await api("POST", "/api/v1/evidence", {
-        body: {
-          caseId: S.caseId,
-          title: $("e-title").value,
-          source: $("e-source").value,
-          sourceDevice: $("e-device").value,
-          location: $("e-loc").value,
-          initialHash: hash,
-          classification: "STANDARD"
-        }
-      });
-      note("msg-ev", "ok", `Evidence registered with initial hash: ${item.evidenceCode}`);
-      await loadEvidence();
-      selectEvidence(item.id);
-    } catch (e) {
-      note("msg-ev", "bad", e.message);
-    }
-  };
-  $("btn-evidences").onclick = loadEvidence;
-
-  async function loadCustodyChain() {
-    if (!S.evidenceId) return;
-    clearNote("msg-chain");
-    const chain = await api("GET", `/api/v1/evidence/${S.evidenceId}/chain`);
-    const list = $("chain-list");
-    list.innerHTML = "";
-
-    if (!chain || chain.length === 0) {
-      list.innerHTML = '<li class="record-item" style="color:var(--ink-muted);font-style:italic">No custody events recorded.</li>';
-      return;
-    }
-
-    chain.forEach(node => {
-      const li = document.createElement("li");
-      li.className = "chain-node";
-      li.innerHTML = `
-        <div style="background:#ffffff;border:1px solid var(--border);border-radius:6px;padding:10px 12px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-weight:700;color:var(--gov-navy);font-size:12px">${esc(node.action)}</span>
-            <span class="pill ok">LINK VALID</span>
-          </div>
-          <div style="font-size:11px;color:var(--ink-secondary);margin-top:4px">
-            Purpose: ${esc(node.purpose || "—")} • Location: ${esc(node.location || "—")}
-          </div>
-          <div style="font-size:10.5px;color:var(--ink-muted);margin-top:4px">
-            Event Hash: <span class="hash-display">${short(node.eventHash)}</span>
-          </div>
-        </div>
-      `;
-      list.appendChild(li);
-    });
-  }
-
-  $("btn-transfer").onclick = async () => {
-    if (!S.evidenceId) { note("msg-chain", "warn", "Select an evidence item first."); return; }
-    const toId = $("t-to").value;
-    if (!toId) { note("msg-chain", "warn", "Select a destination officer."); return; }
-
-    clearNote("msg-chain");
-    try {
-      await api("POST", `/api/v1/evidence/${S.evidenceId}/custody`, {
-        body: {
-          toActorId: toId,
-          action: $("t-action").value,
-          purpose: $("t-purpose").value,
-          location: $("t-loc").value
-        }
-      });
-      note("msg-chain", "ok", "Custody successfully transferred and hash-chained.");
-      await loadCustodyChain();
-    } catch (e) {
-      note("msg-chain", "bad", e.message);
-    }
-  };
-  $("btn-chain").onclick = loadCustodyChain;
-
-  // ── Police Assets & Armory ──
-  async function loadAssets() {
-    clearNote("msg-asset");
-    try {
-      const assets = await api("GET", "/api/v1/assets");
-      const list = $("asset-list");
-      list.innerHTML = "";
-
-      if (!assets || assets.length === 0) {
-        list.innerHTML = '<li class="record-item" style="color:var(--ink-muted);font-style:italic">No police assets found in armory inventory.</li>';
-        return;
-      }
-
-      assets.forEach(a => {
-        const li = document.createElement("li");
-        li.className = "record-item";
-        li.innerHTML = `
-          <div class="record-item-header">
-            <div>
-              <span class="record-item-title">${esc(a.name)}</span>
-              <div style="font-size:11px;color:var(--ink-muted);margin-top:2px">Tag: <span class="hash-display">${esc(a.assetTag)}</span> • Category: <span class="pill info">${esc(a.category)}</span></div>
-            </div>
-            <span class="pill ${a.status === 'AVAILABLE' ? 'ok' : 'warn'}">${esc(a.status)}</span>
-          </div>
-          <div style="font-size:11px;color:var(--ink-secondary);margin-top:4px">
-            Department: ${esc(a.department || "STF")} • Custodian: ${esc(a.custodianBadge || "Armory Pool")}
-          </div>
-        `;
-        list.appendChild(li);
-      });
-    } catch (e) {
-      note("msg-asset", "bad", "Asset load error: " + e.message);
-    }
-  }
-
-  $("btn-register-asset").onclick = async () => {
-    clearNote("msg-asset");
-    try {
-      const asset = await api("POST", "/api/v1/assets", {
-        body: {
-          assetTag: $("a-tag").value,
-          name: $("a-name").value,
-          category: $("a-cat").value,
-          department: $("a-dept").value
-        }
-      });
-      note("msg-asset", "ok", `Asset registered: ${asset.assetTag}`);
-      await loadAssets();
-    } catch (e) {
-      note("msg-asset", "bad", e.message);
-    }
-  };
-  $("btn-refresh-assets").onclick = loadAssets;
-
-  // ── Blockchain Provenance ──
-  $("btn-trigger-anchor").onclick = async () => {
-    clearNote("msg-anchor");
-    try {
-      // Background scheduled job can be triggered or inspected
-      note("msg-anchor", "info", "Triggering Merkle batch calculation and EVM contract anchoring...");
-      log("[BLOCKCHAIN] Invoking AnchorService batch job...");
-      // Let's verify all batches to inspect results
-      await loadBatches();
-      note("msg-anchor", "ok", "Anchoring complete. Checked on-chain batches.");
-    } catch (e) {
-      note("msg-anchor", "bad", e.message);
-    }
-  };
-
-  async function loadBatches() {
-    clearNote("msg-anchor");
-    try {
-      const batches = await api("GET", "/api/v1/audit/provenance/batches");
-      $("stat-batches").textContent = batches ? batches.length : 0;
-      const list = $("batch-list");
-      list.innerHTML = "";
-
-      if (!batches || batches.length === 0) {
-        list.innerHTML = '<li class="record-item" style="color:var(--ink-muted);font-style:italic">No Merkle batches anchored yet. Events will batch periodically.</li>';
-        return;
-      }
-
-      batches.forEach(b => {
-        const li = document.createElement("li");
-        li.className = "record-item";
-        li.innerHTML = `
-          <div class="record-item-header">
-            <div>
-              <span class="record-item-title">Merkle Batch #${b.batchNumber}</span>
-              <div style="font-size:11px;color:var(--ink-muted);margin-top:2px">Merkle Root: <span class="hash-display">${short(b.merkleRoot)}</span> • Events: ${b.eventCount}</div>
-            </div>
-            <span class="pill ok">${esc(b.anchorStatus)}</span>
-          </div>
-          <div style="font-size:11px;color:var(--ink-secondary);margin-top:4px">
-            Tx Ref: <span class="hash-display">${esc(b.anchorReference || "—")}</span> • Type: ${esc(b.anchorType || "ETHEREUM_WEB3J")}
-          </div>
-        `;
-        list.appendChild(li);
-      });
-    } catch (e) {
-      log("  Batch listing: " + e.message);
-    }
-  }
-  $("btn-verify-all-anchors").onclick = async () => {
-    clearNote("msg-anchor");
-    try {
-      const results = await api("GET", "/api/v1/audit/provenance/verify");
-      note("msg-anchor", "ok", "All batches cryptographically verified against live database and on-chain ledger.");
-      log("[VERIFY-ALL] " + JSON.stringify(results));
-      await loadBatches();
-    } catch (e) {
-      note("msg-anchor", "bad", e.message);
-    }
-  };
-
-  // ── Emergency Break-Glass ──
-  $("btn-request-bg").onclick = async () => {
-    if (!S.caseId) { note("msg-bg", "warn", "Select a case first."); return; }
-    clearNote("msg-bg");
-    try {
-      const grant = await api("POST", `/api/v1/cases/${S.caseId}/break-glass`, {
-        body: {
-          reason: $("bg-reason").value
-        }
-      });
-      note("msg-bg", "warn", `EMERGENCY GRANT ACTIVE: Expires at ${grant.expiresAt}. Notice: All actions are VIEW-ONLY and strictly audited.`);
-    } catch (e) {
-      note("msg-bg", "bad", e.message);
-    }
-  };
-  $("btn-check-bg").onclick = async () => {
-    if (!S.caseId) return;
-    try {
-      const grants = await api("GET", `/api/v1/cases/${S.caseId}/break-glass`);
-      note("msg-bg", "info", `Active emergency grants for this case: ${grants ? grants.length : 0}`);
-    } catch (e) {
-      note("msg-bg", "bad", e.message);
-    }
-  };
-
-  // ── Audit Ledger ──
-  $("btn-load-audit").onclick = async () => {
-    clearNote("msg-audit");
-    try {
-      const events = await api("GET", "/api/v1/audit/events?size=25");
-      const list = $("audit-list");
-      list.innerHTML = "";
-      const evs = events.content || events || [];
-
-      if (evs.length === 0) {
-        list.innerHTML = '<li class="record-item" style="color:var(--ink-muted);font-style:italic">No audit events recorded.</li>';
-        return;
-      }
-
-      evs.forEach(ev => {
-        const li = document.createElement("li");
-        li.className = "record-item";
-        li.innerHTML = `
-          <div class="record-item-header">
-            <div>
-              <span class="record-item-title">${esc(ev.eventType)}</span>
-              <div style="font-size:11px;color:var(--ink-muted);margin-top:2px">Timestamp: ${esc(ev.createdAt)}</div>
-            </div>
-            <span class="pill ok">CHAIN OK</span>
-          </div>
-          <div style="font-size:10.5px;color:var(--ink-secondary);margin-top:4px">
-            Event Hash: <span class="hash-display">${short(ev.eventHash)}</span> • Prev: <span class="hash-display">${short(ev.previousEventHash)}</span>
-          </div>
-        `;
-        list.appendChild(li);
-      });
-      note("msg-audit", "ok", `Loaded ${evs.length} immutable hash-chained audit events.`);
-    } catch (e) {
-      note("msg-audit", "bad", e.message);
-    }
-  };
-
-})();
-</script>
+  </script>
 </body>
 </html>

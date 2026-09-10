@@ -52,7 +52,14 @@ public class AuditService {
         try {
             auditEventRepository.acquireChainLock();
         } catch (Exception e) {
-            log.debug("Advisory lock not acquired: {}", e.getMessage());
+            log.warn("AUDIT_CHAIN_LOCK_BUSY: Initial advisory lock attempt failed ({}), retrying...", e.getMessage());
+            try {
+                Thread.sleep(50);
+                auditEventRepository.acquireChainLock();
+            } catch (Exception retryEx) {
+                log.error("AUDIT_CHAIN_LOCK_FAILED: Critical: Unable to acquire audit chain serialization lock. Failing closed to prevent fork.", retryEx);
+                throw new IllegalStateException("Audit chain serialization lock failed: concurrent audit write contention", retryEx);
+            }
         }
 
         // Prepare payload with correlation ID

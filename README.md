@@ -17,20 +17,20 @@ This repository contains the production-ready backend and government portal cons
 
 ### Phase 1: Foundation & Zero-Trust Core ✅
 - **Domain Modeling**: JPA entities for `CaseRecord`, `CasePerson`, `CaseAssignment`, `Document`, `DocumentVersion`, `Evidence`, `EvidenceArtifact`, `CustodyEvent`, `AuditEvent`, `SecurityEvent`, `LegalHold`, `RetentionPolicy`, `SharePackage`, `ShareAccess`, `Organization`, `Department`, `AppUser`, `Role`, `Permission`, `UserRole`, `Policy`, `DigitalSignature`, `BreakGlassGrant`, `WorkflowTransition`.
-- **Row-Level Security (RLS)**: PostgreSQL RLS activated on `case_person` table to isolate victim/witness/accused PII. `RlsAspect` binds `app.current_user_id` to every transaction context (§4.1).
+- **Row-Level Security (RLS) & AES-256-GCM**: PostgreSQL RLS activated on `case_person` table to isolate victim/witness/accused PII. Sensitive PII columns (`id_number_encrypted`, `contact_encrypted`, `address_encrypted`) are additionally encrypted at rest using authenticated AES-256-GCM via `EncryptedStringConverter`. `RlsAspect` binds `app.current_user_id` to every transaction context (§4.1).
 - **ABAC+RBAC Authorization**: `PolicyEvaluationService` evaluates fine-grained access per-request against live DB state (case assignment, classification, role) — never solely from stale JWT claims (§10). Keycloak issues coarse RBAC roles; all fine-grained ABAC is server-side.
 - **Versioned Policy Rules**: `Policy` entity stores declarative ABAC rule definitions (admin-only, version-tracked).
-- **Integrity Layer**: `AuditService` and `HashService` for cryptographic hash-chained audit. Database-level `reject_update_delete` triggers on `document_version`, `custody_event`, and `audit_event` enforce append-only immutability at the DB layer (§4.2).
+- **Integrity Layer**: `AuditService` and `HashService` for cryptographic hash-chained audit with fail-closed advisory serialization locking. Database-level `reject_update_delete` triggers on `document_version`, `custody_event`, and `audit_event` enforce append-only immutability at the DB layer (§4.2).
 - **Infrastructure**: PostgreSQL, MinIO (5 buckets), OpenSearch, RabbitMQ, Redis. Docker Compose for local orchestration.
 
 ### Phase 2: Document Lifecycle ✅
-- **Quarantine Pipeline**: Uploads land in `nyayavault-quarantine` bucket first — never directly into documents (§5).
+- **Quarantine Pipeline**: Uploads land in `crimenet-quarantine` bucket first — never directly into documents (§5).
 - **Validation & Scanning**: MIME type allowlist and 50MB size limit enforced. Mock `MalwareScannerService` inspects files in quarantine.
 - **Outbox Pattern**: DB row created as `PENDING` → MinIO upload → mark `COMMITTED` + audit event atomically, preventing orphaned records (§4.3).
 - **Idempotency**: Supports `Idempotency-Key` headers — duplicate uploads with same key return existing version (§6).
 - **Reconciliation Worker**: Scans for stale `PENDING` rows past TTL, verifies MinIO existence, marks `COMMITTED` or `FAILED` — never silently promotes (§20).
-- **Content-Hash Deduplication**: Reuses existing MinIO objects for duplicate file content based on SHA-256 hash (§20).
-- **Server-Side Encryption**: All `putObject` and `copyObject` requests use KMS/S3 SSE for encryption-at-rest (§5).
+- **Content-Hash Deduplication**: Decoupled SHA-256 content indexing prevents cross-case or cross-tenant document hijacking.
+- **Server-Side Encryption**: Opt-in SSE (`minio.sse-enabled: true` for AWS S3/KMS or MinIO KES). Local standalone MinIO defaults to false because plain local containers lack a KES key broker (§5).
 - **Quarantine Auto-Expiry**: 24-hour lifecycle rule on the quarantine bucket auto-purges abandoned uploads (§5).
 - **Event Publishing**: `RabbitMqPublisher` emits `DOCUMENT_VERSION_CREATED` events for async downstream processing.
 
@@ -38,8 +38,8 @@ This repository contains the production-ready backend and government portal cons
 - **Evidence Registration**: Records physical/digital evidence with a cryptographic initial hash and collection metadata.
 - **Evidence Artifacts**: `EvidenceArtifact` entity tracks physical/digital artifacts under an Evidence record — immutable once registered (§3).
 - **Hash-Linked Custody Chain**: Each `CustodyEvent.event_hash = SHA256(previous_event_hash + canonical_payload)`, enforced append-only by DB trigger (§7).
-- **Optimistic Locking**: Concurrent custody transfers rejected via `previous_event_id` check + row-level lock — prevents split-brain scenarios (§7).
-- **Evidence Artifacts Pipeline**: Digital artifacts go through quarantine → scan → server-side copy flow into the `nyayavault-evidence` bucket.
+- **Pessimistic & Optimistic Locking**: Concurrent custody transfers are locked using a database row-level lock (`SELECT ... FOR UPDATE`) with mandatory `previous_event_id` verification to eliminate TOCTOU race conditions and prevent split-brain custody forks (§7).
+- **Evidence Artifacts Pipeline**: Digital artifacts go through quarantine → scan → server-side copy flow into the `crimenet-evidence` bucket.
 
 ### Phase 4: RabbitMQ & Async Processing ✅
 - **RabbitMQ Listener**: `DocumentMessageListener` consumes events asynchronously.
@@ -54,12 +54,12 @@ This repository contains the production-ready backend and government portal cons
 - **Zero-Trust Retrieval**: Every query includes a **mandatory `bool filter`** on ACL fields built server-side from the requester's context — restricted documents are excluded *before* ranking, never filtered from results afterward (§14).
 
 ### Phase 6: Secure Sharing & Break-Glass Access ✅
-- **SharePackage CRUD**: Manage share packages with recipient, purpose, scope, rights, expiry. **No public links ever — every share requires an authenticated recipient identity** (§11).
-- **Pre-Signed Download URLs**: Secure 300-second (5-minute) pre-signed URLs — never raw MinIO endpoints or credentials (§5).
-- **Watermark Directives**: Watermark flags injected into pre-signed URLs for frontend enforcement (§2 #10: deterrent/traceability controls, not prevention).
+- **SharePackage CRUD**: Manage share packages with recipient, purpose, scope, rights, expiry. **No public links ever — every share requires an authenticated recipient identity** with strict BOLA checks on `getShare` (§11).
+- **Pre-Signed Download URLs**: Secure 300-second (5-minute) pre-signed SigV4 URLs passed unaltered to prevent signature mismatch, returning separate watermark metadata in the response JSON (§5).
+- **Watermark Directives**: Watermark directives returned alongside download URLs for frontend viewer rendering (§2 #10: deterrent/traceability controls, not prevention).
 - **Access Logging**: Dedicated `ShareAccess` ledger records every access action (§11).
-- **MFA Enforcement**: Step-up MFA validation required before generating pre-signed URLs for restricted shares (§11).
-- **Break-Glass Emergency Flow**: `BreakGlassService` provides time-boxed (30 min), reason-based, view-only emergency access. Integrated into `PolicyEvaluationService`. Auto-revoked via scheduled jobs. **Mandatory supervisor notification** via `SUPERVISOR_NOTIFIED_BREAK_GLASS` audit event (§11).
+- **MFA Step-Up Enforcement**: Mandatory structured step-up MFA validation required before accessing restricted shares or emergency access (§11).
+- **Break-Glass Emergency Flow**: `BreakGlassService` provides time-boxed (30 min), reason-based, view-only emergency access with a sliding rate limit (max 3 per 24 hours per officer) and mandatory structured MFA step-up. Integrated into `PolicyEvaluationService`. Auto-revoked via scheduled jobs. Mandatory supervisor alert logged via `SUPERVISOR_NOTIFIED_BREAK_GLASS` audit event (§11).
 
 ### Phase 7: Cryptographic Provenance ✅
 - **Merkle Tree Batching**: `AnchorService` batches unanchored audit events every 5 minutes into a Merkle Tree (§8).

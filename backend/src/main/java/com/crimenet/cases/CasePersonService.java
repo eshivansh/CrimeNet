@@ -76,9 +76,8 @@ public class CasePersonService {
                 .personName(request.personName())
                 .roleType(request.roleType())
                 .idType(request.idType())
-                // These three columns are named *_encrypted, but no encryption is
-                // implemented yet — they hold plaintext. Row-level security is what
-                // protects them today. See LEGAL_DISCLAIMERS.md.
+                // These columns are encrypted with authenticated AES-256-GCM via EncryptedStringConverter
+                // at rest before database write, backed by Row-Level Security (RLS) in PostgreSQL.
                 .idNumberEncrypted(request.idNumber())
                 .contactEncrypted(request.contact())
                 .addressEncrypted(request.address())

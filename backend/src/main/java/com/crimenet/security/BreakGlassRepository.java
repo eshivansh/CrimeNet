@@ -16,4 +16,6 @@ public interface BreakGlassRepository extends JpaRepository<BreakGlassGrant, UUI
 
     boolean existsByGrantedToAndCaseIdAndStatusAndExpiresAtAfter(
             UUID grantedTo, UUID caseId, String status, Instant now);
+
+    long countByGrantedToAndCreatedAtAfter(UUID grantedTo, Instant after);
 }

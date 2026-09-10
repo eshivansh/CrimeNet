@@ -32,14 +32,7 @@ public class BreakGlassService {
     private final com.crimenet.cases.CaseRepository caseRepository;
 
     private static final int DEFAULT_DURATION_MINUTES = 30;
-
-    /**
-     * Request break-glass access to a case the user is NOT assigned to.
-     */
-    @Transactional
-    public BreakGlassGrant requestBreakGlass(UUID caseId, String reason) {
-        return requestBreakGlass(caseId, reason, "MFA-STEPUP-VERIFIED");
-    }
+    private static final int MAX_BREAK_GLASS_PER_24H = 3;
 
     @Transactional
     public BreakGlassGrant requestBreakGlass(UUID caseId, String reason, String mfaToken) {
@@ -52,6 +45,28 @@ public class BreakGlassService {
             throw new IllegalArgumentException("A detailed justification reason (min 10 chars) is required for emergency break-glass");
         }
 
+        // Validate Step-up MFA format: must match structured TOTP/WebAuthn step-up token
+        if (mfaToken == null || !mfaToken.matches("^MFA-[A-Za-z0-9_\\-]{6,64}$")) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Step-up MFA verification token is mandatory and must be a valid verified TOTP/WebAuthn token.");
+        }
+
+        // Prevent duplicate active break-glass grants for the same case
+        if (hasActiveGrant(currentUser.getId(), caseId)) {
+            throw new IllegalStateException("An active emergency break-glass grant already exists for this case.");
+        }
+
+        // Enforce rate limiting: maximum 3 emergency grants per officer per 24 hours
+        Instant twentyFourHoursAgo = Instant.now().minus(24, java.time.temporal.ChronoUnit.HOURS);
+        long recentGrants = breakGlassRepository.countByGrantedToAndCreatedAtAfter(currentUser.getId(), twentyFourHoursAgo);
+        if (recentGrants >= MAX_BREAK_GLASS_PER_24H) {
+            log.warn("BREAK_GLASS_QUOTA_EXCEEDED: Officer {} exceeded 24-hour limit ({} grants requested)",
+                    currentUser.getId(), recentGrants);
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Break-glass emergency quota exceeded: Maximum " + MAX_BREAK_GLASS_PER_24H +
+                    " emergency grants permitted per 24-hour window. Please contact your Department Supervisor or Legal Registrar.");
+        }
+
         // Validate case existence and tenant boundary
         com.crimenet.cases.CaseRecord caseRecord = caseRepository.findById(caseId)
                 .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Case not found: " + caseId));
@@ -59,12 +74,6 @@ public class BreakGlassService {
         if (!currentUser.getOrgId().equals(caseRecord.getOrgId())) {
             throw new org.springframework.security.access.AccessDeniedException(
                     "Cross-tenant break-glass forbidden. Cannot access cases belonging to another agency/organization.");
-        }
-
-        // Validate Step-up MFA
-        if (mfaToken == null || mfaToken.isBlank()) {
-            throw new org.springframework.security.access.AccessDeniedException(
-                    "Step-up MFA verification is mandatory before emergency break-glass access is granted.");
         }
 
         // Record the request audit event FIRST (even if it will be denied)

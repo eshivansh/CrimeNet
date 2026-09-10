@@ -39,7 +39,13 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> get(@PathVariable UUID id) {
+        AppUser currentUser = userService.getCurrentUser();
         AppUser user = userService.getUser(id);
+        // Guard against cross-tenant user reconnaissance
+        if (!currentUser.getOrgId().equals(user.getOrgId())) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Cross-tenant user lookup forbidden: User belongs to a different organization");
+        }
         return ResponseEntity.ok(ApiResponse.ok(UserResponse.from(user)));
     }
 
