@@ -1,0 +1,118 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: crimenet
+
+  # ── PostgreSQL ──
+  datasource:
+    url: jdbc:postgresql://localhost:5432/crimenet
+    username: crimenet_app
+    password: crimenet_app_dev
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  # ── Flyway ──
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    user: crimenet
+    password: crimenet_dev
+
+  # ── Keycloak (OAuth2 Resource Server) ──
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/crimenet
+          jwk-set-uri: http://localhost:8180/realms/crimenet/protocol/openid-connect/certs
+
+  # ── Redis ──
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  # ── RabbitMQ ──
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: crimenet
+    password: crimenet_dev
+
+# ── MinIO ──
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin123
+  buckets:
+    quarantine: crimenet-quarantine
+    documents: crimenet-documents
+    evidence: crimenet-evidence
+    court-packages: crimenet-court-packages
+    archive: crimenet-archive
+
+# ── Document Upload Limits ──
+crimenet:
+  documents:
+    max-size-bytes: 52428800 # 50 MB
+    allowed-mime-types: application/pdf,image/jpeg,image/png,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
+  break-glass:
+    expiry-check-ms: 60000
+  provenance:
+    anchor-interval-ms: 300000
+
+# ── Blockchain Anchoring ──
+blockchain:
+  enabled: true
+  rpc-url: ${BLOCKCHAIN_RPC_URL:http://localhost:8545}
+  private-key: ${BLOCKCHAIN_PRIVATE_KEY:0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
+  contract-address: ${BLOCKCHAIN_CONTRACT_ADDRESS:0x5FbDB2315678afecb367f032d93F642f64180aa3}
+
+# ── OpenSearch ──
+opensearch:
+  host: localhost
+  port: 9200
+  scheme: http
+
+# ── Actuator ──
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# ── OpenAPI / Swagger ──
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+# ── Logging ──
+logging:
+  level:
+    root: INFO
+    com.crimenet: INFO
+    org.springframework.security: INFO

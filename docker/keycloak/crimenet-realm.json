@@ -1,0 +1,328 @@
+{
+  "realm": "crimenet",
+  "enabled": true,
+  "displayName": "CrimeNet",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "ADMIN",
+        "description": "System administrator"
+      },
+      {
+        "name": "INVESTIGATOR",
+        "description": "Investigating officer"
+      },
+      {
+        "name": "SUPERVISOR",
+        "description": "Supervisory officer"
+      },
+      {
+        "name": "FORENSIC_OFFICER",
+        "description": "Forensic lab officer"
+      },
+      {
+        "name": "PROSECUTOR",
+        "description": "Public prosecutor"
+      },
+      {
+        "name": "AUDITOR",
+        "description": "System auditor"
+      },
+      {
+        "name": "COURT_USER",
+        "description": "Court official"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "crimenet-backend",
+      "name": "CrimeNet Backend Service",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "crimenet-backend-secret",
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "publicClient": false,
+      "protocol": "openid-connect",
+      "defaultClientScopes": [
+        "basic",
+        "acr",
+        "profile",
+        "email",
+        "roles",
+        "web-origins"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ],
+      "fullScopeAllowed": true,
+      "protocolMappers": [
+        {
+          "name": "department-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "department",
+            "user.attribute": "department",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "org-id-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "org_id",
+            "user.attribute": "org_id",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "crimenet-frontend",
+      "name": "CrimeNet Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "http://localhost:5173/*",
+        "http://localhost:8080/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:8080"
+      ],
+      "protocol": "openid-connect",
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "defaultClientScopes": [
+        "basic",
+        "acr",
+        "profile",
+        "email",
+        "roles",
+        "web-origins"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ],
+      "fullScopeAllowed": true,
+      "protocolMappers": [
+        {
+          "name": "department-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "department",
+            "user.attribute": "department",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "org-id-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "org_id",
+            "user.attribute": "org_id",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@crimenet.dev",
+      "firstName": "System",
+      "lastName": "Admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ADMIN"
+      ],
+      "attributes": {
+        "department": [
+          "HEADQUARTERS"
+        ],
+        "org_id": [
+          "ORG-DEFAULT"
+        ]
+      },
+      "id": "c91b6ede-052c-5d8a-b150-0d918d40ab51"
+    },
+    {
+      "username": "inspector1",
+      "enabled": true,
+      "email": "inspector1@crimenet.dev",
+      "firstName": "Rajesh",
+      "lastName": "Kumar",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "inspector123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "INVESTIGATOR"
+      ],
+      "attributes": {
+        "department": [
+          "CYBER_CRIME"
+        ],
+        "org_id": [
+          "ORG-DEFAULT"
+        ]
+      },
+      "id": "0c6abfd7-e629-5a84-9ffe-82017d733ab4"
+    },
+    {
+      "username": "supervisor1",
+      "enabled": true,
+      "email": "supervisor1@crimenet.dev",
+      "firstName": "Priya",
+      "lastName": "Sharma",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "supervisor123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "SUPERVISOR"
+      ],
+      "attributes": {
+        "department": [
+          "CYBER_CRIME"
+        ],
+        "org_id": [
+          "ORG-DEFAULT"
+        ]
+      },
+      "id": "2a41e770-d2ad-5705-ab29-8cdfe48f51e1"
+    },
+    {
+      "username": "forensic1",
+      "enabled": true,
+      "email": "forensic1@crimenet.dev",
+      "firstName": "Amit",
+      "lastName": "Verma",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "forensic123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "FORENSIC_OFFICER"
+      ],
+      "attributes": {
+        "department": [
+          "FORENSICS"
+        ],
+        "org_id": [
+          "ORG-DEFAULT"
+        ]
+      },
+      "id": "723dca9d-7d83-5bce-a3da-c71befeea753"
+    },
+    {
+      "username": "prosecutor1",
+      "enabled": true,
+      "email": "prosecutor1@crimenet.dev",
+      "firstName": "Sanjay",
+      "lastName": "Gupta",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "prosecutor123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "PROSECUTOR"
+      ],
+      "attributes": {
+        "department": [
+          "PROSECUTION"
+        ],
+        "org_id": [
+          "ORG-DEFAULT"
+        ]
+      },
+      "id": "aee1c890-2825-5a6b-9b9c-659588b201b6"
+    },
+    {
+      "username": "auditor1",
+      "enabled": true,
+      "email": "auditor1@crimenet.dev",
+      "firstName": "Neha",
+      "lastName": "Singh",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "auditor123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "AUDITOR"
+      ],
+      "attributes": {
+        "department": [
+          "INTERNAL_AUDIT"
+        ],
+        "org_id": [
+          "ORG-DEFAULT"
+        ]
+      },
+      "id": "9e20f5c1-31b3-59d9-8344-522ba20fe130"
+    }
+  ]
+}

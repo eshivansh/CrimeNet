@@ -1,0 +1,12 @@
+# Dev profile — verbose logging, relaxed security for local testing
+logging:
+  level:
+    com.crimenet: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.flywaydb: DEBUG
+
+spring:
+  jpa:
+    show-sql: true

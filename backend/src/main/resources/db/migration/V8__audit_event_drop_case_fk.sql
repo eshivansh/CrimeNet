@@ -1,0 +1,28 @@
+-- ============================================================
+-- V8: drop the audit_event -> case_record foreign key
+-- ============================================================
+--
+-- AuditService.record() runs with Propagation.REQUIRES_NEW, deliberately, so that an
+-- audit entry is committed even when the operation it describes later rolls back. That
+-- is a security property worth keeping: a failed or reverted action must still leave a
+-- trace.
+--
+-- It is, however, incompatible with a foreign key onto case_record. CaseService.createCase()
+-- inserts the case and audits it inside one outer transaction; the audit runs in its own
+-- transaction and commits first, at which point the new case row is not yet visible to it:
+--
+--   ERROR: insert or update on table "audit_event" violates foreign key constraint
+--          "audit_event_case_id_fkey"
+--
+-- So CASE_CREATED could never be written, and case creation always failed with a 500.
+--
+-- Dropping the constraint is the correct resolution rather than weakening the propagation.
+-- An append-only, hash-chained audit log is intentionally decoupled from the mutable tables
+-- it describes: entries must outlive the rows they reference (including after archival or
+-- disposition), and integrity here is established by the hash chain and Merkle anchoring,
+-- not by referential integrity. case_id remains a plain UUID and is still indexed by
+-- idx_audit_case_time for per-case queries.
+--
+-- The actor_id and org_id foreign keys are left in place: those rows are always committed
+-- before an audit entry referencing them is written.
+ALTER TABLE audit_event DROP CONSTRAINT IF EXISTS audit_event_case_id_fkey;

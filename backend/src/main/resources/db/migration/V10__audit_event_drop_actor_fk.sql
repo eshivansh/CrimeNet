@@ -1,0 +1,28 @@
+-- ============================================================
+-- V10: drop the audit_event -> app_user foreign key
+-- ============================================================
+--
+-- Same root cause as V8, on a different column. AuditService.record() runs with
+-- Propagation.REQUIRES_NEW so an audit entry survives rollback of the operation it
+-- describes. That separate transaction cannot see uncommitted rows from the outer one.
+--
+-- UserService auto-provisions an internal user on that user's first authenticated call.
+-- When that first call is also an audited action — signing in and immediately creating a
+-- case, which is exactly what the demo does — the app_user row is still uncommitted while
+-- the audit tries to reference it:
+--
+--   ERROR: insert or update on table "audit_event" violates foreign key constraint
+--          "audit_event_actor_id_fkey"
+--
+-- The failure is invisible in normal use, because by the second request the user has been
+-- committed. It only bites on a genuinely fresh database — i.e. every clean demo run.
+--
+-- Dropping the constraint follows the principle already established in V8: an append-only,
+-- hash-chained audit log is deliberately decoupled from the mutable tables it describes.
+-- Audit entries must outlive the rows they reference, including after a user record is
+-- disposed of under retention. Integrity here comes from the hash chain and Merkle
+-- anchoring, not from referential integrity.
+--
+-- The org_id foreign key is deliberately kept: organizations are seeded reference data
+-- that is committed long before any audit entry can reference it, and never removed.
+ALTER TABLE audit_event DROP CONSTRAINT IF EXISTS audit_event_actor_id_fkey;
