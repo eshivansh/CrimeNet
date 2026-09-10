@@ -929,27 +929,54 @@
                     <td>Original First Information Report (FIR)</td>
                     <td><span class="status-badge badge-primary">v1 (Final)</span></td>
                     <td><span class="status-badge badge-warning">Confidential</span></td>
-                    <td><span class="hash-code">e3b0c44298fc1c14...</span></td>
-                    <td><span class="status-badge badge-success">Sealed // Append-Only</span></td>
-                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="showToast('Pre-signed URL verified (300s expiry)')">Download</button></td>
+                    <td><span class="hash-code">7e5f6cf9548e...</span></td>
+                    <td><span class="status-badge badge-success">Sealed // Ingested</span></td>
+                    <td>
+                      <div style="display: flex; gap: 6px;">
+                        <button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="window.open('/demo_documents/FIR-2024-00892_STF.pdf', '_blank')">View FIR PDF</button>
+                        <button class="btn-action-primary" style="padding: 4px 10px; font-size: 11px; background: #16a34a;" onclick="openDigiLockerModal('DOC-2024-001', 'FIR-2024-00892', '7e5f6cf9548e4d84ac5b62dbb3a068b314a7c735062ed10bdddde90bc6794ec9')">DigiLocker eSign</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr style="background: #f0fdf4;">
+                    <td><strong>DOC-2024-001-ESIGN</strong></td>
+                    <td>FIR-2024-00892 (DigiLocker / PAdES Certified)</td>
+                    <td><span class="status-badge badge-success">eSigned (v1)</span></td>
+                    <td><span class="status-badge badge-success">CCA Certified</span></td>
+                    <td><span class="hash-code">7e5f6cf9548e...</span></td>
+                    <td><span class="status-badge badge-success">✔ Non-Repudiable</span></td>
+                    <td>
+                      <button class="btn-portal-secondary" style="padding: 4px 8px; border-color: #16a34a; color: #15803d; font-weight: 700;" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">View eSigned PDF ↗</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>DOC-2024-003-BSA</strong></td>
+                    <td>Court Electronic Evidence Certificate (§65B BSA 2023)</td>
+                    <td><span class="status-badge badge-primary">Statutory</span></td>
+                    <td><span class="status-badge badge-navy">Judicial Exhibit</span></td>
+                    <td><span class="hash-code">7e5f6cf9548e...</span></td>
+                    <td><span class="status-badge badge-success">QR Verified</span></td>
+                    <td>
+                      <button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="window.open('/demo_documents/BSA_65B_Certificate_FIR-2024-00892.pdf', '_blank')">View Court Certificate ↗</button>
+                    </td>
                   </tr>
                   <tr>
                     <td><strong>DOC-2024-002</strong></td>
                     <td>Ballistics Forensic Analysis Report</td>
                     <td><span class="status-badge badge-primary">v1</span></td>
                     <td><span class="status-badge badge-danger">Restricted</span></td>
-                    <td><span class="hash-code">7f83b1657ff1fc53...</span></td>
+                    <td><span class="hash-code">7f83b1657ff1...</span></td>
                     <td><span class="status-badge badge-success">Sealed // Append-Only</span></td>
-                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="showToast('Pre-signed URL verified (300s expiry)')">Download</button></td>
+                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="showToast('Pre-signed MinIO URL verified (300s expiry)')">Download</button></td>
                   </tr>
                   <tr id="docV2Row" style="display: none; background: #ecfdf5;">
                     <td><strong>DOC-2024-002</strong></td>
                     <td>Ballistics Forensic Analysis Report (Supplementary)</td>
                     <td><span class="status-badge badge-success">v2 (Latest)</span></td>
                     <td><span class="status-badge badge-danger">Restricted</span></td>
-                    <td><span class="hash-code">9a41b226e1088c44...</span></td>
+                    <td><span class="hash-code">9a41b226e108...</span></td>
                     <td><span class="status-badge badge-success">Committed & Anchored</span></td>
-                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="showToast('Pre-signed URL generated for v2')">Download</button></td>
+                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="showToast('Pre-signed MinIO URL generated for v2')">Download</button></td>
                   </tr>
                 </tbody>
               </table>
@@ -1270,6 +1297,67 @@
     </main>
   </section>
 
+  <!-- DigiLocker / PAdES eSign Attestation Modal -->
+  <div id="digiLockerModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#ffffff; border-radius:12px; max-width:580px; width:100%; box-shadow:0 25px 50px -12px rgba(0,0,0,0.35); overflow:hidden; border:1.5px solid #16a34a;">
+      <!-- Green Header -->
+      <div style="background:linear-gradient(135deg, #15803d 0%, #16a34a 100%); color:#ffffff; padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:28px; height:28px; border-radius:50%; background:#ffffff; color:#16a34a; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px;">✔</div>
+          <div>
+            <div style="font-weight:800; font-size:15px; letter-spacing:0.3px;">DIGILOCKER / eSIGN DIGITAL CERTIFICATE</div>
+            <div style="font-size:11px; opacity:0.9;">PAdES (ETSI TS 102 778) • IT Act 2000 §3A • BSA 2023 §65B</div>
+          </div>
+        </div>
+        <button onclick="closeDigiLockerModal()" style="background:transparent; border:none; color:#ffffff; cursor:pointer; font-size:24px; font-weight:700; line-height:1;">&times;</button>
+      </div>
+
+      <!-- Body -->
+      <div style="padding:22px; background:#f8fafc;">
+        <!-- Visual Seal Preview -->
+        <div style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:14px; margin-bottom:18px; display:flex; gap:14px; align-items:center;">
+          <div style="flex:1; font-size:12px; line-height:1.6; color:#1e293b;">
+            <div style="font-weight:800; color:#15803d; font-size:13px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+              <span>✔ SIGNATURE VALID</span>
+              <span style="font-size:10px; background:#dcfce7; color:#15803d; padding:1px 6px; border-radius:4px; border:1px solid #86efac; font-weight:700;">NON-REPUDIABLE</span>
+            </div>
+            <div><strong>Digitally Signed by:</strong> <span id="modalSignerName">Lead Investigating Officer</span></div>
+            <div><strong>Badge / Service ID:</strong> <span id="modalSignerBadge">UP-STF-0842</span> (STF Cyber Division)</div>
+            <div><strong>Signing Protocol:</strong> RSA-2048 / SHA256withRSA (PKCS#1 v1.5)</div>
+            <div><strong>Timestamp:</strong> 2026-09-11 02:45:10 IST • RFC 3161 Qualified TSA</div>
+            <div><strong>Certifying Authority:</strong> CrimeNet Sub-CA (CCA India Licensed)</div>
+            <div><strong>Doc SHA-256 Digest:</strong> <code style="font-family:monospace; background:#e2e8f0; padding:1px 4px; border-radius:3px;" id="modalDocHash">7e5f6cf9548e4d84...</code></div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:74px; height:74px; border:1.5px solid #16a34a; border-radius:6px; background:#ffffff; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4px;">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <div style="font-size:9.5px; color:#15803d; font-weight:700; margin-top:3px;">ON-CHAIN PROOF</div>
+          </div>
+        </div>
+
+        <!-- Statutory Legal Basis -->
+        <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; padding:12px; font-size:11.5px; color:#475569; line-height:1.5; margin-bottom:18px;">
+          <div style="font-weight:700; color:#0f172a; margin-bottom:3px;">Statutory Admissibility Declaration:</div>
+          This visual electronic signature and underlying cryptographic PKCS#7 token satisfy Section 3A of the Information Technology Act, 2000 and Section 65B of the Bharatiya Sakshya Adhiniyam, 2023 for direct admissibility in High Courts and Sessions Courts without secondary oral evidence.
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button class="btn-portal-secondary" onclick="closeDigiLockerModal()">Close</button>
+          <a href="https://amoy.polygonscan.com/address/0x6B76859551315E47041064F48E201b0c2E5832a7" target="_blank" class="btn-portal-secondary" style="color:#7c3aed; border-color:#c4b5fd; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Verify On Polygonscan ↗
+          </a>
+          <button class="btn-action-primary" style="background:#16a34a;" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Open Certified PDF</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Notification Toast -->
   <div class="toast-pill" id="portalToast">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1419,6 +1507,21 @@
           if (box) box.textContent = `[SIMULATED ADAPTER GATEWAY RESPONSE - NICNET SECURED]\n` + JSON.stringify(simulated, null, 2);
           showToast(`Retrieved ${system} record via gateway adapter.`);
         });
+    }
+
+    function openDigiLockerModal(docId, title, hash) {
+      const modal = document.getElementById('digiLockerModal');
+      if (!modal) return;
+      document.getElementById('modalDocHash').textContent = (hash || '7e5f6cf9548e4d84ac5b62dbb3a068b314a7c735062ed10bdddde90bc6794ec9').substring(0, 36) + '...';
+      document.getElementById('modalSignerName').textContent = currentOfficer.name;
+      document.getElementById('modalSignerBadge').textContent = currentOfficer.badge;
+      modal.style.display = 'flex';
+      showToast('DigiLocker certificate & cryptographic stamp verified.');
+    }
+
+    function closeDigiLockerModal() {
+      const modal = document.getElementById('digiLockerModal');
+      if (modal) modal.style.display = 'none';
     }
 
     let toastTimer;

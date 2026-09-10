@@ -2043,21 +2043,19 @@
               <button class="auth-help-btn" onclick="showToast('Help & Emergency Support: Police Cyber Cell')">Help</button>
             </div>
 
-            <!-- Official CrimeNet Shield Logo -->
-            <div class="auth-brand-section">
-              <img src="../assets/Crimenet_logo_v2.png" alt="CrimeNet Logo" style="height: 72px; width: auto; object-fit: contain; margin-bottom: 12px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));">
-
-              <div class="brand-title">
-                <span class="part-crime">Crime</span><span class="part-net">Net</span>
+            <!-- Official CrimeNet Shield Logo & Officer Portal Header -->
+            <div class="auth-brand-section" style="margin-bottom: 22px;">
+              <img src="../assets/Crimenet_logo_v2.png" alt="CrimeNet Logo" style="height: 64px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.06)); margin-bottom: 12px;">
+              <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0,85,212,0.08); color: #0055d4; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 99px; letter-spacing: 0.4px; text-transform: uppercase;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Law Enforcement Terminal
               </div>
-              <div class="brand-subtitle">SECURE DOCUMENT & EVIDENCE FABRIC</div>
-              <div class="brand-tagline">Trusted. Traceable. Tamper-Proof.</div>
             </div>
 
             <!-- Sign In Header -->
-            <div class="auth-heading-group">
-              <h2 class="auth-heading">Sign In</h2>
-              <p class="auth-subheading">Access your secure workspace</p>
+            <div class="auth-heading-group" style="text-align: left; margin-bottom: 18px;">
+              <h2 class="auth-heading" style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Officer Authentication</h2>
+              <p class="auth-subheading" style="font-size: 13px; color: #64748b;">Enter your CCTNS / STF credentials to access evidence vault</p>
             </div>
 
             <!-- Form Inputs -->
@@ -2923,18 +2921,21 @@
                 </div>
               </div>
 
-              <div class="settings-row">
+              <div class="settings-row" onclick="showToast('Enforced Policy: Local offline storage is encrypted with AES-256-GCM by default for zero-trust security.')">
                 <div class="settings-left">
-                  <div class="settings-icon" style="background: #8b5cf6;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                  <div class="settings-icon" style="background: #0284c7;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                   </div>
-                  <span>Offline Tamper Shield</span>
+                  <div>
+                    <span style="font-weight: 600;">Offline Tamper Shield & Vault Cache</span>
+                    <div style="font-size: 11px; color: #64748b;">AES-256-GCM hardware-backed keystore</div>
+                  </div>
                 </div>
                 <div class="settings-right">
-                  <label class="switch">
-                    <input type="checkbox" checked onchange="showToast('Local offline encryption cache enabled')">
-                    <span class="slider"></span>
-                  </label>
+                  <span style="background: #e0f2fe; color: #0284c7; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 99px; display: inline-flex; align-items: center; gap: 4px; letter-spacing: 0.3px;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    ENFORCED (ALWAYS ON)
+                  </span>
                 </div>
               </div>
             </div>
