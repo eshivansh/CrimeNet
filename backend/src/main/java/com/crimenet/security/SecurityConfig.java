@@ -40,9 +40,9 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll()
 
-                // Demo dashboard (static single-page app served from src/main/resources/static).
-                // The page itself is public; every API call it makes is still bearer-authenticated.
-                .requestMatchers(HttpMethod.GET, "/", "/index.html", "/favicon.ico", "/assets/**").permitAll()
+                // Demo dashboard and mobile UI (static single-page apps served from src/main/resources/static).
+                // The page assets are public; every API call they make is still bearer-authenticated.
+                .requestMatchers(HttpMethod.GET, "/", "/index.html", "/favicon.ico", "/assets/**", "/mobile/**").permitAll()
 
                 // Organization — admin only for mutations
                 .requestMatchers(HttpMethod.POST, "/api/v1/organizations/**").hasRole("ADMIN")

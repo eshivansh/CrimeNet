@@ -191,6 +191,113 @@ public class DocumentService {
     }
 
     /**
+     * Upload a new revision/version to an existing document.
+     * Preserves all previous versions immutably and increments version_no.
+     */
+    @Transactional
+    public DocumentVersion addDocumentVersion(UUID documentId, MultipartFile file) throws IOException {
+        Document doc = getDocument(documentId);
+        policyService.enforceCasePermission(doc.getCaseId(), "DOCUMENT", "UPDATE");
+
+        AppUser currentUser = userService.getCurrentUser();
+        byte[] content = file.getBytes();
+        String contentType = file.getContentType() != null ? file.getContentType() : "application/octet-stream";
+        String originalFilename = file.getOriginalFilename();
+
+        if (content.length > maxSizeBytes) {
+            throw new IllegalArgumentException("File size exceeds maximum allowed size");
+        }
+        if (allowedMimeTypes != null && !allowedMimeTypes.contains(contentType)) {
+            throw new IllegalArgumentException("File type not allowed: " + contentType);
+        }
+
+        String contentHash = hashService.computeSha256(content);
+
+        // Find current highest version number
+        int nextVersionNo = documentVersionRepository.findTopByDocumentIdOrderByVersionNoDesc(doc.getId())
+                .map(v -> v.getVersionNo() + 1)
+                .orElse(1);
+
+        String objectKey = buildObjectKey(currentUser.getOrgId(), doc.getCaseId(), doc.getId(), nextVersionNo, contentHash);
+        String quarantineKey = "quarantine/" + objectKey;
+
+        // Check deduplication
+        java.util.Optional<DocumentVersion> existingVersion = documentVersionRepository.findByContentHash(contentHash).stream().findFirst();
+        boolean isDuplicate = existingVersion.isPresent();
+
+        DocumentVersion version = DocumentVersion.builder()
+                .documentId(doc.getId())
+                .versionNo(nextVersionNo)
+                .contentHash(contentHash)
+                .objectKey(isDuplicate ? existingVersion.get().getObjectKey() : objectKey)
+                .sizeBytes(content.length)
+                .mimeType(contentType)
+                .uploadStatus(isDuplicate ? "COMMITTED" : "PENDING")
+                .createdBy(currentUser.getId())
+                .build();
+
+        version = documentVersionRepository.save(version);
+
+        if (!isDuplicate) {
+            try {
+                storageService.uploadToQuarantine(quarantineKey, content, contentType);
+            } catch (Exception e) {
+                log.error("MinIO quarantine upload failed for document {} version {}: {}", doc.getId(), nextVersionNo, e.getMessage());
+                version.setUploadStatus("FAILED");
+                documentVersionRepository.save(version);
+                throw new RuntimeException("File upload failed", e);
+            }
+
+            if (!malwareScannerService.isClean(content, originalFilename)) {
+                storageService.deleteFromQuarantine(quarantineKey);
+                version.setUploadStatus("FAILED_MALWARE");
+                documentVersionRepository.save(version);
+                auditService.record("MALWARE_DETECTED", currentUser.getId(), doc.getId(), doc.getCaseId(),
+                        Map.of("filename", originalFilename != null ? originalFilename : "unknown", "mimeType", contentType, "versionNo", nextVersionNo));
+                throw new RuntimeException("Upload rejected: Malware detected");
+            }
+
+            try {
+                storageService.moveToDocuments(quarantineKey, objectKey);
+                storageService.deleteFromQuarantine(quarantineKey);
+                version.setUploadStatus("COMMITTED");
+            } catch (Exception e) {
+                log.error("MinIO move to documents failed for document {} version {}: {}", doc.getId(), nextVersionNo, e.getMessage());
+                version.setUploadStatus("FAILED");
+                documentVersionRepository.save(version);
+                throw new RuntimeException("File processing failed", e);
+            }
+        } else {
+            version.setUploadStatus("COMMITTED");
+            log.info("Document {} version {} reuses existing content hash: {}", doc.getBusinessId(), nextVersionNo, contentHash);
+        }
+
+        version = documentVersionRepository.save(version);
+
+        // Update document current_version_id
+        doc.setCurrentVersionId(version.getId());
+        doc.setUpdatedAt(Instant.now());
+        documentRepository.save(doc);
+
+        // Audit
+        Map<String, Object> auditPayload = Map.of(
+                "documentId", doc.getId().toString(),
+                "caseId", doc.getCaseId().toString(),
+                "businessId", doc.getBusinessId(),
+                "versionNo", nextVersionNo,
+                "contentHash", contentHash,
+                "sizeBytes", content.length,
+                "mimeType", contentType,
+                "objectKey", objectKey
+        );
+        auditService.record("DOCUMENT_VERSION_CREATED", currentUser.getId(), doc.getId(), doc.getCaseId(), auditPayload);
+        rabbitMqPublisher.publishDocumentVersionCreated(auditPayload);
+
+        log.info("Document {} new version {} created (hash: {})", doc.getBusinessId(), nextVersionNo, contentHash);
+        return version;
+    }
+
+    /**
      * Get document by ID with case access check.
      */
     public Document getDocument(UUID documentId) {

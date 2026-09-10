@@ -46,6 +46,14 @@ public class DocumentController {
         return ResponseEntity.ok(ApiResponse.ok(documentService.getVersions(id)));
     }
 
+    @PostMapping(value = "/documents/{id}/versions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<DocumentVersion>> addVersion(
+            @PathVariable UUID id,
+            @RequestParam("file") MultipartFile file) throws IOException {
+        DocumentVersion version = documentService.addDocumentVersion(id, file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(version));
+    }
+
     @GetMapping("/documents/{id}/integrity")
     public ResponseEntity<ApiResponse<DocumentService.IntegrityCheckResult>> verify(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponse.ok(documentService.verifyIntegrity(id)));
