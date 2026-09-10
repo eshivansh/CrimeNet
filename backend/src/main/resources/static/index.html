@@ -3,25 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CrimeNet — Secure Digital Investigation & Evidence Record Fabric</title>
-  <meta name="description" content="State-of-the-Art Law Enforcement Document Fabric, Evidence Custody & Blockchain Provenance">
+  <title>CrimeNet — National Law Enforcement & Judicial Document Fabric</title>
+  <meta name="description" content="Centralized Zero-Trust Investigation Document Management, Evidence Custody & Cryptographic Provenance System">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #0055d4;
-      --primary-hover: #0043aa;
-      --primary-light: #eff6ff;
-      --primary-pill: #e0edff;
-      --navy-950: #070e1b;
-      --navy-900: #0a192f;
-      --navy-800: #0d2346;
-      --navy-700: #1a365d;
-      --gold-600: #b45309;
-      --gold-500: #c68a2c;
-      --gold-400: #f59e0b;
-      --gold-100: #fef3c7;
+      --primary: #004bbb;
+      --primary-dark: #003380;
+      --primary-light: #f0f5ff;
+      --primary-border: #bcd5ff;
+      --navy-950: #060f1e;
+      --navy-900: #0b1a30;
+      --navy-800: #122847;
+      --navy-700: #1b3a63;
       --slate-50: #f8fafc;
       --slate-100: #f1f5f9;
       --slate-200: #e2e8f0;
@@ -32,31 +28,30 @@
       --slate-700: #334155;
       --slate-800: #1e293b;
       --slate-900: #0f172a;
-      --success: #10b981;
+      --success: #059669;
       --success-bg: #ecfdf5;
-      --success-text: #047857;
-      --warning: #f59e0b;
+      --success-border: #a7f3d0;
+      --warning: #d97706;
       --warning-bg: #fffbeb;
-      --warning-text: #b45309;
-      --danger: #ef4444;
-      --danger-bg: #fee2e2;
-      --danger-text: #dc2626;
+      --warning-border: #fde68a;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
       --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: "JetBrains Mono", monospace;
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 20px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.06);
-      --shadow-lg: 0 12px 30px rgba(0, 85, 212, 0.08);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: var(--font-sans);
-      background-color: #f8fafc;
+      background-color: #f1f5f9;
       color: var(--slate-900);
       min-height: 100vh;
       display: flex;
@@ -65,1207 +60,1159 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* National Tricolor Banner */
-    .national-tricolor {
-      height: 4px;
-      background: linear-gradient(90deg, #ff9933 0%, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%);
+    /* Government Security Banner */
+    .top-security-ribbon {
+      background: var(--navy-950);
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 5px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .ribbon-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ribbon-flag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #f8fafc;
+    }
+    .tricolor-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ff9933 33%, #ffffff 33%, #ffffff 66%, #138808 66%);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    .ribbon-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .sec-tag {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      padding: 1px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
-    /* Top Government Header */
+    /* ========================================================
+       SCREEN 1: OFFICIAL GOVERNMENT LOGIN GATE
+       ======================================================== */
+    #authGatewayView {
+      min-height: calc(100vh - 28px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: linear-gradient(145deg, #0b1a30 0%, #060f1e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #authGatewayView::before {
+      content: "";
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 75, 187, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .auth-portal-card {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+    }
+
+    .auth-card-header {
+      background: linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
+      padding: 28px 32px 22px;
+      border-bottom: 1px solid var(--slate-200);
+      text-align: center;
+    }
+
+    .auth-logo-img {
+      max-height: 52px;
+      width: auto;
+      object-fit: contain;
+      margin-bottom: 12px;
+    }
+
+    .auth-portal-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy-900);
+      letter-spacing: -0.3px;
+    }
+
+    .auth-portal-subtitle {
+      font-size: 11.5px;
+      color: var(--slate-600);
+      font-weight: 600;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .auth-card-body {
+      padding: 28px 32px 32px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-700);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      border: 1.5px solid var(--slate-300);
+      border-radius: var(--radius-sm);
+      background: #ffffff;
+      color: var(--slate-900);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 75, 187, 0.12);
+    }
+
+    .auth-security-notice {
+      background: #fffbeb;
+      border-left: 3px solid #d97706;
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      color: #92400e;
+      line-height: 1.4;
+      margin-bottom: 22px;
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      background: var(--primary);
+      color: #ffffff;
+      padding: 12px 18px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-login-submit:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-login-submit:active {
+      transform: scale(0.99);
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      margin: 22px 0 16px;
+      color: var(--slate-400);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--slate-200);
+    }
+    .auth-divider span {
+      padding: 0 12px;
+    }
+
+    .quick-roles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .quick-role-btn {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 9px 10px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .quick-role-btn:hover {
+      background: var(--primary-light);
+      border-color: var(--primary-border);
+    }
+
+    .role-btn-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .role-btn-badge {
+      font-size: 10.5px;
+      font-family: var(--font-mono);
+      color: var(--slate-500);
+    }
+
+    /* ========================================================
+       SCREEN 2: MAIN LAW ENFORCEMENT WORKSPACE
+       ======================================================== */
+    #mainWorkspaceView {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* Primary Navigation Bar */
     .gov-navbar {
       background: #ffffff;
       border-bottom: 1px solid var(--slate-200);
-      padding: 12px 32px;
+      padding: 10px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 90;
       box-shadow: var(--shadow-sm);
     }
 
-    .brand-cluster {
+    .brand-section {
       display: flex;
       align-items: center;
       gap: 14px;
-      text-decoration: none;
     }
 
-    .brand-shield-icon {
-      width: 42px;
-      height: 48px;
-      filter: drop-shadow(0 2px 6px rgba(0, 85, 212, 0.15));
+    .brand-logo-img {
+      max-height: 40px;
+      width: auto;
+      object-fit: contain;
     }
 
-    .brand-title-text h1 {
-      font-size: 22px;
+    .brand-titles {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-heading {
+      font-size: 17px;
       font-weight: 800;
-      letter-spacing: -0.3px;
-      color: var(--navy-800);
-      line-height: 1.1;
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-    .brand-title-text h1 span {
-      color: var(--gold-500);
-    }
-    .brand-title-text p {
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--slate-500);
-    }
-
-    .nav-center-badges {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .infra-chip {
-      background: var(--slate-100);
-      border: 1px solid var(--slate-200);
-      border-radius: 99px;
-      padding: 4px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--slate-700);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .infra-chip .dot-green {
-      width: 8px;
-      height: 8px;
-      background: var(--success);
-      border-radius: 50%;
-      box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn-mobile-app {
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
+      color: var(--navy-900);
+      line-height: 1.2;
       display: flex;
       align-items: center;
       gap: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 2px 8px rgba(0, 85, 212, 0.25);
-      transition: all 0.2s;
-    }
-    .btn-mobile-app:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
     }
 
-    .officer-badge-profile {
+    .brand-subtext {
+      font-size: 10.5px;
+      color: var(--slate-500);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .officer-profile-card {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 4px 12px;
-      background: var(--slate-50);
+      background: var(--slate-100);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--slate-200);
-      border-radius: 10px;
     }
-    .officer-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--navy-800), var(--primary));
-      color: #fff;
+
+    .officer-avatar-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--navy-900);
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 800;
-    }
-    .officer-info-text {
-      text-align: left;
-    }
-    .officer-info-text .name {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--navy-900);
-    }
-    .officer-info-text .role {
-      font-size: 11px;
-      color: var(--slate-500);
+      letter-spacing: 0.5px;
     }
 
-    /* Sub Navigation Tabs */
-    .portal-tabs-nav {
+    .officer-meta-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .officer-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--navy-900);
+      line-height: 1.2;
+    }
+
+    .officer-badge-no {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--slate-500);
+      font-weight: 600;
+    }
+
+    .btn-portal-secondary {
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-portal-secondary:hover {
+      background: var(--slate-100);
+      color: var(--navy-900);
+    }
+
+    /* Sub-Navigation & Workspace Tabs */
+    .workspace-tabs-bar {
       background: #ffffff;
       border-bottom: 1px solid var(--slate-200);
-      padding: 0 32px;
+      padding: 0 28px;
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 4px;
+      overflow-x: auto;
     }
-    .portal-tab-link {
-      padding: 14px 4px;
-      font-size: 14px;
+
+    .workspace-tab-btn {
+      padding: 13px 18px;
+      font-size: 13px;
       font-weight: 600;
-      color: var(--slate-500);
-      text-decoration: none;
+      color: var(--slate-600);
+      background: transparent;
+      border: none;
+      border-bottom: 2.5px solid transparent;
       cursor: pointer;
-      position: relative;
       display: flex;
       align-items: center;
       gap: 8px;
-      transition: color 0.2s;
-    }
-    .portal-tab-link:hover {
-      color: var(--primary);
-    }
-    .portal-tab-link.active {
-      color: var(--primary);
-      font-weight: 700;
-    }
-    .portal-tab-link.active::after {
-      content: "";
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--primary);
-      border-radius: 3px 3px 0 0;
+      white-space: nowrap;
+      transition: all 0.15s;
     }
 
-    /* Main Container */
-    .portal-main {
+    .workspace-tab-btn:hover {
+      color: var(--navy-900);
+      background: var(--slate-50);
+    }
+
+    .workspace-tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 700;
+    }
+
+    .tab-icon {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Workspace Content Container */
+    .workspace-content {
       max-width: 1440px;
       width: 100%;
-      margin: 24px auto;
-      padding: 0 32px 60px;
+      margin: 0 auto;
+      padding: 24px 28px 48px;
       flex: 1;
     }
 
-    .tab-pane {
+    .tab-view-panel {
       display: none;
-      animation: fadeIn 0.2s ease-in-out;
     }
-    .tab-pane.active {
+    .tab-view-panel.active {
       display: block;
+      animation: fadeIn 0.2s ease-out;
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Metrics Grid */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 24px;
-    }
-    .metric-card {
-      background: #ffffff;
-      border: 1px solid var(--slate-200);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .metric-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-    .metric-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--slate-500);
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .metric-value {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--navy-900);
-      letter-spacing: -0.5px;
-      line-height: 1;
-    }
-    .metric-footer {
-      font-size: 12px;
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-    }
-
-    /* Action Banner */
-    .quick-actions-banner {
-      background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
-      border-radius: var(--radius-xl);
-      padding: 24px 28px;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow-lg);
-    }
-    .action-banner-text h2 {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-    .action-banner-text p {
-      font-size: 13px;
-      color: var(--slate-300);
-    }
-    .banner-buttons-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .btn-banner-action {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-    .btn-banner-action:hover {
-      background: #ffffff;
-      color: var(--navy-900);
-    }
-    .btn-banner-primary {
-      background: var(--primary);
-      border-color: var(--primary);
-    }
-    .btn-banner-primary:hover {
-      background: #0043aa;
-      color: #ffffff;
-    }
-
-    /* Layout Columns */
-    .portal-two-col {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 24px;
-      align-items: flex-start;
-    }
-
-    /* Section Cards */
-    .content-box-card {
-      background: #ffffff;
-      border: 1px solid var(--slate-200);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 24px;
-    }
-    .content-box-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--slate-100);
-    }
-    .content-box-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--navy-900);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* 6 Colored Folders (Pixel-Matched to Screenshot 1) */
-    .folder-grid-card {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .folder-tile {
+    /* Common Card Components */
+    .gov-card {
       background: #ffffff;
       border: 1px solid var(--slate-200);
       border-radius: var(--radius-md);
-      padding: 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .folder-tile:hover {
-      background: var(--slate-50);
-      border-color: var(--slate-300);
-      transform: translateY(-2px);
-    }
-    .folder-tile-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .folder-tile-meta h4 {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--navy-900);
-    }
-    .folder-tile-meta p {
-      font-size: 12px;
-      color: var(--slate-500);
-      margin-top: 1px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      overflow: hidden;
     }
 
-    /* Table Styles */
-    .data-table-wrapper {
+    .gov-card-header {
+      padding: 16px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .gov-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gov-card-title-icon {
+      width: 18px;
+      height: 18px;
+      stroke: var(--primary);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .gov-card-body {
+      padding: 20px;
+    }
+
+    /* Data Tables */
+    .gov-table-wrapper {
       overflow-x: auto;
     }
-    .crimenet-table {
+
+    .gov-table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-size: 13.5px;
-    }
-    .crimenet-table th {
-      background: var(--slate-50);
-      color: var(--slate-600);
-      font-weight: 700;
+      border-collapse: collapse;
       text-align: left;
-      padding: 12px 16px;
-      border-top: 1px solid var(--slate-200);
-      border-bottom: 1px solid var(--slate-200);
+      font-size: 13px;
+    }
+
+    .gov-table th {
+      background: var(--slate-100);
+      color: var(--slate-700);
+      font-weight: 700;
+      padding: 11px 16px;
+      border-bottom: 1.5px solid var(--slate-200);
       text-transform: uppercase;
       font-size: 11px;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
     }
-    .crimenet-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--slate-100);
+
+    .gov-table td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--slate-200);
       color: var(--slate-800);
       vertical-align: middle;
     }
-    .crimenet-table tr:hover td {
-      background: #fafcff;
+
+    .gov-table tbody tr:hover {
+      background-color: #f8faff;
     }
 
-    /* Status Pills */
+    /* Badges & Chips */
     .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-size: 12px;
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-size: 11px;
       font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
-    .badge-verified { background: #dcfce7; color: #15803d; }
-    .badge-ocr { background: #e0e7ff; color: #4338ca; }
-    .badge-indexed { background: #f3e8ff; color: #7e22ce; }
-    .badge-pending { background: #fef3c7; color: #b45309; }
 
-    /* OCR Simulator Component (Matches Screenshot 2) */
-    .ocr-desktop-card {
+    .badge-success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+    .badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+    .badge-primary { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border); }
+    .badge-navy { background: #0f172a; color: #f8fafc; }
+
+    .hash-code {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      background: var(--slate-100);
+      padding: 3px 6px;
+      border-radius: 4px;
+      color: var(--navy-800);
+      border: 1px solid var(--slate-200);
+    }
+
+    /* Key-Value Dossier Grid */
+    .dossier-grid {
       display: grid;
-      grid-template-columns: 420px 1fr;
-      gap: 28px;
-      align-items: center;
-    }
-    .ocr-scanner-box {
-      background: #eff6ff;
-      border-radius: var(--radius-xl);
-      padding: 24px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .scan-bracket {
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      border-color: #0066ff;
-      border-style: solid;
-      pointer-events: none;
-    }
-    .sb-tl { top: 14px; left: 14px; border-width: 4px 0 0 4px; border-top-left-radius: 6px; }
-    .sb-tr { top: 14px; right: 14px; border-width: 4px 4px 0 0; border-top-right-radius: 6px; }
-    .sb-bl { bottom: 14px; left: 14px; border-width: 0 0 4px 4px; border-bottom-left-radius: 6px; }
-    .sb-br { bottom: 14px; right: 14px; border-width: 0 4px 4px 0; border-bottom-right-radius: 6px; }
-
-    .fir-desktop-paper {
-      background: #ffffff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-      width: 100%;
-      font-size: 10px;
-      line-height: 1.4;
-      position: relative;
-      overflow: hidden;
-    }
-    .fir-laser {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: #0066ff;
-      box-shadow: 0 0 10px #0066ff;
-      animation: laserSweep 3s ease-in-out infinite alternate;
-    }
-    @keyframes laserSweep {
-      0% { top: 0%; }
-      100% { top: 96%; }
-    }
-
-    /* Stepper */
-    .ocr-stepper-row {
-      display: flex;
-      align-items: center;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
       margin-bottom: 20px;
     }
-    .stepper-step {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--slate-400);
-    }
-    .stepper-step.active {
-      color: var(--primary);
-      font-weight: 700;
-    }
-    .stepper-num {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--slate-200);
-      color: var(--slate-700);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-    }
-    .stepper-step.active .stepper-num {
-      background: var(--primary);
-      color: #ffffff;
+
+    .dossier-stat-item {
+      background: var(--slate-50);
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--slate-200);
     }
 
-    /* Toast */
+    .dossier-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-500);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+
+    .dossier-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    /* Action Buttons */
+    .btn-action-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-action-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Notification Toast */
     .toast-pill {
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: var(--navy-900);
-      color: #ffffff;
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-size: 13.5px;
+      background: var(--navy-950);
+      color: #f8fafc;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      font-size: 13px;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.3s;
+      border-left: 4px solid var(--success);
       z-index: 1000;
+      opacity: 0;
+      transform: translateY(12px);
       pointer-events: none;
+      transition: all 0.25s ease-out;
     }
     .toast-pill.show {
       opacity: 1;
       transform: translateY(0);
+      pointer-events: auto;
     }
   </style>
 </head>
 <body>
 
-  <!-- National Tricolor Strip -->
-  <div class="national-tricolor"></div>
-
-  <!-- Government & Cryptographic Header -->
-  <header class="gov-navbar">
-    <div class="brand-cluster">
-      <!-- Gold & Navy Shield SVG -->
-      <svg class="brand-shield-icon" viewBox="0 0 100 120" fill="none">
-        <path d="M50 4L12 22V58C12 88 50 114 50 114C50 114 88 88 88 58V22L50 4Z" fill="#0d2346" stroke="#c68a2c" stroke-width="6" stroke-linejoin="round"/>
-        <path d="M50 16L24 30V58C24 80 50 100 50 100C50 100 76 80 76 58V30L50 16Z" fill="#091b38" stroke="#f59e0b" stroke-width="3" stroke-linejoin="round"/>
-        <path d="M38 56L46 65L64 45" stroke="#f59e0b" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <div class="brand-title-text">
-        <h1>Crime<span>Net</span></h1>
-        <p>SECURE DOCUMENT & EVIDENCE FABRIC • LAW ENFORCEMENT & JUDICIARY</p>
+  <!-- Top Institutional Security Ribbon -->
+  <div class="top-security-ribbon">
+    <div class="ribbon-left">
+      <div class="ribbon-flag">
+        <span class="tricolor-dot"></span>
+        <span>MINISTRY OF HOME AFFAIRS & LAW ENFORCEMENT</span>
       </div>
+      <span>•</span>
+      <span>CRIMENET CASE-CENTRIC ZERO-TRUST FABRIC</span>
     </div>
+    <div class="ribbon-right">
+      <span class="sec-tag">CONFIDENTIAL // OFFICIAL USE ONLY</span>
+      <span>BSA 2023 §65B CERTIFIED</span>
+    </div>
+  </div>
 
-    <!-- Active Microservice Telemetry Status -->
-    <div class="nav-center-badges">
-      <div class="infra-chip">
-        <span class="dot-green"></span>
-        <span>PostgreSQL RLS Active</span>
+  <!-- ==========================================================
+       VIEW 1: AUTHENTICATION & CLEARANCE GATE
+       ========================================================== -->
+  <section id="authGatewayView">
+    <div class="auth-portal-card">
+      <div class="auth-card-header">
+        <img src="assets/Crimenet_logo_v2.png" alt="CrimeNet Logo" class="auth-logo-img">
+        <h2 class="auth-portal-title">Central Law Enforcement Gateway</h2>
+        <div class="auth-portal-subtitle">Secure Digital Investigation & Evidence Repository</div>
       </div>
-      <div class="infra-chip">
-        <span class="dot-green"></span>
-        <span>Blockchain Anchor Synced</span>
-      </div>
-      <div class="infra-chip">
-        <span class="dot-green"></span>
-        <span>MinIO Zero-Trust S3</span>
-      </div>
-    </div>
-
-    <!-- Actions & Officer Profile -->
-    <div class="header-actions">
-      <!-- Standalone Mobile App Launch Button -->
-      <a href="/mobile/index.html" target="_blank" class="btn-mobile-app" title="Open Standalone Mobile App in New Window">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <rect x="5" y="2" width="14" height="20" rx="3"></rect>
-          <line x1="12" y1="18" x2="12" y2="18.01"></line>
-        </svg>
-        <span>Open Mobile App ↗</span>
-      </a>
-
-      <!-- Officer Profile Card -->
-      <div class="officer-badge-profile">
-        <div class="officer-avatar">👮</div>
-        <div class="officer-info-text">
-          <div class="name">Officer R. Sharma</div>
-          <div class="role">Badge: UP-STF-0842</div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Navigation Tabs -->
-  <nav class="portal-tabs-nav">
-    <div class="portal-tab-link active" onclick="switchPortalTab('dashboard', this)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <span>Dashboard</span>
-    </div>
-    <div class="portal-tab-link" onclick="switchPortalTab('cases', this)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-      <span>Case Dossier (CC/2025/1457)</span>
-    </div>
-    <div class="portal-tab-link" onclick="switchPortalTab('ocr', this)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-      <span>Document OCR Scanner</span>
-    </div>
-    <div class="portal-tab-link" onclick="switchPortalTab('evidence', this)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span>Evidence Locker & Custody</span>
-    </div>
-    <div class="portal-tab-link" onclick="switchPortalTab('blockchain', this)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      <span>Blockchain Merkle Audit</span>
-    </div>
-  </nav>
-
-  <!-- Main Portal Content Viewport -->
-  <main class="portal-main">
-
-    <!-- ========================================================
-         TAB 1: DASHBOARD
-         ======================================================== -->
-    <div class="tab-pane active" id="pane-dashboard">
-
-      <!-- Telemetry Stats Grid -->
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-card-header">
-            <span>Active Case Files</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <div class="metric-value">14</div>
-          <div class="metric-footer" style="color: #10b981;">
-            <span>↑ 2 high priority assigned</span>
-          </div>
+      <div class="auth-card-body">
+        <div class="auth-security-notice">
+          <strong>Notice:</strong> This is a restricted government informatics network. All authentication events, session queries, and document operations are bound to immutable hash-linked audit ledgers.
         </div>
 
-        <div class="metric-card">
-          <div class="metric-card-header">
-            <span>Chain Integrity</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <form id="loginForm" onsubmit="handlePortalLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="officerBadge">Officer Badge / Service ID</label>
+            <input type="text" id="officerBadge" class="form-input" value="UP-STF-0842" required>
           </div>
-          <div class="metric-value">100%</div>
-          <div class="metric-footer" style="color: #10b981;">
-            <span>✓ 0 Tampering detected</span>
-          </div>
-        </div>
 
-        <div class="metric-card">
-          <div class="metric-card-header">
-            <span>Custody In-Transit</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+          <div class="form-group">
+            <label class="form-label" for="officerDept">Jurisdiction & Agency</label>
+            <select id="officerDept" class="form-select">
+              <option value="Special Task Force">State Police — Special Task Force (STF)</option>
+              <option value="Central Armory">State Police — Central Armory & Ballistics</option>
+              <option value="Cyber Forensic Lab">State Forensic Science Laboratory (FSL)</option>
+              <option value="High Court Registry">Judicial Directorate & Prosecution</option>
+            </select>
           </div>
-          <div class="metric-value">3</div>
-          <div class="metric-footer" style="color: #f59e0b;">
-            <span>● Awaiting receiver signature</span>
-          </div>
-        </div>
 
-        <div class="metric-card">
-          <div class="metric-card-header">
-            <span>Secured Documents</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+          <div class="form-group">
+            <label class="form-label" for="officerPin">Hardware Key / PKI PIN</label>
+            <input type="password" id="officerPin" class="form-input" value="••••••••" required>
           </div>
-          <div class="metric-value">128</div>
-          <div class="metric-footer" style="color: #0055d4;">
-            <span>SHA-256 On-Chain Verified</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- Quick Action Banner -->
-      <div class="quick-actions-banner">
-        <div class="action-banner-text">
-          <h2>Evidence Ingestion & Case Workspace</h2>
-          <p>Cryptographically verify digital evidence, upload FIRs with AI OCR, or initiate chain-of-custody transfer.</p>
-        </div>
-        <div class="banner-buttons-row">
-          <button class="btn-banner-action btn-banner-primary" onclick="switchPortalTab('ocr', document.querySelectorAll('.portal-tab-link')[2])">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            <span>Scan with OCR</span>
+          <button type="submit" class="btn-login-submit">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Verify Credentials & Enter Workspace</span>
           </button>
-          <button class="btn-banner-action" onclick="switchPortalTab('evidence', document.querySelectorAll('.portal-tab-link')[3])">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>Verify Evidence Hash</span>
+        </form>
+
+        <div class="auth-divider">
+          <span>Quick Evaluation Clearances</span>
+        </div>
+
+        <div class="quick-roles-grid">
+          <button type="button" class="quick-role-btn" onclick="quickLogin('Lead Investigating Officer', 'UP-STF-0842', 'Special Task Force')">
+            <span class="role-btn-title">Lead Investigator</span>
+            <span class="role-btn-badge">Badge UP-STF-0842</span>
           </button>
-          <button class="btn-banner-action" onclick="showToast('Emergency Break-Glass Audit Request Registered (View-Only, Watermarked)')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span>Break-Glass</span>
+          <button type="button" class="quick-role-btn" onclick="quickLogin('Armory & Asset In-Charge', 'AR-9902', 'Central Armory')">
+            <span class="role-btn-title">Armory Custodian</span>
+            <span class="role-btn-badge">Badge AR-9902</span>
+          </button>
+          <button type="button" class="quick-role-btn" onclick="quickLogin('Chief Cyber Examiner', 'FSL-4410', 'Cyber Forensic Lab')">
+            <span class="role-btn-title">Forensic Scientist</span>
+            <span class="role-btn-badge">Badge FSL-4410</span>
+          </button>
+          <button type="button" class="quick-role-btn" onclick="quickLogin('Judicial Auditor', 'JD-082', 'High Court Registry')">
+            <span class="role-btn-title">Judicial Auditor</span>
+            <span class="role-btn-badge">Badge JD-082</span>
           </button>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- Priority Cases Table -->
-      <div class="content-box-card">
-        <div class="content-box-header">
-          <div class="content-box-title">
-            <span>Priority Active Investigations</span>
+  <!-- ==========================================================
+       VIEW 2: MAIN LAW ENFORCEMENT WORKSPACE
+       ========================================================== -->
+  <section id="mainWorkspaceView">
+    <!-- Main Top Navigation -->
+    <header class="gov-navbar">
+      <div class="brand-section">
+        <img src="assets/Crimenet_logo_v2.png" alt="CrimeNet" class="brand-logo-img">
+        <div class="brand-titles">
+          <div class="brand-heading">
+            <span>CrimeNet</span>
+            <span class="status-badge badge-primary">STF Command</span>
           </div>
-          <button class="btn-banner-action" style="color: var(--primary); background: var(--primary-light); border-color: var(--primary-pill);" onclick="switchPortalTab('cases', document.querySelectorAll('.portal-tab-link')[1])">
-            Open Case CC/2025/1457 →
-          </button>
-        </div>
-
-        <div class="data-table-wrapper">
-          <table class="crimenet-table">
-            <thead>
-              <tr>
-                <th>Case Number</th>
-                <th>Title / Offense</th>
-                <th>Lead Officer</th>
-                <th>Status</th>
-                <th>Evidence Items</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr onclick="switchPortalTab('cases', document.querySelectorAll('.portal-tab-link')[1])" style="cursor: pointer;">
-                <td><strong style="color: var(--primary);">CC/2025/1457</strong></td>
-                <td><strong>Phishing & Fraud Syndicate</strong><br><span style="font-size: 12px; color: var(--slate-500);">Sec 66D IT Act, Sec 420 IPC</span></td>
-                <td>Officer R. Sharma</td>
-                <td><span class="status-badge badge-ocr">Active Investigation</span></td>
-                <td>12 Files, 3 Seized Devices</td>
-                <td><button class="btn-banner-action" style="padding: 4px 10px; font-size: 12px; color: var(--primary); background: var(--primary-light);">View Dossier</button></td>
-              </tr>
-              <tr>
-                <td><strong style="color: var(--primary);">CC/2025/1392</strong></td>
-                <td><strong>State Power Grid Ransomware Intrusion</strong><br><span style="font-size: 12px; color: var(--slate-500);">Sec 70 Critical Infrastructure Protection</span></td>
-                <td>Inspector A. Verma</td>
-                <td><span class="status-badge badge-verified">Forensics Complete</span></td>
-                <td>8 Memory Dumps</td>
-                <td><button class="btn-banner-action" style="padding: 4px 10px; font-size: 12px; color: var(--slate-700); background: var(--slate-100);" onclick="showToast('Loading Case CC/2025/1392...')">View Dossier</button></td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="brand-subtext">Case-Centric Evidence & Asset Fabric</div>
         </div>
       </div>
 
-    </div>
-
-    <!-- ========================================================
-         TAB 2: CASE DOSSIER CC/2025/1457 (Pixel-Matched to Screenshot 1)
-         ======================================================== -->
-    <div class="tab-pane" id="pane-cases">
-
-      <div class="content-box-card">
-        <div class="content-box-header">
-          <div>
-            <div class="content-box-title">
-              <span>Case: CC/2025/1457 — Phishing & Fraud</span>
-            </div>
-            <p style="font-size: 13px; color: var(--slate-500); margin-top: 2px;">
-              Civil Lines Police Station • Assigned Lead: Officer R. Sharma • RLS Tenant ID: UP-POLICE-01
-            </p>
-          </div>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn-banner-action" style="color: var(--primary); background: var(--primary-light);" onclick="showToast('Section 65B Electronic Certificate generated')">
-              📜 Sec 65B Certificate
-            </button>
-            <button class="btn-banner-action btn-banner-primary" onclick="showToast('Upload File to Case CC/2025/1457')">
-              + Ingest Document
-            </button>
+      <div class="user-actions">
+        <div class="officer-profile-card">
+          <div class="officer-avatar-box" id="userAvatarBox">IO</div>
+          <div class="officer-meta-info">
+            <span class="officer-name" id="userDisplayName">Lead Investigator</span>
+            <span class="officer-badge-no" id="userBadgeNumber">UP-STF-0842 • STF</span>
           </div>
         </div>
 
-        <!-- 6 Colored Folder Categories (Exact Match to Screenshot 1) -->
-        <h3 style="font-size: 15px; font-weight: 700; color: var(--navy-900); margin-bottom: 12px;">Case Categories</h3>
-        <div class="folder-grid-card">
-          <!-- 1. Yellow -->
-          <div class="folder-tile" onclick="showToast('Filtering FIR & Complaints (12 files)')">
-            <div class="folder-tile-icon" style="background: #fef3c7; color: #f59e0b;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-            </div>
-            <div class="folder-tile-meta">
-              <h4>FIR & Complaints</h4>
-              <p>12 files registered</p>
-            </div>
-          </div>
+        <a href="/mobile/index.html" target="_blank" class="btn-portal-secondary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          <span>Mobile App</span>
+        </a>
 
-          <!-- 2. Blue -->
-          <div class="folder-tile" onclick="showToast('Filtering Statements (8 files)')">
-            <div class="folder-tile-icon" style="background: #eff6ff; color: #3b82f6;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#3b82f6"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-            </div>
-            <div class="folder-tile-meta">
-              <h4>Statements</h4>
-              <p>8 witness statements</p>
-            </div>
-          </div>
-
-          <!-- 3. Green -->
-          <div class="folder-tile" onclick="showToast('Filtering Forensic Reports (6 files)')">
-            <div class="folder-tile-icon" style="background: #ecfdf5; color: #10b981;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#10b981"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-            </div>
-            <div class="folder-tile-meta">
-              <h4>Forensic Reports</h4>
-              <p>6 laboratory extractions</p>
-            </div>
-          </div>
-
-          <!-- 4. Purple -->
-          <div class="folder-tile" onclick="showToast('Filtering Photos & Videos (24 files)')">
-            <div class="folder-tile-icon" style="background: #f5f3ff; color: #8b5cf6;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#8b5cf6"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-            </div>
-            <div class="folder-tile-meta">
-              <h4>Photos & Videos</h4>
-              <p>24 media records</p>
-            </div>
-          </div>
-
-          <!-- 5. Orange -->
-          <div class="folder-tile" onclick="showToast('Filtering Court Documents (10 files)')">
-            <div class="folder-tile-icon" style="background: #fff7ed; color: #f97316;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#f97316"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-            </div>
-            <div class="folder-tile-meta">
-              <h4>Court Documents</h4>
-              <p>10 bail & order petitions</p>
-            </div>
-          </div>
-
-          <!-- 6. Grey -->
-          <div class="folder-tile" onclick="showToast('Filtering Other Documents (5 files)')">
-            <div class="folder-tile-icon" style="background: #f1f5f9; color: #64748b;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#64748b"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-            </div>
-            <div class="folder-tile-meta">
-              <h4>Other Documents</h4>
-              <p>5 administrative memos</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Recent Files Section (Exact match to Screenshot 1) -->
-        <h3 style="font-size: 15px; font-weight: 700; color: var(--navy-900); margin-bottom: 12px;">Recent Files & Verification Status</h3>
-        <div class="data-table-wrapper">
-          <table class="crimenet-table">
-            <thead>
-              <tr>
-                <th>Document Name</th>
-                <th>Size / Timestamp</th>
-                <th>Integrity Status</th>
-                <th>SHA-256 Hash</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="background: #fee2e2; color: #dc2626; font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px;">PDF</span>
-                    <strong>FIR_2025.pdf</strong>
-                  </div>
-                </td>
-                <td>2.4 MB • 12 May 2025, 10:30 AM</td>
-                <td><span class="status-badge badge-verified">✓ Verified</span></td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">8f4a...9b12</code></td>
-                <td><button class="btn-banner-action" style="padding: 4px 8px; font-size: 11px; color: var(--primary);" onclick="showToast('Downloading verified FIR_2025.pdf...')">Download</button></td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px;">JPG</span>
-                    <strong>CCTV_Snapshot_01.jpg</strong>
-                  </div>
-                </td>
-                <td>1.2 MB • 12 May 2025, 11:45 AM</td>
-                <td><span class="status-badge badge-ocr">OCR Done</span></td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">3e81...7c04</code></td>
-                <td><button class="btn-banner-action" style="padding: 4px 8px; font-size: 11px; color: var(--primary);" onclick="showToast('Viewing OCR extraction...')">View OCR</button></td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="background: #dbeafe; color: #2563eb; font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px;">DOC</span>
-                    <strong>Witness_Statement.docx</strong>
-                  </div>
-                </td>
-                <td>800 KB • 12 May 2025, 02:20 PM</td>
-                <td><span class="status-badge badge-indexed">Indexed</span></td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">1b99...a442</code></td>
-                <td><button class="btn-banner-action" style="padding: 4px 8px; font-size: 11px; color: var(--primary);" onclick="showToast('Searching index...')">Inspect</button></td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="background: #fee2e2; color: #dc2626; font-size: 10px; font-weight: 800; padding: 4px 6px; border-radius: 6px;">PDF</span>
-                    <strong>Forensic_Report.pdf</strong>
-                  </div>
-                </td>
-                <td>3.1 MB • 13 May 2025, 09:10 AM</td>
-                <td><span class="status-badge badge-pending">Pending Review</span></td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">77cc...5d01</code></td>
-                <td><button class="btn-banner-action" style="padding: 4px 8px; font-size: 11px; color: var(--primary);" onclick="showToast('Opening Forensic Review Module...')">Review</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <button type="button" class="btn-portal-secondary" onclick="handlePortalLogout()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sign Out</span>
+        </button>
       </div>
+    </header>
 
-    </div>
+    <!-- Workspace Tabs Navigation -->
+    <nav class="workspace-tabs-bar">
+      <button class="workspace-tab-btn active" onclick="switchTab('dossier', this)">
+        <svg class="tab-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>Case 1457 Dossier</span>
+      </button>
 
-    <!-- ========================================================
-         TAB 3: DOCUMENT OCR SCANNER (Pixel-Matched to Screenshot 2)
-         ======================================================== -->
-    <div class="tab-pane" id="pane-ocr">
+      <button class="workspace-tab-btn" onclick="switchTab('documents', this)">
+        <svg class="tab-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Document Versions (v1, v2)</span>
+      </button>
 
-      <div class="content-box-card">
-        <div class="content-box-header">
-          <div class="content-box-title">
-            <span>AI-Powered Document OCR & Auto-Extraction</span>
+      <button class="workspace-tab-btn" onclick="switchTab('evidence', this)">
+        <svg class="tab-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Evidence & Custody Chain</span>
+      </button>
+
+      <button class="workspace-tab-btn" onclick="switchTab('assets', this)">
+        <svg class="tab-icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <span>Police Assets Lifecycle</span>
+      </button>
+
+      <button class="workspace-tab-btn" onclick="switchTab('blockchain', this)">
+        <svg class="tab-icon" viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span>Blockchain Merkle Anchors</span>
+      </button>
+    </nav>
+
+    <!-- Main Workspace Body -->
+    <main class="workspace-content">
+
+      <!-- ========================================================
+           TAB 1: CASE 1457 DOSSIER
+           ======================================================== -->
+      <section class="tab-view-panel active" id="tab-dossier">
+        <div class="gov-card">
+          <div class="gov-card-header">
+            <div class="gov-card-title">
+              <svg class="gov-card-title-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <span>FIR-2024-00892: State of UP vs. Unknown Syndicates</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <span class="status-badge badge-danger">High Priority // Homicide</span>
+              <span class="status-badge badge-success">RLS Enforced</span>
+            </div>
           </div>
-          <button class="btn-banner-action btn-banner-primary" onclick="simulateDesktopScan()">
-            🔄 Upload Another / Scan New
-          </button>
-        </div>
-
-        <!-- 3-Step Stepper (Screenshot 2) -->
-        <div class="ocr-stepper-row">
-          <div class="stepper-step active" id="dStep1">
-            <div class="stepper-num">1</div>
-            <span>Scan / Upload</span>
-          </div>
-          <div style="flex: 0 0 40px; height: 1.5px; background: var(--slate-200);"></div>
-          <div class="stepper-step active" id="dStep2">
-            <div class="stepper-num">2</div>
-            <span>Extract Text</span>
-          </div>
-          <div style="flex: 0 0 40px; height: 1.5px; background: var(--slate-200);"></div>
-          <div class="stepper-step" id="dStep3">
-            <div class="stepper-num">3</div>
-            <span>Review & Save</span>
-          </div>
-        </div>
-
-        <!-- Scanner Viewfinder & Extracted Telemetry -->
-        <div class="ocr-desktop-card">
-          <!-- Viewfinder Column -->
-          <div class="ocr-scanner-box">
-            <div class="scan-bracket sb-tl"></div>
-            <div class="scan-bracket sb-tr"></div>
-            <div class="scan-bracket sb-bl"></div>
-            <div class="scan-bracket sb-br"></div>
-
-            <div class="fir-desktop-paper">
-              <div class="fir-laser"></div>
-              <div style="text-align: center; margin-bottom: 6px;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.5 2 7.5 3.5 7 5.5C5.5 6 4 7.5 4 9.5C4 11.5 5.5 13 7.5 13.5C7.5 16 9.5 18 12 18C14.5 18 16.5 16 16.5 13.5C18.5 13 20 11.5 20 9.5C20 7.5 18.5 6 17 5.5C16.5 3.5 14.5 2 12 2ZM12 4C13.7 4 15 5.3 15 7V8H9V7C9 5.3 10.3 4 12 4ZM6 9.5C6 8.7 6.7 8 7.5 8H8V11H7.5C6.7 11 6 10.3 6 9.5ZM18 9.5C18 10.3 17.3 11 16.5 11H16V8H16.5C17.3 8 18 8.7 18 9.5ZM12 19C7.5 19 4 20 4 21V22H20V21C20 20 16.5 19 12 19Z"/></svg>
-                <div style="font-weight: 800; font-size: 11px;">FIRST INFORMATION REPORT</div>
-                <div style="font-size: 9px; color: var(--slate-600);">(Under Section 154 Cr.P.C.)</div>
+          <div class="gov-card-body">
+            <div class="dossier-grid">
+              <div class="dossier-stat-item">
+                <div class="dossier-label">Statutory Charges</div>
+                <div class="dossier-value" style="font-size: 13px;">IPC 302, 120B / BNS 103</div>
               </div>
-
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 9.5px; margin-bottom: 6px;">
-                <div><strong>Police Station:</strong> Civil Lines</div>
-                <div><strong>FIR No.:</strong> 0123/2024</div>
-                <div><strong>Date:</strong> 12/05/2024</div>
-                <div><strong>Time:</strong> 14:30 hrs</div>
+              <div class="dossier-stat-item">
+                <div class="dossier-label">Assigned Lead Agency</div>
+                <div class="dossier-value" style="font-size: 13px;">Special Task Force (STF)</div>
               </div>
+              <div class="dossier-stat-item">
+                <div class="dossier-label">Custodial Evidentiary Pieces</div>
+                <div class="dossier-value">4 Items Sealed</div>
+              </div>
+              <div class="dossier-stat-item">
+                <div class="dossier-label">Blockchain Anchor Status</div>
+                <div class="dossier-value" style="color: var(--success);">Merkle Root Confirmed</div>
+              </div>
+            </div>
 
-              <div style="height: 1px; background: var(--slate-200); margin: 6px 0;"></div>
-
-              <div style="font-weight: 700;">Complainant Details:</div>
-              <div style="font-size: 9px;">Name: Rajesh Kumar • Father: Suresh Kumar</div>
-              <div style="font-size: 9px;">Address: 221, MG Road, New Delhi - 110001</div>
-
-              <div style="height: 1px; background: var(--slate-200); margin: 6px 0;"></div>
-
-              <div style="font-weight: 700;">Brief Facts of the Case:</div>
-              <p style="font-size: 8.5px; color: var(--slate-700);">
-                On 12/05/2024 at around 13:15 hrs, an unauthorized crypto extortion incident took place. The victim's account credentials were compromised via phishing.
+            <!-- Victim / Witness RLS Security Panel -->
+            <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 16px; margin-top: 16px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                <span style="font-size: 13px; font-weight: 700; color: var(--navy-900);">PostgreSQL Row-Level Security (RLS) & AES-256-GCM Verification</span>
+                <span class="status-badge badge-navy">Tenant Isolation Active</span>
+              </div>
+              <p style="font-size: 12px; color: var(--slate-600); margin-bottom: 12px;">
+                Witness and victim PII entries in the <code>case_person</code> table are protected by database policy and encrypted with AES-256-GCM. Unassigned officers query returns zero rows directly from PostgreSQL.
               </p>
-            </div>
-          </div>
-
-          <!-- Checklist & Extraction Status Column -->
-          <div>
-            <!-- Progress Row -->
-            <div style="margin-bottom: 18px;">
-              <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 6px;">
-                <span id="dProgressLabel">Extracting text...</span>
-                <span id="dProgressNum" style="color: var(--primary);">72%</span>
-              </div>
-              <div style="height: 8px; background: var(--slate-200); border-radius: 99px; overflow: hidden;">
-                <div id="dProgressFill" style="height: 100%; width: 72%; background: var(--primary); border-radius: 99px; transition: width 0.3s;"></div>
-              </div>
-            </div>
-
-            <!-- Extraction Checklist -->
-            <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--slate-50); border-radius: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <span style="width: 22px; height: 22px; border-radius: 50%; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px;">✓</span>
-                  <span style="font-weight: 600; font-size: 13.5px;">Detecting document type</span>
-                </div>
-                <span style="font-weight: 600; font-size: 13px; color: var(--slate-600);">FIR (Police Report)</span>
-              </div>
-
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--slate-50); border-radius: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <span style="width: 22px; height: 22px; border-radius: 50%; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px;">✓</span>
-                  <span style="font-weight: 600; font-size: 13.5px;">Extracting text (OCR)</span>
-                </div>
-                <span style="font-weight: 600; font-size: 13px; color: var(--slate-600);">Completed</span>
-              </div>
-
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--slate-50); border-radius: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <span id="dCheck3" style="width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid var(--primary); border-top-color: transparent; animation: spin 1s linear infinite;"></span>
-                  <span style="font-weight: 600; font-size: 13.5px;">Identifying key fields</span>
-                </div>
-                <span id="dCheck3Text" style="font-weight: 700; font-size: 13px; color: var(--primary);">In progress...</span>
-              </div>
-
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--slate-50); border-radius: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <span id="dCheck4" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--slate-300);"></span>
-                  <span style="font-weight: 600; font-size: 13.5px;">Processing & indexing</span>
-                </div>
-                <span id="dCheck4Text" style="font-weight: 600; font-size: 13px; color: var(--slate-400);">Pending</span>
-              </div>
-            </div>
-
-            <!-- AI-Powered OCR Banner -->
-            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-md); padding: 14px; display: flex; gap: 12px;">
-              <div style="color: var(--primary); font-size: 20px;">✨</div>
-              <div>
-                <strong style="color: #1e3a8a; font-size: 13.5px;">AI-Powered OCR</strong>
-                <p style="font-size: 12px; color: #2563eb; margin-top: 2px;">
-                  Supports scanned police reports, handwritten witness testimonies, and multilingual regional documents (English, Hindi, regional scripts).
-                </p>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn-action-primary" onclick="showToast('RLS Check Passed: Caller authorized on Case 1457. Encrypted PII decrypted in memory.')">
+                  Verify RLS Policy Clearance
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-    </div>
-
-    <!-- ========================================================
-         TAB 4: EVIDENCE LOCKER & CUSTODY
-         ======================================================== -->
-    <div class="tab-pane" id="pane-evidence">
-      <div class="content-box-card">
-        <div class="content-box-header">
-          <div class="content-box-title">
-            <span>Physical & Digital Evidence Vault</span>
+      <!-- ========================================================
+           TAB 2: DOCUMENT VERSIONS (v1, v2)
+           ======================================================== -->
+      <section class="tab-view-panel" id="tab-documents">
+        <div class="gov-card">
+          <div class="gov-card-header">
+            <div class="gov-card-title">
+              <svg class="gov-card-title-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>
+              <span>Case Document Repository & Version Control</span>
+            </div>
+            <button class="btn-action-primary" onclick="simulateUploadNewVersion()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Upload New Version (v2)</span>
+            </button>
           </div>
-          <button class="btn-banner-action btn-banner-primary" onclick="showToast('Transfer Custody modal launched with pessimistic lock (SELECT ... FOR UPDATE)')">
-            + Transfer Custody
-          </button>
-        </div>
-
-        <div class="data-table-wrapper">
-          <table class="crimenet-table">
-            <thead>
-              <tr>
-                <th>Item Code</th>
-                <th>Description</th>
-                <th>Current Custodian</th>
-                <th>Storage Location</th>
-                <th>Cryptographic Initial Hash</th>
-                <th>Lock State</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>E-001</strong></td>
-                <td>Apple iPhone 15 Pro (Seized from suspect residence)</td>
-                <td>Officer R. Sharma</td>
-                <td>Malkhana Secure Locker 4B</td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">8a4b...9e10</code></td>
-                <td><span class="status-badge badge-verified">Locked (Pessimistic)</span></td>
-              </tr>
-              <tr>
-                <td><strong>E-002</strong></td>
-                <td>SanDisk Extreme 2TB SSD (Bit-stream copy)</td>
-                <td>FSL Cyber Forensics Lab</td>
-                <td>Lab Evidence Vault #2</td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">3f81...7c02</code></td>
-                <td><span class="status-badge badge-ocr">In Analysis</span></td>
-              </tr>
-              <tr>
-                <td><strong>E-003</strong></td>
-                <td>Handwritten Crypto Recovery Ledger</td>
-                <td>Court Registry Clerk</td>
-                <td>Judicial Vault</td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">a99b...11c4</code></td>
-                <td><span class="status-badge badge-indexed">Court Exhibit</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========================================================
-         TAB 5: BLOCKCHAIN MERKLE PROVENANCE
-         ======================================================== -->
-    <div class="tab-pane" id="pane-blockchain">
-      <div class="content-box-card">
-        <div class="content-box-header">
-          <div class="content-box-title">
-            <span>Immutable Blockchain Provenance Ledger</span>
+          <div class="gov-card-body">
+            <div class="gov-table-wrapper">
+              <table class="gov-table" id="docTable">
+                <thead>
+                  <tr>
+                    <th>Doc Identifier</th>
+                    <th>Document Title</th>
+                    <th>Version</th>
+                    <th>Classification</th>
+                    <th>Content Hash (SHA-256)</th>
+                    <th>Immutability</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>DOC-2024-001</strong></td>
+                    <td>Original First Information Report (FIR)</td>
+                    <td><span class="status-badge badge-primary">v1 (Final)</span></td>
+                    <td><span class="status-badge badge-warning">Confidential</span></td>
+                    <td><span class="hash-code">e3b0c44298fc1c14...</span></td>
+                    <td><span class="status-badge badge-success">Sealed // Append-Only</span></td>
+                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="showToast('Pre-signed URL verified (300s expiry)')">Download</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>DOC-2024-002</strong></td>
+                    <td>Ballistics Forensic Analysis Report</td>
+                    <td><span class="status-badge badge-primary">v1</span></td>
+                    <td><span class="status-badge badge-danger">Restricted</span></td>
+                    <td><span class="hash-code">7f83b1657ff1fc53...</span></td>
+                    <td><span class="status-badge badge-success">Sealed // Append-Only</span></td>
+                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="showToast('Pre-signed URL verified (300s expiry)')">Download</button></td>
+                  </tr>
+                  <tr id="docV2Row" style="display: none; background: #ecfdf5;">
+                    <td><strong>DOC-2024-002</strong></td>
+                    <td>Ballistics Forensic Analysis Report (Supplementary)</td>
+                    <td><span class="status-badge badge-success">v2 (Latest)</span></td>
+                    <td><span class="status-badge badge-danger">Restricted</span></td>
+                    <td><span class="hash-code">9a41b226e1088c44...</span></td>
+                    <td><span class="status-badge badge-success">Committed & Anchored</span></td>
+                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;" onclick="showToast('Pre-signed URL generated for v2')">Download</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <button class="btn-banner-action btn-banner-primary" onclick="showToast('Audit chain verification passed: 0 tampering events detected across all blocks')">
-            Verify Entire Chain Hash
-          </button>
         </div>
+      </section>
 
-        <div class="data-table-wrapper">
-          <table class="crimenet-table">
-            <thead>
-              <tr>
-                <th>Batch / Block #</th>
-                <th>Merkle Root Hash</th>
-                <th>Leaf Count</th>
-                <th>On-Chain Status</th>
-                <th>Smart Contract Tx</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Batch #42</strong></td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">0x8f3c7e91a4b82d...44e0</code></td>
-                <td>16 events</td>
-                <td><span class="status-badge badge-verified">Confirmed On-Chain</span></td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">0x5FbD...aa3</code></td>
-              </tr>
-              <tr>
-                <td><strong>Batch #41</strong></td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">0x2d1a8e44b99c01...77a9</code></td>
-                <td>32 events</td>
-                <td><span class="status-badge badge-verified">Confirmed On-Chain</span></td>
-                <td><code style="font-family: var(--font-mono); font-size: 11px;">0x19aB...ff8</code></td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- ========================================================
+           TAB 3: EVIDENCE & CUSTODY CHAIN
+           ======================================================== -->
+      <section class="tab-view-panel" id="tab-evidence">
+        <div class="gov-card">
+          <div class="gov-card-header">
+            <div class="gov-card-title">
+              <svg class="gov-card-title-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/></svg>
+              <span>Sealed Physical & Digital Evidence Registry</span>
+            </div>
+            <button class="btn-action-primary" onclick="simulateCustodyTransfer()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+              <span>Transfer Custody (Pessimistic Lock)</span>
+            </button>
+          </div>
+          <div class="gov-card-body">
+            <div class="gov-table-wrapper">
+              <table class="gov-table">
+                <thead>
+                  <tr>
+                    <th>Evidence Code</th>
+                    <th>Artifact Description</th>
+                    <th>Current Custodian</th>
+                    <th>Secure Vault Location</th>
+                    <th>Chain Hash Link</th>
+                    <th>Digital Signature</th>
+                  </tr>
+                </thead>
+                <tbody id="evidenceTableBody">
+                  <tr>
+                    <td><strong>EVD-2024-001</strong></td>
+                    <td>9mm Spent Cartridge Case (Crime Scene)</td>
+                    <td><span id="custodianCol1">Lead Investigator (UP-STF-0842)</span></td>
+                    <td>STF Locker B-14</td>
+                    <td><span class="hash-code">c48a...92d1</span></td>
+                    <td><span class="status-badge badge-success">Verified RSA-4096</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>EVD-2024-002</strong></td>
+                    <td>Hikvision CCTV NVR Hard Drive (Bitstream Image)</td>
+                    <td>Cyber Forensics Lab In-Charge</td>
+                    <td>FSL Hardware Vault #2</td>
+                    <td><span class="hash-code">d110...448a</span></td>
+                    <td><span class="status-badge badge-success">Verified RSA-4096</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
 
-  </main>
+      <!-- ========================================================
+           TAB 4: POLICE ASSETS LIFECYCLE
+           ======================================================== -->
+      <section class="tab-view-panel" id="tab-assets">
+        <div class="gov-card">
+          <div class="gov-card-header">
+            <div class="gov-card-title">
+              <svg class="gov-card-title-icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/></svg>
+              <span>Police Department Asset Lifecycle & Armory Tracker</span>
+            </div>
+            <button class="btn-action-primary" onclick="simulateAssetStatusUpdate()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Log Armory Inspection</span>
+            </button>
+          </div>
+          <div class="gov-card-body">
+            <div class="gov-table-wrapper">
+              <table class="gov-table">
+                <thead>
+                  <tr>
+                    <th>Asset Tag</th>
+                    <th>Equipment Name</th>
+                    <th>Category</th>
+                    <th>Assigned Officer</th>
+                    <th>Operational Status</th>
+                    <th>Audit Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>AST-WPN-1044</strong></td>
+                    <td>Glock 17 9x19mm Service Pistol</td>
+                    <td><span class="status-badge badge-danger">Weapon</span></td>
+                    <td>Lead Investigator (UP-STF-0842)</td>
+                    <td><span class="status-badge badge-primary">Issued // In Field</span></td>
+                    <td><span class="status-badge badge-success">Armory Verified</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>AST-CAM-8891</strong></td>
+                    <td>Axon Body 3 High-Definition Camera</td>
+                    <td><span class="status-badge badge-primary">Bodycam</span></td>
+                    <td>Patrol Unit Alpha-2</td>
+                    <td><span class="status-badge badge-primary">Issued // Active</span></td>
+                    <td><span class="status-badge badge-success">Audit Logged</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>AST-VEH-0402</strong></td>
+                    <td>Mahindra Scorpio Tactical Response Vehicle</td>
+                    <td><span class="status-badge badge-warning">Vehicle</span></td>
+                    <td>STF Flying Squad</td>
+                    <td><span class="status-badge badge-success" id="vehStatusBadge">Operational</span></td>
+                    <td><span class="status-badge badge-success">GPS Synced</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>AST-KIT-0119</strong></td>
+                    <td>Forensic Crime Scene Evidence Kit</td>
+                    <td><span class="status-badge badge-navy">Forensic Kit</span></td>
+                    <td>FSL Mobile Unit</td>
+                    <td><span class="status-badge badge-primary">Issued</span></td>
+                    <td><span class="status-badge badge-success">Sealed</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <!-- Toast Notification -->
+      <!-- ========================================================
+           TAB 5: BLOCKCHAIN MERKLE PROVENANCE
+           ======================================================== -->
+      <section class="tab-view-panel" id="tab-blockchain">
+        <div class="gov-card">
+          <div class="gov-card-header">
+            <div class="gov-card-title">
+              <svg class="gov-card-title-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              <span>On-Chain Merkle Provenance Anchors (Ethereum Sepolia / Polygon)</span>
+            </div>
+            <button class="btn-action-primary" onclick="showToast('Cryptographic Verification: All local audit hashes match on-chain smart contract!')">
+              Verify On-Chain Integrity
+            </button>
+          </div>
+          <div class="gov-card-body">
+            <div class="gov-table-wrapper">
+              <table class="gov-table">
+                <thead>
+                  <tr>
+                    <th>Batch ID</th>
+                    <th>Merkle Root Hash</th>
+                    <th>Leaf Count</th>
+                    <th>Contract Address</th>
+                    <th>On-Chain Confirmation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Batch #048</strong></td>
+                    <td><span class="hash-code">0x7c49e29a98fc...33b1</span></td>
+                    <td>64 Events</td>
+                    <td><span class="hash-code">0x8a92...DocumentProvenanceAnchor</span></td>
+                    <td><span class="status-badge badge-success">Confirmed (Block #4,892,104)</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Batch #047</strong></td>
+                    <td><span class="hash-code">0x12a9c402bb77...910a</span></td>
+                    <td>32 Events</td>
+                    <td><span class="hash-code">0x8a92...DocumentProvenanceAnchor</span></td>
+                    <td><span class="status-badge badge-success">Confirmed (Block #4,891,890)</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </section>
+
+  <!-- Notification Toast -->
   <div class="toast-pill" id="portalToast">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-    <span id="portalToastText">Operation successful</span>
+    <span id="portalToastText">Operation verified and audit logged</span>
   </div>
 
   <script>
-    function switchPortalTab(tabId, tabEl) {
-      document.querySelectorAll('.portal-tab-link').forEach(link => link.classList.remove('active'));
-      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    // State management
+    let currentOfficer = {
+      name: "Lead Investigating Officer",
+      badge: "UP-STF-0842",
+      dept: "Special Task Force"
+    };
 
-      if (tabEl) tabEl.classList.add('active');
-      const targetPane = document.getElementById('pane-' + tabId);
-      if (targetPane) targetPane.classList.add('active');
+    function handlePortalLogin(e) {
+      if (e) e.preventDefault();
+      const badge = document.getElementById('officerBadge').value || "UP-STF-0842";
+      const dept = document.getElementById('officerDept').value || "Special Task Force";
+
+      currentOfficer.badge = badge;
+      currentOfficer.dept = dept;
+      currentOfficer.name = "Lead Investigating Officer";
+
+      executeLoginSuccess();
     }
 
-    function simulateDesktopScan() {
-      showToast('Simulating OCR extraction on First Information Report...');
-      let progress = 0;
-      const fill = document.getElementById('dProgressFill');
-      const num = document.getElementById('dProgressNum');
-      const lbl = document.getElementById('dProgressLabel');
+    function quickLogin(name, badge, dept) {
+      currentOfficer.name = name;
+      currentOfficer.badge = badge;
+      currentOfficer.dept = dept;
 
-      const interval = setInterval(() => {
-        progress += 10;
-        if (progress > 100) {
-          clearInterval(interval);
-          fill.style.width = '100%';
-          num.textContent = '100%';
-          lbl.textContent = 'Text Extraction Complete!';
-          document.getElementById('dCheck3').style.animation = 'none';
-          document.getElementById('dCheck3').style.background = '#10b981';
-          document.getElementById('dCheck3').style.border = 'none';
-          document.getElementById('dCheck3').innerHTML = '<span style="color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center;">✓</span>';
-          document.getElementById('dCheck3Text').textContent = 'Completed (12 fields)';
-          document.getElementById('dCheck3Text').style.color = '#10b981';
+      executeLoginSuccess();
+    }
 
-          document.getElementById('dCheck4').style.background = '#10b981';
-          document.getElementById('dCheck4').style.border = 'none';
-          document.getElementById('dCheck4').innerHTML = '<span style="color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center;">✓</span>';
-          document.getElementById('dCheck4Text').textContent = 'Indexed to Case 1457';
-          document.getElementById('dCheck4Text').style.color = '#10b981';
-          showToast('FIR Document OCR extracted & indexed into OpenSearch!');
-        } else {
-          fill.style.width = progress + '%';
-          num.textContent = progress + '%';
+    function executeLoginSuccess() {
+      document.getElementById('userDisplayName').textContent = currentOfficer.name;
+      document.getElementById('userBadgeNumber').textContent = currentOfficer.badge + " • " + currentOfficer.dept;
+
+      const initials = currentOfficer.name.split(' ').map(n => n[0]).slice(0, 2).join('');
+      document.getElementById('userAvatarBox').textContent = initials || "IO";
+
+      document.getElementById('authGatewayView').style.display = 'none';
+      document.getElementById('mainWorkspaceView').style.display = 'flex';
+
+      showToast("Security Clearance Verified: " + currentOfficer.name + " (" + currentOfficer.badge + ")");
+    }
+
+    function handlePortalLogout() {
+      document.getElementById('mainWorkspaceView').style.display = 'none';
+      document.getElementById('authGatewayView').style.display = 'flex';
+      showToast("Signed out. Session invalidated.");
+    }
+
+    function switchTab(tabId, btnEl) {
+      document.querySelectorAll('.workspace-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-view-panel').forEach(panel => panel.classList.remove('active'));
+
+      if (btnEl) btnEl.classList.add('active');
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+    }
+
+    function simulateUploadNewVersion() {
+      showToast("Calculating SHA-256 hash & uploading Ballistics Report v2...");
+      setTimeout(() => {
+        const v2Row = document.getElementById('docV2Row');
+        if (v2Row) v2Row.style.display = 'table-row';
+        showToast("Ballistics Report v2 committed & linked to Merkle audit chain!");
+      }, 1000);
+    }
+
+    function simulateCustodyTransfer() {
+      showToast("Acquiring row-level pessimistic lock (SELECT ... FOR UPDATE)...");
+      setTimeout(() => {
+        const col = document.getElementById('custodianCol1');
+        if (col) {
+          col.textContent = "FSL Cyber Examiner (FSL-4410)";
         }
-      }, 150);
+        showToast("Pessimistic lock released: Custody transferred to FSL Cyber Examiner!");
+      }, 1200);
+    }
+
+    function simulateAssetStatusUpdate() {
+      const badge = document.getElementById('vehStatusBadge');
+      if (badge) {
+        badge.textContent = "Inspected & Cleared";
+        badge.className = "status-badge badge-primary";
+      }
+      showToast("Vehicle inspection logged with SHA-256 audit event!");
     }
 
     let toastTimer;
@@ -1278,7 +1225,7 @@
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => {
         toast.classList.remove('show');
-      }, 2600);
+      }, 3000);
     }
   </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>CrimeNet Mobile — Officer R. Sharma Edition</title>
+  <title>CrimeNet Mobile — Law Enforcement & Judiciary Edition</title>
   <meta name="description" content="Secure Document & Evidence Fabric for Law Enforcement and Judiciary for Law Enforcement Agencies">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,8 +163,15 @@
       flex-direction: column;
       overflow: hidden;
       border: 11px solid #1e293b;
+    }
+
+    /* Android Google Pixel 9 Frame */
+    .iphone-frame.pixel-frame {
+      width: 412px;
+      height: 892px;
+      border-radius: 40px;
+      border: 11px solid #1e293b;
       outline: 2px solid rgba(255,255,255,0.15);
-      transition: all 0.3s ease;
     }
 
     /* Fullscreen Mode Override */
@@ -1432,7 +1439,7 @@
     }
 
     /* =========================================================
-       SCREEN 4: HOME / DASHBOARD (Officer R. Sharma)
+       SCREEN 4: HOME / DASHBOARD (Lead Investigating Officer)
        ========================================================= */
     .home-screen {
       flex: 1;
@@ -1700,7 +1707,7 @@
     }
 
     /* =========================================================
-       SCREEN 6: Officer R. Sharma PROFILE & SETTINGS
+       SCREEN 6: Lead Investigating Officer PROFILE & SETTINGS
        ========================================================= */
     .profile-screen {
       flex: 1;
@@ -1935,15 +1942,19 @@
   <!-- Top Demo Control Bar for Testing & Instant Screen Jump -->
   <div class="top-demo-bar">
     <div class="demo-bar-brand">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-      <span>CrimeNet Mobile Preview</span>
-      <span class="officer-badge">Officer R. Sharma</span>
+      <img src="assets/Crimenet_logo_v2.png" alt="Logo" style="height: 20px; width: auto; object-fit: contain;">
+      <span>CrimeNet Mobile</span>
+      <span class="officer-badge">Lead Investigating Officer</span>
     </div>
     <div class="demo-bar-actions">
-      <button class="demo-btn" onclick="toggleViewportMode()" id="btnViewportToggle" title="Toggle between realistic iPhone frame and responsive full-screen">
-        📱 Switch View (Frame / Full)
+      <button class="demo-btn active" onclick="setDeviceMode('ios')" id="btnDeviceIos">
+         iOS (iPhone 16)
+      </button>
+      <button class="demo-btn" onclick="setDeviceMode('android')" id="btnDeviceAndroid">
+        🤖 Android (Pixel 9)
+      </button>
+      <button class="demo-btn" onclick="setDeviceMode('fullscreen')" id="btnDeviceFull">
+        📱 Native Fullscreen
       </button>
       <button class="demo-btn active" onclick="switchScreen('auth')" id="tabBtn-auth">
         1. Sign In (Screenshot 3)
@@ -2020,16 +2031,9 @@
               <button class="auth-help-btn" onclick="showToast('Help & Emergency Support: Police Cyber Cell')">Help</button>
             </div>
 
-            <!-- Shield Logo (Exact SVG rendering of Screenshot 3 Emblem) -->
+            <!-- Official CrimeNet Shield Logo -->
             <div class="auth-brand-section">
-              <svg class="shield-emblem" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer Gold Shield Border -->
-                <path d="M50 4L12 22V58C12 88 50 114 50 114C50 114 88 88 88 58V22L50 4Z" fill="#0d2346" stroke="#c68a2c" stroke-width="6" stroke-linejoin="round"/>
-                <!-- Inner Gold Ring -->
-                <path d="M50 16L24 30V58C24 80 50 100 50 100C50 100 76 80 76 58V30L50 16Z" fill="#091b38" stroke="#f59e0b" stroke-width="3" stroke-linejoin="round"/>
-                <!-- Verified Checkmark in Gold -->
-                <path d="M38 56L46 65L64 45" stroke="#f59e0b" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+              <img src="assets/Crimenet_logo_v2.png" alt="CrimeNet Logo" style="height: 72px; width: auto; object-fit: contain; margin-bottom: 12px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));">
 
               <div class="brand-title">
                 <span class="part-crime">Crime</span><span class="part-net">Net</span>
@@ -2651,7 +2655,7 @@
 
 
         <!-- =======================================================
-             SCREEN 4: HOME / DASHBOARD (Officer R. Sharma)
+             SCREEN 4: HOME / DASHBOARD (Lead Investigating Officer)
              ======================================================= -->
         <section class="screen-page" id="page-home">
           <div class="home-screen">
@@ -2661,7 +2665,7 @@
               <div class="officer-welcome">
                 <div class="officer-avatar-box">S</div>
                 <div class="officer-welcome-text">
-                  <h2>Officer R. Sharma</h2>
+                  <h2>Lead Investigating Officer</h2>
                   <p>Lead Investigator • UP STF Cyber</p>
                 </div>
               </div>
@@ -2769,7 +2773,7 @@
                 <div class="case-card-title">Phishing & Fraud Investigation</div>
                 <div class="case-card-desc">Digital evidence collected from MG Road cyber hub. Lead suspect crypto wallets identified.</div>
                 <div class="case-card-footer">
-                  <span>Lead: Officer R. Sharma</span>
+                  <span>Lead: Lead Investigating Officer</span>
                   <span>Updated 2 hrs ago</span>
                 </div>
               </div>
@@ -2783,7 +2787,7 @@
                 <div class="case-card-title">State Power Grid Ransomware Attempt</div>
                 <div class="case-card-desc">C2 server domain seized and forensic memory dumps authenticated with court certificate.</div>
                 <div class="case-card-footer">
-                  <span>Lead: Officer R. Sharma</span>
+                  <span>Lead: Lead Investigating Officer</span>
                   <span>Updated Yesterday</span>
                 </div>
               </div>
@@ -2846,7 +2850,7 @@
 
 
         <!-- =======================================================
-             SCREEN 6: Officer R. Sharma PROFILE & SETTINGS
+             SCREEN 6: Lead Investigating Officer PROFILE & SETTINGS
              ======================================================= -->
         <section class="screen-page" id="page-profile">
           <div class="profile-screen">
@@ -2861,7 +2865,7 @@
               <div class="id-card-body">
                 <div class="id-photo">👮</div>
                 <div class="id-officer-info">
-                  <h3>R. Sharma</h3>
+                  <h3>Lead Investigator</h3>
                   <p>Senior Lead Investigator</p>
                   <p>Cyber Crime Police Station / STF</p>
                   <div class="id-badge-code">BADGE: UP-STF-0842</div>
@@ -3084,16 +3088,37 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Toggle between iPhone 16 Pro device frame and responsive mobile fullscreen mode
-    function toggleViewportMode() {
-      const isFullscreen = document.body.classList.toggle('fullscreen-mode');
-      const btn = document.getElementById('btnViewportToggle');
-      if (isFullscreen) {
-        btn.textContent = '🖥️ Switch to Device Frame';
-      } else {
-        btn.textContent = '📱 Switch View (Frame / Full)';
+    // Switch between iOS, Android, and Fullscreen device modes
+    function setDeviceMode(mode) {
+      const frame = document.querySelector('.iphone-frame');
+      const btnIos = document.getElementById('btnDeviceIos');
+      const btnAndroid = document.getElementById('btnDeviceAndroid');
+      const btnFull = document.getElementById('btnDeviceFull');
+      const island = document.querySelector('.dynamic-island');
+      const homeIndicator = document.querySelector('.home-indicator-bar');
+
+      document.body.classList.remove('fullscreen-mode');
+      if (frame) frame.classList.remove('pixel-frame');
+      if (btnIos) btnIos.classList.remove('active');
+      if (btnAndroid) btnAndroid.classList.remove('active');
+      if (btnFull) btnFull.classList.remove('active');
+
+      if (mode === 'ios') {
+        if (btnIos) btnIos.classList.add('active');
+        if (island) island.style.display = 'block';
+        if (homeIndicator) homeIndicator.style.width = '135px';
+        showToast('Switched to Apple iOS (iPhone 16 Pro: 390x844)');
+      } else if (mode === 'android') {
+        if (frame) frame.classList.add('pixel-frame');
+        if (btnAndroid) btnAndroid.classList.add('active');
+        if (island) island.style.display = 'none';
+        if (homeIndicator) homeIndicator.style.width = '72px';
+        showToast('Switched to Google Android (Pixel 9 Pro: 412x892)');
+      } else if (mode === 'fullscreen') {
+        document.body.classList.add('fullscreen-mode');
+        if (btnFull) btnFull.classList.add('active');
+        showToast('Switched to Native Fullscreen Mobile View');
       }
-      showToast(isFullscreen ? 'Switched to Fullscreen View' : 'Switched to iPhone 16 Pro Frame');
     }
 
     // Dynamic Island Pulse Animation
@@ -3154,12 +3179,12 @@
 
     // Biometric Login handler
     function handleBiometricLogin() {
-      showToast('Authenticating Officer R. Sharma via Biometrics...');
+      showToast('Authenticating Lead Investigating Officer via Biometrics...');
       const btn = document.querySelector('.biometric-btn');
       if (btn) btn.style.transform = 'scale(1.2)';
       setTimeout(() => {
         if (btn) btn.style.transform = 'scale(1)';
-        showToast('Biometrics Verified: Officer R. Sharma (UP-STF-0842)');
+        showToast('Biometrics Verified: Lead Investigating Officer (UP-STF-0842)');
         setTimeout(() => {
           switchScreen('case');
         }, 500);
@@ -3339,7 +3364,7 @@
             <div style="position: relative;">
               <div style="position: absolute; left: -24px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: #0055d4;"></div>
               <div style="font-size: 13px; font-weight: 700; color: #0f172a;">12 May 2025 • 14:00 PM</div>
-              <div style="font-size: 12px; color: #475569;">Officer R. Sharma assigned as Lead Investigating Officer. Seizure memo created.</div>
+              <div style="font-size: 12px; color: #475569;">Lead Investigating Officer assigned as Lead Investigating Officer. Seizure memo created.</div>
             </div>
 
             <div style="position: relative;">
