@@ -18,6 +18,7 @@ import java.util.UUID;
 public class EvidenceController {
 
     private final EvidenceService evidenceService;
+    private final BsaCertificateService bsaCertificateService;
 
     @PostMapping("/evidence")
     public ResponseEntity<ApiResponse<Evidence>> register(
@@ -69,5 +70,14 @@ public class EvidenceController {
             @PathVariable UUID id,
             @PathVariable UUID artifactId) {
         return ResponseEntity.ok(ApiResponse.ok(evidenceService.getArtifactDownloadUrl(id, artifactId)));
+    }
+
+    @GetMapping(value = "/evidence/{id}/bsa-certificate", produces = org.springframework.http.MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getBsaCertificate(@PathVariable UUID id) {
+        byte[] pdfBytes = bsaCertificateService.generateCertificatePdf(id);
+        return ResponseEntity.ok()
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"BSA-65B-Certificate-" + id + ".pdf\"")
+                .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
     }
 }

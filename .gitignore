@@ -40,3 +40,5 @@ build/
 ### Mac OS ###
 .DS_Store
 ppt/
+node_modules/
+**/node_modules/
