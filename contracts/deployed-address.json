@@ -1,0 +1,9 @@
+{
+  "network": "Polygon Amoy Testnet (Chain ID 80002)",
+  "rpc": "https://polygon-amoy-bor-rpc.publicnode.com",
+  "contractAddress": "0x6B76859551315E47041064F48E201b0c2E5832a7",
+  "deployer": "0x99Af56a6aE8d2d471AF8F0740b19558fad630CFF",
+  "txHash": "0xc866d0aafdf28f38c0b2ce4abd86354bc06780ec6caf46fb7b6824a463c5d903",
+  "deployedAt": "2026-09-10T20:23:41.563Z",
+  "explorerUrl": "https://amoy.polygonscan.com/address/0x6B76859551315E47041064F48E201b0c2E5832a7"
+}

@@ -83,8 +83,8 @@ crimenet:
 blockchain:
   enabled: ${BLOCKCHAIN_ENABLED:true}
   rpc-url: ${BLOCKCHAIN_RPC_URL:https://polygon-amoy-bor-rpc.publicnode.com}
-  private-key: ${BLOCKCHAIN_PRIVATE_KEY:0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
-  contract-address: ${BLOCKCHAIN_CONTRACT_ADDRESS:0x5FbDB2315678afecb367f032d93F642f64180aa3}
+  private-key: ${BLOCKCHAIN_PRIVATE_KEY:0xb33ccddddcc977a89620e89e06d5f578f0f8e018d296cd361488d5bb9a19309d}
+  contract-address: ${BLOCKCHAIN_CONTRACT_ADDRESS:0x6B76859551315E47041064F48E201b0c2E5832a7}
 
 # ── OpenSearch ──
 opensearch:

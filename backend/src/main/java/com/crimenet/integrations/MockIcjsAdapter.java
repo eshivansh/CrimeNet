@@ -27,7 +27,7 @@ public class MockIcjsAdapter implements ExternalSystemAdapter {
                 "caseType", "CRIMINAL",
                 "court", "District Court, Lucknow",
                 "nextHearing", "2026-10-15",
-                "judge", "Hon. Justice A.K. Sharma",
+                "judge", "Hon. Principal Sessions Judge",
                 "mock", true
         );
     }

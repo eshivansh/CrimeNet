@@ -27,7 +27,7 @@ public class MockCctnsAdapter implements ExternalSystemAdapter {
                 "policeStation", "Cyber Crime Cell, Lucknow",
                 "sections", "IT Act Section 66C, 66D; IPC Section 420",
                 "status", "UNDER_INVESTIGATION",
-                "io", "SI Rajesh Kumar",
+                "io", "Sub-Inspector (Investigating Officer)",
                 "registeredAt", "2026-03-15T10:30:00Z",
                 "mock", true
         );
