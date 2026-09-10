@@ -1,5 +1,5 @@
 -- ============================================================
--- NyayaVault Seed Data
+-- CrimeNet Seed Data
 -- V2: Default organization, departments, roles, permissions
 -- ============================================================
 

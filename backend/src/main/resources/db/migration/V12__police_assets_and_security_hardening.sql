@@ -71,5 +71,5 @@ INSERT INTO permission (role_id, resource, action) VALUES
 ON CONFLICT (role_id, resource, action) DO NOTHING;
 
 -- ── 4. Grants for runtime app role ──
-GRANT SELECT, INSERT, UPDATE, DELETE ON police_asset TO nyayavault_app, crimenet_app;
-GRANT SELECT, INSERT, UPDATE, DELETE ON document_signature TO nyayavault_app, crimenet_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON police_asset TO crimenet_app, crimenet_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON document_signature TO crimenet_app, crimenet_app;

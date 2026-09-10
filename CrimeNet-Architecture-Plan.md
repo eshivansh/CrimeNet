@@ -1,4 +1,4 @@
-# NyayaVault — Backend Architecture & Implementation Plan
+# CrimeNet — Backend Architecture & Implementation Plan
 ### A Zero-Trust Document & Evidence Provenance Fabric for the Criminal Justice Lifecycle
 
 ---
@@ -284,11 +284,11 @@ Because MinIO isn't transactional with Postgres, use the **outbox pattern**: the
 ## 5. MinIO / Object Storage Architecture
 
 ```
-nyayavault-quarantine/     -- unscanned uploads, short TTL, auto-purge on fail
-nyayavault-documents/      -- sealed document versions, org/case partitioned
-nyayavault-evidence/       -- evidence artifacts, stricter access policy
-nyayavault-court-packages/ -- generated export bundles, time-limited
-nyayavault-archive/        -- cold tier, WORM/object-lock enabled
+crimenet-quarantine/     -- unscanned uploads, short TTL, auto-purge on fail
+crimenet-documents/      -- sealed document versions, org/case partitioned
+crimenet-evidence/       -- evidence artifacts, stricter access policy
+crimenet-court-packages/ -- generated export bundles, time-limited
+crimenet-archive/        -- cold tier, WORM/object-lock enabled
 ```
 
 Key naming: `{org_id}/{case_id}/{document_id}/{version_no}/{content_hash}.enc`
@@ -296,7 +296,7 @@ Key naming: `{org_id}/{case_id}/{document_id}/{version_no}/{content_hash}.enc`
 Rules:
 - Every object server-side encrypted (SSE) with a per-org KMS key.
 - **No bucket or object is ever public.** All client access goes through the API, which issues short-lived **pre-signed URLs** (60–300s) after authorization passes — never raw MinIO endpoints or credentials to the frontend.
-- `nyayavault-archive` and `nyayavault-evidence` use MinIO **Object Lock (WORM)** so legal-hold items literally cannot be deleted even by an admin, independent of the app-level `legal_hold` table — this is the correction to the naive "5 buckets" starting design: without Object Lock, "immutability" is only a promise, not a guarantee.
+- `crimenet-archive` and `crimenet-evidence` use MinIO **Object Lock (WORM)** so legal-hold items literally cannot be deleted even by an admin, independent of the app-level `legal_hold` table — this is the correction to the naive "5 buckets" starting design: without Object Lock, "immutability" is only a promise, not a guarantee.
 - Quarantine bucket has a lifecycle rule to auto-expire failed/abandoned uploads after 24h.
 
 ---
@@ -472,7 +472,7 @@ Every `AIJob` → `AIResult` records: user, query, model + version, timestamp, r
 
 ```mermaid
 flowchart LR
-    N[NyayaVault Core] <--> G[Integration Gateway: auth, validation, normalization, audit]
+    N[CrimeNet Core] <--> G[Integration Gateway: auth, validation, normalization, audit]
     G <--> I[ICJS Adapter]
     G <--> S[eSakshya Adapter]
     G <--> C[CCTNS Adapter]
@@ -507,7 +507,7 @@ All mutating endpoints: idempotency-key support, explicit audit event, explicit 
 ## 18. Spring Boot Project Structure (feature-oriented)
 
 ```
-backend/src/main/java/com/nyayavault/
+backend/src/main/java/com/crimenet/
 ├── identity/          (users, keycloak sync)
 ├── organization/
 ├── policy/            (RBAC+ABAC engine)

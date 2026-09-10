@@ -4,7 +4,7 @@
 
 -- ── 1. Make the V3 row-level security policy actually apply ──
 -- PostgreSQL exempts a table's OWNER from row-level security unless the table is
--- explicitly FORCEd. Flyway creates case_person as the `nyayavault` role, and the
+-- explicitly FORCEd. Flyway creates case_person as the `crimenet` role, and the
 -- application connects with that same role, so it owned the table and the V3
 -- policy was silently bypassed on every query. FORCE closes that gap.
 ALTER TABLE case_person FORCE ROW LEVEL SECURITY;

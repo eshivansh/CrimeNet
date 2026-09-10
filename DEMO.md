@@ -42,7 +42,7 @@ To do it by hand instead:
 docker compose up -d
 cd backend
 .\mvnw.cmd clean package -DskipTests
-java -jar target\nyayavault-backend-0.1.0-SNAPSHOT.jar --spring.profiles.active=dev
+java -jar target\crimenet-backend-0.1.0-SNAPSHOT.jar --spring.profiles.active=dev
 ```
 
 ### Endpoints
@@ -53,7 +53,7 @@ java -jar target\nyayavault-backend-0.1.0-SNAPSHOT.jar --spring.profiles.active=
 | Swagger UI | <http://localhost:8080/swagger-ui.html> | — |
 | Keycloak admin | <http://localhost:8180> | `admin` / `admin` |
 | MinIO console | <http://localhost:9001> | `minioadmin` / `minioadmin123` |
-| RabbitMQ | <http://localhost:15672> | `nyayavault` / `nyayavault_dev` |
+| RabbitMQ | <http://localhost:15672> | `crimenet` / `crimenet_dev` |
 
 ### Demo accounts
 
@@ -119,7 +119,7 @@ Two details worth having ready if a technical judge presses:
 
 - PostgreSQL exempts a table's **owner** from its own policies. So the table is set to
   `FORCE ROW LEVEL SECURITY` **and** the application connects as a restricted role
-  (`nyayavault_app`) holding neither SUPERUSER nor BYPASSRLS. Connecting as the superuser
+  (`crimenet_app`) holding neither SUPERUSER nor BYPASSRLS. Connecting as the superuser
   owner silently disables every policy — a genuine trap, and one this project hit.
 - The acting officer is bound per transaction via `set_config('app.current_user_id', ...)`.
   If that binding is ever missing, the policy matches nothing — it fails closed.
@@ -222,7 +222,7 @@ batch root, and verification fails.
 Show it rather than describing it — that is step 3. `case_person` (the table holding PII)
 carries a policy restricting rows to officers with a live, unrevoked assignment. The
 application binds `app.current_user_id` per transaction; the table is `FORCE ROW LEVEL
-SECURITY`; and the runtime connects as `nyayavault_app`, which holds neither SUPERUSER nor
+SECURITY`; and the runtime connects as `crimenet_app`, which holds neither SUPERUSER nor
 BYPASSRLS. All three are needed — a superuser bypasses policies entirely, which is why
 connecting as the database owner silently disables the whole feature.
 
@@ -247,7 +247,7 @@ audit — is genuine. Only the external dependency is stubbed.
 | Symptom | Fix |
 |---|---|
 | Console loads but sign-in fails | Keycloak is slow to start; wait ~30s and retry |
-| Every sign-in shows "Failed to fetch" | Keycloak lost its database. `docker compose up -d --force-recreate keycloak`. This was caused by `KC_DB: dev-mem` and is fixed (see below) — if it returns, check `docker logs nyayavault-keycloak` for "this database is empty" |
+| Every sign-in shows "Failed to fetch" | Keycloak lost its database. `docker compose up -d --force-recreate keycloak`. This was caused by `KC_DB: dev-mem` and is fixed (see below) — if it returns, check `docker logs crimenet-keycloak` for "this database is empty" |
 | Duplicate users in the transfer list | An old set of internal users from a previous realm import. `docker compose down -v` then `.\start-demo.ps1` for a clean base |
 | Every API call returns 401 | token expired — sign in again |
 | Search returns nothing | indexing is async; wait a few seconds and re-run |

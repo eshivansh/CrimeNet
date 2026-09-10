@@ -1,5 +1,5 @@
 -- ============================================================
--- NyayaVault Foundation Schema
+-- CrimeNet Foundation Schema
 -- V1: Core tables, indexes, append-only triggers
 -- ============================================================
 

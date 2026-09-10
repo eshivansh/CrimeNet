@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.UUID;
 
 /**
- * Maps NyayaVault resources to their external system identifiers.
+ * Maps CrimeNet resources to their external system identifiers.
  * Metadata-first federation — store external IDs locally, fetch content only when needed (§16).
  */
 @Entity

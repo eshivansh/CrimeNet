@@ -148,6 +148,13 @@
             <version>3.5.3</version>
         </dependency>
 
+        <!-- Apache PDFBox (Document Text Extraction & OCR Parsing) -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.30</version>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
