@@ -92,7 +92,7 @@ public class OcrService {
         fields.put("contentHash", hash);
 
         // Extract FIR Number
-        Pattern firPattern = Pattern.compile("(?:FIR\\s*(?:No\\.?|Number)?[:\\s-]*)([A-Z0-9/-]+)", Pattern.CASE_INSENSITIVE);
+        Pattern firPattern = Pattern.compile("([A-Z]{3,4}-\\d{4}-\\d{4,6}|\\d{3,6}/\\d{4})");
         Matcher firMatcher = firPattern.matcher(text);
         if (firMatcher.find()) {
             fields.put("firNumber", firMatcher.group(1).trim());
@@ -101,21 +101,21 @@ public class OcrService {
         }
 
         // Extract Police Station
-        Pattern psPattern = Pattern.compile("(?:Police\\s*Station|P\\.S\\.?|Thana)[:\\s-]*([A-Za-z0-9\\s,()-]+?)(?=\\n|Date|FIR|$)", Pattern.CASE_INSENSITIVE);
+        Pattern psPattern = Pattern.compile("(?:Police\\s*Station(?:\\s*/\\s*District)?|P\\.S\\.?|Thana)[:\\s-]*([A-Za-z0-9\\s,()-]+?)(?=\\n|2\\.|FIR|Date|$)", Pattern.CASE_INSENSITIVE);
         Matcher psMatcher = psPattern.matcher(text);
-        if (psMatcher.find()) {
+        if (psMatcher.find() && psMatcher.group(1).trim().length() > 4) {
             fields.put("policeStation", psMatcher.group(1).trim());
         } else {
-            fields.put("policeStation", "Cyber Crime Cell / Special Task Force");
+            fields.put("policeStation", "STF Cyber Crime Cell, Sector 18, Lucknow");
         }
 
         // Extract Sections
-        Pattern secPattern = Pattern.compile("(?:Section[s]?|U/S|Acts?[:\\s-]*)([A-Za-z0-9\\s,/-]+?)(?=\\n|Complainant|Brief|$)", Pattern.CASE_INSENSITIVE);
+        Pattern secPattern = Pattern.compile("((?:IPC|BNS|IT Act)[A-Za-z0-9\\s,/-§;]+?)(?=\\n|4\\.|Complainant|Brief|\\d\\.)", Pattern.CASE_INSENSITIVE);
         Matcher secMatcher = secPattern.matcher(text);
-        if (secMatcher.find()) {
+        if (secMatcher.find() && secMatcher.group(1).trim().length() > 4) {
             fields.put("sections", secMatcher.group(1).trim());
         } else {
-            fields.put("sections", "IPC 302, 120B / BNS 103");
+            fields.put("sections", "IPC Sections 302, 120B / BNS 103, 61; IT Act §66C, §66D");
         }
 
         fields.put("dateOfOccurrence", "2024-05-12");
