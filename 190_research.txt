@@ -21,7 +21,7 @@ What I think you should build
 
 I would call the system something along the lines of:
 
-NyayaVault
+CrimeNet
 Unified Secure Legal & Investigation Document Fabric
 
 The word fabric matters.
@@ -2194,7 +2194,7 @@ If I were on your team, I would not submit:
 
 I'd submit something closer to:
 
-NyayaVault — A Zero-Trust Document & Evidence Provenance Fabric for the Criminal Justice Lifecycle
+CrimeNet — A Zero-Trust Document & Evidence Provenance Fabric for the Criminal Justice Lifecycle
 Core idea
 Existing systems
       │
@@ -2221,9 +2221,9 @@ Content I would add/change
 
 1. Make “integration with the existing justice ecosystem” much more prominent.
 
-Don't present CCTNS/eSakshya/ICJS/eOffice as technologies you built. Present them as the ecosystem NyayaVault interoperates with. ICJS already integrates major justice pillars toward “One Data Once Entry,” and eSakshya already provides evidence capture, secure storage and APIs.
+Don't present CCTNS/eSakshya/ICJS/eOffice as technologies you built. Present them as the ecosystem CrimeNet interoperates with. ICJS already integrates major justice pillars toward “One Data Once Entry,” and eSakshya already provides evidence capture, secure storage and APIs.
 
-That actually makes NyayaVault more credible.
+That actually makes CrimeNet more credible.
 
 2. Add a provenance model.
 
@@ -2402,4 +2402,4 @@ CYBERSECURITY STANDARDS
         +
 RECORDS MANAGEMENT
         ↓
-NYAYAVAULT DESIGN
+CRIMENET DESIGN

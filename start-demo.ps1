@@ -1,5 +1,5 @@
 <#
-    NyayaVault — one-command demo startup.
+    CrimeNet — one-command demo startup.
 
     Brings up the seven infrastructure containers, waits for them to report healthy,
     then builds and runs the backend. The demo console is served by the backend itself
@@ -123,7 +123,7 @@ if ($InfraOnly) {
 
 # ── Stop any CrimeNet instance still running ──
 $running = @(Get-CimInstance Win32_Process -Filter "Name='java.exe'" -ErrorAction SilentlyContinue |
-             Where-Object { $_.CommandLine -like '*crimenet-backend*.jar*' -or $_.CommandLine -like '*nyayavault-backend*.jar*' })
+             Where-Object { $_.CommandLine -like '*crimenet-backend*.jar*' -or $_.CommandLine -like '*crimenet-backend*.jar*' })
 if ($running.Count -gt 0) {
     Info 'Stopping the previous CrimeNet instance'
     foreach ($p in $running) {

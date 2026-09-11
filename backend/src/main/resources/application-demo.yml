@@ -1,0 +1,95 @@
+# ==============================================================================
+# CrimeNet - Zero-Docker Standalone Demo Profile (application-demo.yml)
+# Enables instantaneous demonstration without running Docker Desktop.
+# Uses in-memory H2 in PostgreSQL mode and local WORM filesystem storage.
+# ==============================================================================
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: crimenet-demo
+
+  datasource:
+    url: jdbc:h2:mem:crimenet;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false
+
+  rabbitmq:
+    username: ${RABBITMQ_USERNAME:crimenet}
+    password: ${RABBITMQ_PASSWORD:crimenet_dev}
+
+  # In standalone demo mode, OAuth2 / Keycloak check is permitted locally
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/api/v1/auth/demo-certs
+
+  # Disable external message brokers in zero-docker demo mode
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+
+# ── Blockchain Anchoring (Polygon Amoy Live Testnet) ──
+blockchain:
+  enabled: true
+  rpc-url: https://polygon-amoy-bor-rpc.publicnode.com
+  private-key: 0xb33ccddddcc977a89620e89e06d5f578f0f8e018d296cd361488d5bb9a19309d
+  contract-address: 0x6B76859551315E47041064F48E201b0c2E5832a7
+
+# Credentials the base configuration no longer defaults. MinIO and RabbitMQ are not
+# running in this profile; these only satisfy property resolution at startup.
+minio:
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin123}
+
+# ── Local WORM Storage Fallback ──
+storage:
+  mode: filesystem
+  local-path: ./demo_documents
+
+crimenet:
+  # Values the base configuration deliberately leaves undefined. Demo-only; the base
+  # configuration refuses to start without real ones under any other profile.
+  security:
+    encryption-key: ${CRIMENET_ENCRYPTION_KEY:demo-only-local-pii-key-not-for-real-case-data}
+    encryption-strict: false
+    step-up:
+      dev-bypass: true      # no Keycloak in this profile, so no step-up claim can exist
+    malware-scan:
+      mode: heuristic
+  documents:
+    max-size-bytes: 52428800
+  break-glass:
+    expiry-check-ms: 60000
+  provenance:
+    anchor-interval-ms: 300000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

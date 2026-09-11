@@ -67,6 +67,24 @@ public class PiiEncryptionKeyProvider {
                 describeSource(configuredKey), strictMode);
     }
 
+    /**
+     * Initialises the key outside a Spring context, for command-line tools such as
+     * {@code DemoDocumentVerificationSuite} that exercise the converter directly.
+     *
+     * <p>Refuses to run once a key is set, so it cannot be used to swap the key out from
+     * under a running application.
+     */
+    public static synchronized void initialiseStandalone(String keyMaterial, boolean strict) {
+        if (key != null) {
+            throw new IllegalStateException(
+                    "The PII encryption key is already initialised and cannot be replaced.");
+        }
+        PiiEncryptionKeyProvider provider = new PiiEncryptionKeyProvider();
+        provider.configuredKey = keyMaterial;
+        provider.configuredStrictMode = strict;
+        provider.initialise();
+    }
+
     static SecretKey key() {
         SecretKey resolved = key;
         if (resolved == null) {

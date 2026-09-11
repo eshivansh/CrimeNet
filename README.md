@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/Crimenet_logo_v2.png" alt="CrimeNet Logo" width="300">
+  <img src="assets/Crimenet_logo_card.png" alt="CrimeNet Logo" width="420">
 </p>
 
 <h1 align="center">CrimeNet: Zero-Trust Law Enforcement & Judicial Document Provenance Fabric</h1>
