@@ -12,11 +12,11 @@
              bypasses — and @PreAuthorize is this application's primary authorization
              mechanism), and Boot's own CVE-2025-22235.
 
-             3.4.13 is the newest release on the 3.4 line. CVE-2026-40973 (predictable temp
+             4.1.1 is the newest release on the 3.4 line. CVE-2026-40973 (predictable temp
              directory) has no fix published for 3.4.x; it needs persistent sessions to be
              exploitable, which this stateless API does not use. Moving to the 3.5 line is
              the follow-up. -->
-        <version>3.4.13</version>
+        <version>4.1.1</version>
         <relativePath/>
     </parent>
 
