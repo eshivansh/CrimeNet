@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS document_signature (
     public_key_cert TEXT NOT NULL,
     document_hash VARCHAR(64) NOT NULL,
     signed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     verified BOOLEAN NOT NULL DEFAULT true,
     revoked BOOLEAN NOT NULL DEFAULT false
 );

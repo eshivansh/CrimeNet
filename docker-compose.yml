@@ -91,6 +91,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: crimenet
       RABBITMQ_DEFAULT_PASS: crimenet_dev
+      RABBITMQ_ERLANG_COOKIE: crimenet_cookie_secret_123
     ports:
       - "5672:5672"
       - "15672:15672"
