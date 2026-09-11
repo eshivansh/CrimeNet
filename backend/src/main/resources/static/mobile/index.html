@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>CrimeNet Mobile — Law Enforcement & Judiciary Edition</title>
-  <meta name="description" content="Secure Document & Evidence Fabric for Law Enforcement and Judiciary">
-  
-  <!-- PWA Manifest & iOS Standalone Configuration -->
+  <title>CrimeNet Mobile — Law Enforcement &amp; Judiciary Edition</title>
+  <meta name="description" content="Secure Document &amp; Evidence Management for Law Enforcement and Judiciary">
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,447 +13,151 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="apple-touch-icon" href="../assets/Crimenet_logo_v2.png">
   <link rel="icon" type="image/png" href="../assets/Crimenet_logo_v2.png">
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  
   <style>
     :root {
-      --primary: #0055d4;
-      --primary-dark: #003ea1;
-      --primary-light: #e8f1ff;
-      --primary-pill: #e0edff;
-      --navy-950: #060b14;
-      --navy-900: #0b1528;
-      --navy-800: #10203d;
-      --navy-700: #1b3562;
-      --slate-50: #f8fafc;
-      --slate-100: #f1f5f9;
-      --slate-200: #e2e8f0;
-      --slate-300: #cbd5e1;
-      --slate-400: #94a3b8;
-      --slate-500: #64748b;
-      --slate-600: #475569;
-      --slate-700: #334155;
-      --slate-800: #1e293b;
-      --slate-900: #0f172a;
-      --success: #16a34a;
-      --success-bg: #ecfdf5;
-      --success-border: #a7f3d0;
-      --danger: #dc2626;
-      --danger-bg: #fef2f2;
-      --danger-border: #fecaca;
-      --purple: #7c3aed;
-      --purple-bg: #f5f3ff;
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-full: 9999px;
+      --primary: #1a56db; --primary-dark: #1e40af; --primary-light: #eff6ff; --primary-pill: #dbeafe;
+      --navy-900: #0f172a; --navy-800: #1e293b;
+      --slate-50: #f8fafc; --slate-100: #f1f5f9; --slate-200: #e2e8f0; --slate-300: #cbd5e1;
+      --slate-400: #94a3b8; --slate-500: #64748b; --slate-600: #475569; --slate-700: #334155;
+      --green-600: #16a34a; --green-50: #f0fdf4; --green-200: #bbf7d0;
+      --red-600: #dc2626; --red-50: #fef2f2; --red-200: #fecaca;
+      --amber-600: #d97706; --amber-50: #fffbeb;
+      --indigo-600: #4f46e5; --indigo-50: #eef2ff;
+      --radius-sm: 8px; --radius-md: 12px;
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
-      --shadow-lg: 0 10px 30px rgba(0, 85, 212, 0.15);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: #f1f5f9;
-      color: var(--slate-900);
+      width: 100%; height: 100%; background: #f1f5f9; color: var(--navy-900);
       font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased; display: flex; justify-content: center; overflow-x: hidden;
     }
-
-    /* Edge-to-Edge Mobile App Shell */
     #appShell {
-      width: 100%;
-      max-width: 480px;
-      min-height: 100vh;
-      min-height: 100dvh;
-      height: 100dvh;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 35px rgba(0, 0, 0, 0.06);
+      width: 100%; max-width: 480px; height: 100dvh; background: #fff;
+      display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 35px rgba(0,0,0,0.06);
     }
-
     @media (max-width: 600px) {
-      html, body {
-        background: #ffffff !important;
-      }
-      #appShell {
-        max-width: 100% !important;
-        width: 100% !important;
-        box-shadow: none !important;
-      }
+      html, body { background: #fff !important; }
+      #appShell { max-width: 100% !important; box-shadow: none !important; }
     }
-
-    /* Top Institutional App Bar */
     .app-top-header {
-      background: #ffffff;
-      border-bottom: 1px solid var(--slate-200);
+      background: #fff; border-bottom: 1px solid var(--slate-200);
       padding: max(10px, env(safe-area-inset-top, 10px)) 16px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 50;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between; z-index: 50; flex-shrink: 0;
     }
-
-    .app-brand-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .app-brand-logo {
-      height: 32px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .app-brand-titles {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .app-title-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .app-title-text {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--navy-900);
-      letter-spacing: -0.2px;
-    }
-
-    .app-sub-text {
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    .app-header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .app-brand-left { display: flex; align-items: center; gap: 10px; }
+    .app-brand-logo { height: 32px; width: auto; }
+    .app-title-text { font-size: 15px; font-weight: 800; color: var(--navy-900); }
+    .app-sub-text { font-size: 10.5px; font-weight: 600; color: var(--slate-500); }
+    .app-header-actions { display: flex; align-items: center; gap: 8px; }
     .header-icon-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--slate-100);
-      border: 1px solid var(--slate-200);
-      color: var(--slate-700);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      transition: background 0.15s;
+      width: 36px; height: 36px; border-radius: 50%; background: var(--slate-100); border: 1px solid var(--slate-200);
+      color: var(--slate-700); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s;
     }
-
-    .header-icon-btn:active {
-      background: var(--slate-200);
-    }
-
-    .badge-dot {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 7px;
-      height: 7px;
-      background: var(--danger);
-      border-radius: 50%;
-      border: 1px solid #fff;
-    }
-
-    /* Screen Scroll Viewport */
-    .app-viewport {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      background: #f8fafc;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Individual Screens */
-    .screen-view {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      min-height: 100%;
-      padding: 16px 16px 80px;
-    }
-
-    .screen-view.active-screen {
-      display: flex;
-      animation: fadeIn 0.18s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Bottom Navigation Bar */
+    .header-icon-btn:active { background: var(--slate-200); }
+    .badge-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; background: var(--red-600); border-radius: 50%; border: 1px solid #fff; }
+    .app-viewport { flex: 1; overflow-y: auto; overflow-x: hidden; background: #f8fafc; -webkit-overflow-scrolling: touch; }
+    .screen-view { display: none; flex-direction: column; width: 100%; min-height: 100%; padding: 16px 16px 80px; }
+    .screen-view.active-screen { display: flex; animation: fadeIn 0.18s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     .app-bottom-nav {
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid var(--slate-200);
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 6px 4px max(14px, env(safe-area-inset-bottom, 14px));
-      z-index: 100;
-      flex-shrink: 0;
+      background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: space-around;
+      padding: 6px 4px max(14px, env(safe-area-inset-bottom, 14px)); z-index: 100; flex-shrink: 0;
     }
-
     .bottom-nav-tab {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      color: var(--slate-500);
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 12px;
-      transition: all 0.2s;
-      flex: 1;
-      text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--slate-500);
+      font-size: 10px; font-weight: 600; cursor: pointer; padding: 4px 6px; border-radius: 12px;
+      transition: all 0.2s; flex: 1; text-align: center;
     }
-
-    .bottom-nav-tab svg {
-      width: 22px;
-      height: 22px;
-      stroke: currentColor;
-      stroke-width: 1.9;
-      fill: none;
-      transition: transform 0.2s;
-    }
-
-    .bottom-nav-tab.active {
-      color: var(--primary);
-      font-weight: 700;
-    }
-
+    .bottom-nav-tab svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.9; fill: none; }
+    .bottom-nav-tab.active { color: var(--primary); font-weight: 700; }
     .bottom-nav-tab.active .tab-icon-box {
-      background: var(--primary-pill);
-      color: var(--primary);
-      padding: 3px 14px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: var(--primary-pill); padding: 3px 14px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
     }
-
-    /* Common Card Components */
-    .mobile-card {
-      background: #ffffff;
-      border: 1px solid var(--slate-200);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 14px;
-      overflow: hidden;
+    .m-card { background: #fff; border: 1px solid var(--slate-200); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: 14px; overflow: hidden; }
+    .m-card-head { padding: 14px 16px; border-bottom: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .m-card-title { font-size: 14px; font-weight: 700; color: var(--navy-900); display: flex; align-items: center; gap: 7px; }
+    .m-card-body { padding: 14px 16px; }
+    .badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
+    .badge-blue { background: var(--primary-light); color: var(--primary); border: 1px solid #bfdbfe; }
+    .badge-green { background: var(--green-50); color: var(--green-600); border: 1px solid var(--green-200); }
+    .badge-red { background: var(--red-50); color: var(--red-600); border: 1px solid var(--red-200); }
+    .badge-dark { background: #0f172a; color: #f8fafc; }
+    .badge-amber { background: var(--amber-50); color: var(--amber-600); border: 1px solid #fde68a; }
+    .btn-primary {
+      background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); padding: 10px 16px;
+      font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px; transition: background 0.15s; width: 100%;
     }
-
-    .mobile-card-header {
-      padding: 14px 16px;
-      background: #ffffff;
-      border-bottom: 1px solid var(--slate-200);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+    .btn-primary:active { background: var(--primary-dark); }
+    .btn-outline {
+      background: #fff; color: var(--slate-700); border: 1px solid var(--slate-300); border-radius: var(--radius-sm);
+      padding: 8px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     }
-
-    .mobile-card-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--navy-900);
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .mobile-card-body {
-      padding: 14px 16px;
-    }
-
-    /* Badges */
-    .m-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      letter-spacing: 0.3px;
-    }
-    .m-badge-primary { background: var(--primary-light); color: var(--primary); border: 1px solid #bfdbfe; }
-    .m-badge-success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
-    .m-badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
-    .m-badge-navy { background: #0f172a; color: #f8fafc; }
-
-    /* Action Buttons */
-    .btn-m-primary {
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: background 0.15s;
-      width: 100%;
-    }
-    .btn-m-primary:active { background: var(--primary-dark); }
-
-    .btn-m-secondary {
-      background: #ffffff;
-      color: var(--slate-700);
-      border: 1px solid var(--slate-300);
-      border-radius: var(--radius-sm);
-      padding: 8px 14px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    /* Toast notification */
     .mobile-toast {
-      position: fixed;
-      top: max(16px, env(safe-area-inset-top, 16px));
-      left: 50%;
-      transform: translateX(-50%) translateY(-30px);
-      background: var(--navy-900);
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      font-size: 12.5px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.25s ease-out;
-      width: 90%;
-      max-width: 420px;
-      border-left: 4px solid var(--success);
+      position: fixed; top: max(16px, env(safe-area-inset-top, 16px)); left: 50%;
+      transform: translateX(-50%) translateY(-30px); background: var(--navy-900); color: #fff;
+      padding: 10px 18px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+      z-index: 1000; opacity: 0; pointer-events: none; transition: all 0.25s ease-out;
+      width: 90%; max-width: 420px; border-left: 4px solid var(--green-600);
     }
-    .mobile-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-      pointer-events: auto;
-    }
-
-    /* Fullscreen Slide-Up Modal / Action Sheet */
-    .sheet-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: 200;
-      align-items: flex-end;
-      justify-content: center;
-    }
-
-    .sheet-backdrop.active {
-      display: flex;
-    }
-
+    .mobile-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+    .sheet-backdrop { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.7); backdrop-filter: blur(4px); z-index: 200; align-items: flex-end; justify-content: center; }
+    .sheet-backdrop.active { display: flex; }
     .sheet-card {
-      background: #ffffff;
-      width: 100%;
-      max-width: 500px;
-      max-height: 85vh;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      overflow-y: auto;
-      padding: 20px 18px max(24px, env(safe-area-inset-bottom, 24px));
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      animation: slideUp 0.25s ease-out;
+      background: #fff; width: 100%; max-width: 500px; max-height: 85vh;
+      border-top-left-radius: 20px; border-top-right-radius: 20px; overflow-y: auto;
+      padding: 20px 18px max(24px, env(safe-area-inset-bottom, 24px)); box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+      display: flex; flex-direction: column; gap: 14px; animation: slideUp 0.25s ease-out;
     }
-
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    .sheet-drag-handle {
-      width: 40px;
-      height: 4px;
-      background: var(--slate-300);
-      border-radius: 99px;
-      align-self: center;
-      margin-bottom: 6px;
-    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .sheet-drag-handle { width: 40px; height: 4px; background: var(--slate-300); border-radius: 99px; align-self: center; margin-bottom: 6px; }
+    .section-label { font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+    .stat-label { font-size: 10px; font-weight: 600; color: var(--slate-500); }
+    .stat-value { font-size: 12.5px; font-weight: 700; color: var(--navy-900); margin-top: 2px; }
+    .timeline-item { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--slate-700); padding: 4px 0; }
+    .timeline-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .timeline-dot.done { background: var(--green-600); }
+    .timeline-dot.pending { background: var(--primary); }
+    .doc-item { border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 12px; }
+    .doc-item:last-child { border-bottom: none; margin-bottom: 0; }
+    .doc-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+    .doc-item-name { font-weight: 700; font-size: 13px; color: var(--navy-900); }
+    .doc-item-meta { font-size: 11px; color: var(--slate-500); margin-bottom: 6px; }
+    .doc-item-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .doc-item-actions .btn-outline { font-size: 11px; padding: 4px 8px; }
+    .shared-indicator { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; color: var(--slate-500); margin-left: 4px; }
+    .shared-dots { display: inline-flex; }
+    .shared-dots span { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 700; color: #fff; margin-left: -4px; }
+    .audit-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--slate-100); font-size: 12px; }
+    .audit-item:last-child { border-bottom: none; }
+    .audit-time { font-size: 10px; color: var(--slate-400); white-space: nowrap; min-width: 50px; font-weight: 600; }
+    .audit-text { color: var(--slate-700); }
   </style>
 </head>
 <body>
-
   <div id="appShell">
-    
-    <!-- Top App Bar (Visible on all tabs when logged in) -->
     <header class="app-top-header" id="appHeader" style="display:none;">
       <div class="app-brand-left">
         <img src="../assets/Crimenet_logo_v2.png" alt="CrimeNet" class="app-brand-logo">
-        <div class="app-brand-titles">
-          <div class="app-title-row">
-            <span class="app-title-text">CrimeNet</span>
-            <span class="m-badge m-badge-primary">STF</span>
-          </div>
-          <div class="app-sub-text">National Evidence Fabric</div>
+        <div>
+          <div class="app-title-text">CrimeNet</div>
+          <div class="app-sub-text">Document Management System</div>
         </div>
       </div>
       <div class="app-header-actions">
-        <button class="header-icon-btn" onclick="openQuickAiSheet()" title="Ask Case AI">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.2"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z"/></svg>
+        <button class="header-icon-btn" onclick="switchMobileTab('ai')" title="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="header-icon-btn" style="position:relative;" title="Notifications">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="badge-dot"></span>
         </button>
         <button class="header-icon-btn" onclick="handleLogout()" title="Sign Out">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -463,762 +165,478 @@
       </div>
     </header>
 
-    <!-- Scrollable Viewport -->
     <main class="app-viewport">
-
-      <!-- ========================================================
-           SCREEN 1: AUTHENTICATION / OFFICER LOGIN
-           ======================================================== -->
+      <!-- LOGIN -->
       <section class="screen-view active-screen" id="view-auth">
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: 24px 10px;">
-          <img src="../assets/Crimenet_logo_v2.png" alt="CrimeNet Emblem" style="height: 68px; width: auto; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(0,85,212,0.15));">
-          
-          <div style="display:inline-flex; align-items:center; gap:6px; background:var(--primary-pill); color:var(--primary); font-size:11px; font-weight:800; padding:4px 12px; border-radius:99px; text-transform:uppercase; margin-bottom:12px;">
-            <span>🛡️ Official Law Enforcement Portal</span>
-          </div>
-          
-          <h2 style="font-size:22px; font-weight:800; color:var(--navy-900); margin-bottom:4px;">Officer Authentication</h2>
-          <p style="font-size:13px; color:var(--slate-500); max-width:280px; margin-bottom:24px;">Enter your service credentials to access case evidence vault</p>
-
-          <!-- 1-Tap Quick Evaluation Logins -->
-          <div style="width:100%; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:var(--radius-md); padding:16px; margin-bottom:20px; text-align:left;">
-            <div style="font-size:12px; font-weight:800; color:var(--slate-700); text-transform:uppercase; margin-bottom:10px;">
-              ⚡ One-Tap Evaluation Access:
-            </div>
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:24px 10px;">
+          <img src="../assets/Crimenet_logo_v2.png" alt="CrimeNet" style="height:64px; width:auto; margin-bottom:16px;">
+          <h2 style="font-size:20px; font-weight:800; color:var(--navy-900); margin-bottom:4px;">CrimeNet</h2>
+          <p style="font-size:13px; color:var(--slate-500); max-width:280px; margin-bottom:24px;">Secure Document Management for Law Enforcement &amp; Judiciary</p>
+          <div style="width:100%; text-align:left; margin-bottom:20px;">
+            <div class="section-label" style="margin-bottom:10px;">Select your role to continue</div>
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-m-primary" style="background:#0055d4; font-size:12.5px; padding:10px 12px; justify-content:flex-start;"
-                onclick="quickMobileLogin('Lead Investigating Officer', 'UP-STF-0842', 'Special Task Force')">
-                <span style="font-size:16px;">👮‍♂️</span>
-                <div style="text-align:left;">
-                  <div style="font-weight:700;">Lead Investigator</div>
-                  <div style="font-size:10.5px; opacity:0.85;">Badge: UP-STF-0842 (STF Cyber Cell)</div>
+              <button class="btn-primary" style="background:#1a56db; padding:12px 14px; justify-content:flex-start;" onclick="quickMobileLogin('Inspector Rajesh Kumar','UP-STF-0842','Special Task Force')">
+                <div style="width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
+                <div style="text-align:left;"><div style="font-weight:700; font-size:13px;">Investigating Officer</div><div style="font-size:10.5px; opacity:0.8;">Badge: UP-STF-0842 — Cyber Cell</div></div>
               </button>
-
-              <button class="btn-m-primary" style="background:#0284c7; font-size:12.5px; padding:10px 12px; justify-content:flex-start;"
-                onclick="quickMobileLogin('Forensic Scientist', 'FSL-4410', 'State Cyber Forensic Lab')">
-                <span style="font-size:16px;">🔬</span>
-                <div style="text-align:left;">
-                  <div style="font-weight:700;">Chief Cyber Examiner</div>
-                  <div style="font-size:10.5px; opacity:0.85;">Badge: FSL-4410 (Forensic Science Lab)</div>
+              <button class="btn-primary" style="background:#0e7490; padding:12px 14px; justify-content:flex-start;" onclick="quickMobileLogin('Dr. Priya Sharma','FSL-4410','State Forensic Lab')">
+                <div style="width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
                 </div>
+                <div style="text-align:left;"><div style="font-weight:700; font-size:13px;">Forensic Examiner</div><div style="font-size:10.5px; opacity:0.8;">Badge: FSL-4410 — Forensic Science Lab</div></div>
               </button>
-
-              <button class="btn-m-primary" style="background:#4338ca; font-size:12.5px; padding:10px 12px; justify-content:flex-start;"
-                onclick="quickMobileLogin('Judicial Auditor', 'JD-082', 'High Court Registry')">
-                <span style="font-size:16px;">⚖️</span>
-                <div style="text-align:left;">
-                  <div style="font-weight:700;">Judicial Magistrate / Auditor</div>
-                  <div style="font-size:10.5px; opacity:0.85;">Badge: JD-082 (Sessions Court Registry)</div>
+              <button class="btn-primary" style="background:#6d28d9; padding:12px 14px; justify-content:flex-start;" onclick="quickMobileLogin('Hon. Justice S. Mehta','JD-082','Sessions Court')">
+                <div style="width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 </div>
+                <div style="text-align:left;"><div style="font-weight:700; font-size:13px;">Judicial Officer</div><div style="font-size:10.5px; opacity:0.8;">Badge: JD-082 — Sessions Court</div></div>
               </button>
             </div>
           </div>
-
-          <!-- Manual Form Login -->
           <form onsubmit="handleManualLogin(event)" style="width:100%;">
             <div style="margin-bottom:12px; text-align:left;">
-              <label style="font-size:11.5px; font-weight:700; color:var(--slate-700); margin-bottom:4px; display:block;">Officer Badge ID</label>
+              <label style="font-size:11.5px; font-weight:700; color:var(--slate-700); margin-bottom:4px; display:block;">Badge ID</label>
               <input type="text" id="mAuthBadge" value="UP-STF-0842" style="width:100%; height:44px; border:1.2px solid #cbd5e1; border-radius:8px; padding:0 12px; font-size:14px; font-weight:600;" required>
             </div>
-
             <div style="margin-bottom:18px; text-align:left;">
-              <label style="font-size:11.5px; font-weight:700; color:var(--slate-700); margin-bottom:4px; display:block;">PKI Hardware PIN</label>
-              <input type="password" id="mAuthPin" value="••••••••" style="width:100%; height:44px; border:1.2px solid #cbd5e1; border-radius:8px; padding:0 12px; font-size:14px;" required>
+              <label style="font-size:11.5px; font-weight:700; color:var(--slate-700); margin-bottom:4px; display:block;">Password</label>
+              <input type="password" id="mAuthPin" value="password123" style="width:100%; height:44px; border:1.2px solid #cbd5e1; border-radius:8px; padding:0 12px; font-size:14px;" required>
             </div>
-
-            <button type="submit" class="btn-m-primary" style="height:46px; font-size:14px;">
-              <span>Verify & Unlock Mobile Workspace</span>
-            </button>
+            <button type="submit" class="btn-primary" style="height:46px; font-size:14px;">Sign In</button>
           </form>
-
           <div style="margin-top:20px; font-size:11px; color:var(--slate-400); line-height:1.4;">
-            Restricted Government Network // BSA 2023 §65B Certified<br>
-            All actions logged with SHA-256 tamper-proof timestamps
+            Government Restricted Network<br>All actions are logged with tamper-proof timestamps
           </div>
         </div>
       </section>
 
-      <!-- ========================================================
-           SCREEN 2: CASE DOSSIER (FIR-2024-00892)
-           ======================================================== -->
+      <!-- CASE OVERVIEW -->
       <section class="screen-view" id="view-case">
-        <!-- Case Header Card -->
-        <div class="mobile-card">
-          <div class="mobile-card-header">
+        <div class="m-card">
+          <div class="m-card-head">
             <div>
               <div style="font-size:15px; font-weight:800; color:var(--navy-900);">FIR-2024-00892</div>
               <div style="font-size:11.5px; color:var(--slate-500);">State of UP vs. Criminal Syndicate</div>
             </div>
-            <span class="m-badge m-badge-danger">High Priority</span>
+            <span class="badge badge-red">High Priority</span>
           </div>
-          <div class="mobile-card-body">
-            <!-- 4 Quick Action Chips -->
+          <div class="m-card-body">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
-              <button class="btn-m-secondary" style="font-size:11.5px; padding:8px 6px;"
-                onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">
-                📄 View Signed FIR ↗
-              </button>
-              <button class="btn-m-secondary" style="font-size:11.5px; padding:8px 6px; color:#7c3aed; border-color:#d8b4fe;"
-                onclick="openMobileProofSheet('DOC-2024-001', 'FIR-2024-00892')">
-                ⬡ Tamper Test
-              </button>
-              <button class="btn-m-secondary" style="font-size:11.5px; padding:8px 6px; color:#16a34a; border-color:#bbf7d0;"
-                onclick="openPadesVisualSheet()">
-                ✍️ View Seal
-              </button>
-              <button class="btn-m-secondary" style="font-size:11.5px; padding:8px 6px; color:#2563eb; border-color:#bfdbfe;"
-                onclick="openQuickAiSheet()">
-                🤖 Ask Case AI
-              </button>
+              <button class="btn-outline" style="font-size:11.5px; padding:8px 6px;" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf','_blank')">View Signed FIR</button>
+              <button class="btn-outline" style="font-size:11.5px; padding:8px 6px; color:var(--indigo-600);" onclick="openMobileProofSheet('DOC-2024-001','FIR-2024-00892')">Check Integrity</button>
+              <button class="btn-outline" style="font-size:11.5px; padding:8px 6px; color:var(--green-600);" onclick="openPadesVisualSheet()">View Digital Seal</button>
+              <button class="btn-outline" style="font-size:11.5px; padding:8px 6px; color:var(--primary);" onclick="switchMobileTab('ai')">Search Case Info</button>
             </div>
-
-            <!-- Case Stats Grid -->
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; background:#f8fafc; padding:12px; border-radius:8px; margin-bottom:16px;">
-              <div>
-                <div style="font-size:10px; font-weight:700; color:var(--slate-500); text-transform:uppercase;">Charges</div>
-                <div style="font-size:12.5px; font-weight:700; color:var(--navy-900); margin-top:2px;">IPC 302, 120B / BNS 103</div>
-              </div>
-              <div>
-                <div style="font-size:10px; font-weight:700; color:var(--slate-500); text-transform:uppercase;">Unit</div>
-                <div style="font-size:12.5px; font-weight:700; color:var(--navy-900); margin-top:2px;">STF Cyber Operations</div>
-              </div>
-              <div>
-                <div style="font-size:10px; font-weight:700; color:var(--slate-500); text-transform:uppercase;">Seized Evidence</div>
-                <div style="font-size:12.5px; font-weight:700; color:var(--navy-900); margin-top:2px;">4 Items Sealed</div>
-              </div>
-              <div>
-                <div style="font-size:10px; font-weight:700; color:var(--slate-500); text-transform:uppercase;">Blockchain Proof</div>
-                <div style="font-size:12.5px; font-weight:700; color:var(--success); margin-top:2px;">✔ Anchored (Polygon)</div>
-              </div>
+            <div class="stat-grid">
+              <div><div class="stat-label">Charges</div><div class="stat-value">IPC 302, 120B / BNS 103</div></div>
+              <div><div class="stat-label">Investigating Unit</div><div class="stat-value">STF Cyber Operations</div></div>
+              <div><div class="stat-label">Seized Items</div><div class="stat-value">4 Items Sealed</div></div>
+              <div><div class="stat-label">Document Integrity</div><div class="stat-value" style="color:var(--green-600);">Verified on Blockchain</div></div>
             </div>
-
-            <!-- Investigation Progress -->
-            <div style="font-size:12px; font-weight:800; color:var(--slate-700); text-transform:uppercase; margin-bottom:8px;">
-              Investigation Milestones
-            </div>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--slate-700);">
-                <span style="color:var(--success); font-weight:900;">✔</span>
-                <span>FIR Registered & Digitally Signed (12-May-2024)</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--slate-700);">
-                <span style="color:var(--success); font-weight:900;">✔</span>
-                <span>Raid & Evidence Seizure under BNSS §105</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--slate-700);">
-                <span style="color:var(--success); font-weight:900;">✔</span>
-                <span>Forensic Lab Ballistics Match Confirmed</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--slate-700);">
-                <span style="color:var(--success); font-weight:900;">✔</span>
-                <span>Digital Proof Stamped on Polygon Blockchain</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#2563eb; font-weight:700;">
-                <span>⏳</span>
-                <span>Court Hearing Scheduled (Sessions Court)</span>
-              </div>
+            <div class="section-label">Case Timeline</div>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <div class="timeline-item"><div class="timeline-dot done"></div><span>FIR Registered &amp; Digitally Signed (12 May 2024)</span></div>
+              <div class="timeline-item"><div class="timeline-dot done"></div><span>Search &amp; Evidence Seizure (13 May 2024)</span></div>
+              <div class="timeline-item"><div class="timeline-dot done"></div><span>Forensic Ballistics Report — Match Confirmed</span></div>
+              <div class="timeline-item"><div class="timeline-dot done"></div><span>Documents Verified on Blockchain</span></div>
+              <div class="timeline-item"><div class="timeline-dot pending"></div><span style="color:var(--primary); font-weight:600;">Court Hearing Scheduled — Sessions Court</span></div>
             </div>
           </div>
         </div>
-
-        <!-- Protected Witness Shield -->
-        <div class="mobile-card" style="border-left: 4px solid var(--primary);">
-          <div class="mobile-card-body">
+        <div class="m-card" style="border-left:3px solid var(--primary);">
+          <div class="m-card-body">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <span style="font-size:13px; font-weight:700; color:var(--navy-900);">Protected Witness Privacy Shield</span>
-              <span class="m-badge m-badge-primary">Encrypted</span>
+              <span style="font-size:13px; font-weight:700; color:var(--navy-900);">Witness Records</span>
+              <span class="badge badge-blue">Access Restricted</span>
             </div>
-            <p style="font-size:12px; color:var(--slate-600); line-height:1.4; margin-bottom:10px;">
-              Witness identities are encrypted with role clearance. Only investigating officers assigned to this case can inspect confidential records.
-            </p>
-            <button class="btn-m-secondary" style="width:100%; font-size:11.5px;"
-              onclick="showToast('Clearance Approved: Officer UP-STF-0842 authorized to view confidential records.')">
-              Check Witness Protection Clearance
-            </button>
+            <p style="font-size:12px; color:var(--slate-600); line-height:1.4; margin-bottom:10px;">Witness identities are encrypted. Only officers assigned to this case can view these records.</p>
+            <button class="btn-outline" style="width:100%; font-size:11.5px;" onclick="showToast('Access granted — Officer UP-STF-0842 authorized')">Request Access</button>
           </div>
         </div>
       </section>
 
-      <!-- ========================================================
-           SCREEN 3: DOCUMENT OCR & CAMERA SCANNER
-           ======================================================== -->
+      <!-- DOCUMENT SCANNER (OCR) -->
       <section class="screen-view" id="view-ocr">
-        <div class="mobile-card">
-          <div class="mobile-card-header">
-            <div class="mobile-card-title">
+        <div class="m-card">
+          <div class="m-card-head">
+            <div class="m-card-title">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              <span>Document OCR & Image Preprocessing</span>
+              <span>Document Scanner</span>
             </div>
-            <span class="m-badge m-badge-success" id="ocrStatusBadge">Ready</span>
+            <span class="badge badge-green" id="ocrStatusBadge">Ready</span>
           </div>
-          <div class="mobile-card-body">
-            <!-- Hidden real camera file input -->
+          <div class="m-card-body">
             <input type="file" id="realCameraInput" accept="image/*" capture="environment" style="display:none;" onchange="handleOcrPhotoUpload(event)">
-
-            <!-- Photo / Upload Selector Buttons -->
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
-              <button class="btn-m-primary" style="font-size:12px; padding:10px 8px;" onclick="document.getElementById('realCameraInput').click()">
-                📷 Take Photo
-              </button>
-              <button class="btn-m-secondary" style="font-size:12px; padding:10px 8px;" onclick="loadSampleFirOcr()">
-                📄 Load Sample FIR
-              </button>
+              <button class="btn-primary" style="font-size:12px; padding:10px 8px;" onclick="document.getElementById('realCameraInput').click()">Take Photo</button>
+              <button class="btn-outline" style="font-size:12px; padding:10px 8px;" onclick="loadSampleFirOcr()">Load Sample FIR</button>
             </div>
-
-            <!-- Canvas Viewport -->
-            <div style="background:#0f172a; border-radius:8px; overflow:hidden; position:relative; min-height:180px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
-              <canvas id="ocrPreviewCanvas" style="max-width:100%; height:auto; display:block; border-radius:4px;"></canvas>
-              <div id="canvasPlaceholderText" style="color:#94a3b8; font-size:12px; text-align:center; padding:20px;">
-                No document loaded.<br>Tap "Take Photo" or "Load Sample FIR".
-              </div>
+            <div style="background:#0f172a; border-radius:8px; overflow:hidden; min-height:180px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
+              <canvas id="ocrPreviewCanvas" style="max-width:100%; height:auto; display:block;"></canvas>
+              <div id="canvasPlaceholderText" style="color:#94a3b8; font-size:12px; text-align:center; padding:20px;">No document loaded.<br>Tap "Take Photo" or "Load Sample FIR".</div>
             </div>
-
-            <!-- Image Enhancement Filter Pills -->
-            <div style="font-size:11px; font-weight:700; color:var(--slate-500); text-transform:uppercase; margin-bottom:6px;">
-              Preprocessing Filters (Image Enhancement)
-            </div>
+            <div class="section-label">Image Enhancement</div>
             <div style="display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:14px;">
-              <button class="btn-m-secondary active-filter" id="filterAutoBtn" style="font-size:11px; padding:5px 10px; border-radius:20px; background:var(--primary); color:#fff; border-color:var(--primary);"
-                onclick="applyCanvasFilter('AUTO')">Auto-Enhance</button>
-              <button class="btn-m-secondary" id="filterBwBtn" style="font-size:11px; padding:5px 10px; border-radius:20px;"
-                onclick="applyCanvasFilter('BW')">Clean B&W</button>
-              <button class="btn-m-secondary" id="filterGrayBtn" style="font-size:11px; padding:5px 10px; border-radius:20px;"
-                onclick="applyCanvasFilter('GRAY')">Grayscale</button>
-              <button class="btn-m-secondary" id="filterHighBtn" style="font-size:11px; padding:5px 10px; border-radius:20px;"
-                onclick="applyCanvasFilter('HIGH')">High Contrast</button>
+              <button class="btn-outline" id="filterAutoBtn" style="font-size:11px; padding:5px 10px; border-radius:20px; background:var(--primary); color:#fff; border-color:var(--primary);" onclick="applyCanvasFilter('AUTO')">Auto</button>
+              <button class="btn-outline" id="filterBwBtn" style="font-size:11px; padding:5px 10px; border-radius:20px;" onclick="applyCanvasFilter('BW')">Black &amp; White</button>
+              <button class="btn-outline" id="filterGrayBtn" style="font-size:11px; padding:5px 10px; border-radius:20px;" onclick="applyCanvasFilter('GRAY')">Grayscale</button>
+              <button class="btn-outline" id="filterHighBtn" style="font-size:11px; padding:5px 10px; border-radius:20px;" onclick="applyCanvasFilter('HIGH')">High Contrast</button>
             </div>
-
-            <!-- Extracted Text & Fields Box -->
-            <div id="ocrResultsCard" style="display:none; background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:12px; margin-bottom:14px;">
+            <div id="ocrResultsCard" style="display:none; background:var(--green-50); border:1.5px solid var(--green-600); border-radius:8px; padding:12px; margin-bottom:14px;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                <span style="font-size:12px; font-weight:800; color:#15803d;">✔ OCR EXTRACTION COMPLETE</span>
-                <span class="m-badge m-badge-success">Confidence: 98.7%</span>
+                <span style="font-size:12px; font-weight:700; color:#15803d;">Text Extracted Successfully</span>
+                <span class="badge badge-green">Complete</span>
               </div>
               <div style="font-size:12px; color:#1e293b; line-height:1.5;" id="ocrExtractedContent">
-                <strong>Doc Type:</strong> First Information Report (FIR)<br>
-                <strong>Case No:</strong> FIR-2024-00892<br>
+                <strong>Document Type:</strong> First Information Report<br>
+                <strong>Case Number:</strong> FIR-2024-00892<br>
                 <strong>Sections:</strong> IPC 302, 120B / BNS §103, §61<br>
                 <strong>Seized Items:</strong> MicroSD 128GB, WD 2TB SSD<br>
-                <strong>Authority:</strong> UP Police Special Task Force
+                <strong>Filed By:</strong> UP Police Special Task Force
               </div>
             </div>
-
-            <!-- OCR Save & Commit Actions -->
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-m-primary" style="background:#16a34a;" onclick="saveOcrToStorage()">
-                💾 Save Document to Offline Encrypted Storage
-              </button>
-              <button class="btn-m-secondary" onclick="openPadesVisualSheet()">
-                ✍️ Seal with Institutional PAdES Digital Signature
-              </button>
+              <button class="btn-primary" style="background:var(--green-600);" onclick="saveOcrToStorage()">Save to Document Vault</button>
+              <button class="btn-outline" onclick="openPadesVisualSheet()">Apply Digital Signature</button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ========================================================
-           SCREEN 4: STORAGE & EVIDENCE VAULT
-           ======================================================== -->
+      <!-- DOCUMENT VAULT -->
       <section class="screen-view" id="view-storage">
-        <!-- Storage Metrics Card -->
-        <div class="mobile-card" style="background:linear-gradient(135deg, #0b1528, #1b3562); color:#fff;">
-          <div class="mobile-card-body">
+        <div class="m-card" style="background:linear-gradient(135deg,#0f172a,#1e3a5f); color:#fff;">
+          <div class="m-card-body">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <div>
-                <div style="font-size:16px; font-weight:800;">Offline Evidence Vault</div>
-                <div style="font-size:11.5px; opacity:0.8;">Case CC/2025/1457 Sealed WORM Store</div>
-              </div>
-              <span class="m-badge" style="background:#10b981; color:#064e3b; font-weight:800;">WORM Active</span>
+              <div><div style="font-size:16px; font-weight:800;">Document Vault</div><div style="font-size:11.5px; opacity:0.75;">Case CC/2025/1457</div></div>
+              <span class="badge" style="background:#10b981; color:#064e3b; font-weight:700;">Tamper-Proof</span>
             </div>
-            
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px; background:rgba(255,255,255,0.08); padding:10px; border-radius:8px;">
-              <div>
-                <div style="opacity:0.75; font-size:10.5px;">Encrypted Storage</div>
-                <div style="font-weight:700; margin-top:2px;">1.8 MB / 500 MB</div>
-              </div>
-              <div>
-                <div style="opacity:0.75; font-size:10.5px;">Encryption Standard</div>
-                <div style="font-weight:700; margin-top:2px;">AES-256-GCM</div>
-              </div>
-              <div>
-                <div style="opacity:0.75; font-size:10.5px;">Retention Hold</div>
-                <div style="font-weight:700; margin-top:2px;">7-Year Statutory</div>
-              </div>
-              <div>
-                <div style="opacity:0.75; font-size:10.5px;">Cloud Synchronization</div>
-                <div style="font-weight:700; color:#34d399; margin-top:2px;">✔ 100% Synced</div>
-              </div>
+              <div><div style="opacity:0.7; font-size:10.5px;">Storage Used</div><div style="font-weight:700; margin-top:2px;">1.8 MB / 500 MB</div></div>
+              <div><div style="opacity:0.7; font-size:10.5px;">Encryption</div><div style="font-weight:700; margin-top:2px;">AES-256</div></div>
+              <div><div style="opacity:0.7; font-size:10.5px;">Retention Period</div><div style="font-weight:700; margin-top:2px;">7 Years (Statutory)</div></div>
+              <div><div style="opacity:0.7; font-size:10.5px;">Sync Status</div><div style="font-weight:700; color:#34d399; margin-top:2px;">Up to Date</div></div>
             </div>
           </div>
         </div>
-
-        <!-- Stored Documents List Header -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <div style="font-size:12.5px; font-weight:800; color:var(--slate-700); text-transform:uppercase;">
-            Stored Evidence Vault
-          </div>
-          <button class="btn-m-primary" style="width:auto; font-size:11px; padding:5px 12px; border-radius:20px; background:#0055d4;" onclick="switchMobileTab('ocr')">
-            + Scan New Document
-          </button>
+          <div class="section-label" style="margin-bottom:0;">Stored Documents</div>
+          <button class="btn-primary" style="width:auto; font-size:11px; padding:5px 12px; border-radius:20px;" onclick="switchMobileTab('ocr')">+ Scan New</button>
         </div>
-
-        <div class="mobile-card">
-          <div class="mobile-card-body" id="vaultDocList" style="display:flex; flex-direction:column; gap:10px; padding:12px;">
-            <!-- Doc 1 -->
-            <div style="border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; font-size:13px; color:var(--navy-900);">DOC-2024-001: Original FIR</span>
-                <span class="m-badge m-badge-primary">v1 (Original)</span>
-              </div>
-              <div style="font-size:11px; color:var(--slate-500); margin:3px 0 6px;">SHA-256: 275eb6b6c389... • 7-Year WORM Lock</div>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px;" onclick="window.open('/demo_documents/FIR-2024-00892_STF.pdf', '_blank')">View PDF ↗</button>
-                <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px; color:#7c3aed;" onclick="openMobileProofSheet('DOC-2024-001', 'Original FIR')">Tamper Check ⬡</button>
+        <div class="m-card">
+          <div class="m-card-body" id="vaultDocList" style="display:flex; flex-direction:column; padding:12px;">
+            <div class="doc-item">
+              <div class="doc-item-header"><span class="doc-item-name">FIR — Original Copy</span><span class="badge badge-blue">v1</span></div>
+              <div class="doc-item-meta">SHA-256: 275eb6b6c389...<span class="shared-indicator"><span class="shared-dots"><span style="background:#1a56db;">RK</span><span style="background:#0e7490;">PS</span></span> Shared with 2</span></div>
+              <div class="doc-item-actions">
+                <button class="btn-outline" onclick="window.open('/demo_documents/FIR-2024-00892_STF.pdf','_blank')">View PDF</button>
+                <button class="btn-outline" style="color:var(--indigo-600);" onclick="openMobileProofSheet('DOC-2024-001','Original FIR')">Verify Integrity</button>
               </div>
             </div>
-
-            <!-- Doc 2 -->
-            <div style="border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; font-size:13px; color:var(--navy-900);">DOC-2024-001-ESIGN: eSigned FIR</span>
-                <span class="m-badge m-badge-success">✔ Digitally Signed</span>
-              </div>
-              <div style="font-size:11px; color:var(--slate-500); margin:3px 0 6px;">PAdES Institutional Seal • IT Act §3A Certified</div>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px; color:#16a34a;" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">View Certified PDF ↗</button>
-                <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px;" onclick="openPadesVisualSheet()">Inspect Seal ✍️</button>
+            <div class="doc-item">
+              <div class="doc-item-header"><span class="doc-item-name">FIR — Digitally Signed</span><span class="badge badge-green">Signed</span></div>
+              <div class="doc-item-meta">Signed by IO, verified under IT Act §3A<span class="shared-indicator"><span class="shared-dots"><span style="background:#1a56db;">RK</span><span style="background:#6d28d9;">SM</span><span style="background:#0e7490;">PS</span></span> Shared with 3</span></div>
+              <div class="doc-item-actions">
+                <button class="btn-outline" style="color:var(--green-600);" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf','_blank')">View Signed PDF</button>
+                <button class="btn-outline" onclick="openPadesVisualSheet()">View Signature</button>
               </div>
             </div>
-
-            <!-- Doc 3 -->
-            <div style="border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; font-size:13px; color:var(--navy-900);">DOC-2024-002: Ballistics Report</span>
-                <span class="m-badge m-badge-primary">v1 & v2 Annexure</span>
-              </div>
-              <div style="font-size:11px; color:var(--slate-500); margin:3px 0 6px;">Forensic Science Lab (FSL) Firearm Match</div>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px; color:#6366f1;" onclick="openVersionDiffSheet()">Compare v1 ➔ v2 🔀</button>
+            <div class="doc-item">
+              <div class="doc-item-header"><span class="doc-item-name">Forensic Ballistics Report</span><span class="badge badge-blue">v1 &amp; v2</span></div>
+              <div class="doc-item-meta">Forensic Science Lab — Firearm Match Analysis</div>
+              <div class="doc-item-actions"><button class="btn-outline" style="color:var(--indigo-600);" onclick="openVersionDiffSheet()">Compare Versions</button></div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-header"><span class="doc-item-name">Court Hearing Notice</span><span class="badge badge-amber">Pending</span></div>
+              <div class="doc-item-meta">Sessions Court — Hearing date: 28 Jun 2024</div>
+              <div class="doc-item-actions"><button class="btn-outline" onclick="showToast('Court notice document opened')">View Notice</button></div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-header"><span class="doc-item-name">9mm Spent Cartridge — Evidence Log</span><span class="badge badge-dark">Vault B-14</span></div>
+              <div class="doc-item-meta">Held by: <span id="mobileCustodianName">Inspector R. Kumar (UP-STF-0842)</span></div>
+              <div class="doc-item-actions">
+                <button class="btn-outline" onclick="window.open('/demo_documents/BSA_65B_Certificate_FIR-2024-00892.pdf','_blank')">Court Certificate</button>
+                <button class="btn-outline" style="color:var(--amber-600);" onclick="transferMobileCustody()">Transfer Custody</button>
               </div>
             </div>
-
-            <!-- Evd 1 -->
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; font-size:13px; color:var(--navy-900);">EVD-2024-001: 9mm Spent Cartridge</span>
-                <span class="m-badge m-badge-navy">Vault B-14</span>
-              </div>
-              <div style="font-size:11px; color:var(--slate-500); margin:3px 0 6px;">Held by: <span id="mobileCustodianName">Lead Investigator (UP-STF-0842)</span></div>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px;" onclick="window.open('/demo_documents/BSA_65B_Certificate_FIR-2024-00892.pdf', '_blank')">Download Court Cert (PDF) ↗</button>
-                <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px; color:#d97706;" onclick="transferMobileCustody()">Transfer Custody to FSL</button>
-              </div>
+            <div class="doc-item">
+              <div class="doc-item-header"><span class="doc-item-name">Witness Statement — WS/2024/003</span><span class="badge badge-blue">Confidential</span></div>
+              <div class="doc-item-meta">Recorded under BNSS §183 — Identity protected</div>
+              <div class="doc-item-actions"><button class="btn-outline" onclick="showToast('Access restricted — clearance required')">Request Access</button></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ========================================================
-           SCREEN 5: BLOCKCHAIN COURT PROOF REGISTRY
-           ======================================================== -->
+      <!-- DOCUMENT VERIFICATION -->
       <section class="screen-view" id="view-blockchain">
-        <!-- Live Polygon Banner -->
-        <div class="mobile-card" style="background:#0f172a; color:#fff; border-color:#334155;">
-          <div class="mobile-card-body">
+        <div class="m-card" style="background:#0f172a; color:#fff;">
+          <div class="m-card-body">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <div style="display:flex; align-items:center; gap:8px;">
                 <span style="width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981;"></span>
-                <span style="font-weight:800; font-size:13.5px;">POLYGON PROOF REGISTRY</span>
+                <span style="font-weight:800; font-size:13.5px;">DOCUMENT VERIFICATION</span>
               </div>
-              <span class="m-badge m-badge-success" style="font-size:10px;">Amoy Testnet</span>
+              <span class="badge badge-green" style="font-size:10px;">Blockchain Secured</span>
             </div>
-            
             <div style="font-size:11px; color:#94a3b8; line-height:1.6; background:#1e293b; padding:10px; border-radius:6px; margin-bottom:12px;">
-              <div><strong>Smart Contract:</strong> <code style="color:#a78bfa;">0x6B76859551315E47041064F48E201b0c2E5832a7</code></div>
-              <div><strong>Master Merkle Root:</strong> <code style="color:#38bdf8;">0x63ff48d83a29b955967e8b41...</code></div>
-              <div><strong>Block Confirmation:</strong> Block #14,892,104 (100% Finalized)</div>
+              Every document is fingerprinted and recorded on the Polygon blockchain. Any modification — even changing a single character — is instantly detected.
             </div>
-
-            <a href="https://amoy.polygonscan.com/address/0x6B76859551315E47041064F48E201b0c2E5832a7" target="_blank"
-              style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:#c4b5fd; text-decoration:underline;">
-              <span>Inspect Smart Contract on Polygonscan ↗</span>
-            </a>
+            <div style="font-size:11px; color:#94a3b8; line-height:1.6; background:#1e293b; padding:10px; border-radius:6px;">
+              <div><strong>Contract:</strong> <code style="color:#a78bfa;">0x6B76...32a7</code></div>
+              <div><strong>Block:</strong> #14,892,104 (Confirmed)</div>
+              <div><strong>Network:</strong> Polygon Amoy</div>
+            </div>
           </div>
         </div>
-
-        <!-- Interactive Tamper Simulator -->
-        <div class="mobile-card" style="border:1.5px solid #7c3aed;">
-          <div class="mobile-card-header" style="background:#faf5ff;">
-            <div class="mobile-card-title" style="color:#6b21a8;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-              <span>Live Tamper Detection Test</span>
+        <div class="m-card" style="border:1.5px solid var(--indigo-600);">
+          <div class="m-card-head" style="background:var(--indigo-50);">
+            <div class="m-card-title" style="color:var(--indigo-600);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Tamper Detection Test</span>
             </div>
-            <span class="m-badge m-badge-success" id="proofStatusBadge">Verified</span>
+            <span class="badge badge-green" id="proofStatusBadge">Verified</span>
           </div>
-          <div class="mobile-card-body">
+          <div class="m-card-body">
             <p style="font-size:12px; color:var(--slate-600); line-height:1.5; margin-bottom:12px;">
-              Court evaluators can test instant integrity rejection. Tap <strong>"Simulate 1-Byte Corruption"</strong> to modify 1 character in the document and observe instant court rejection.
+              Test document integrity by simulating a modification. Even a 1-byte change will be detected and rejected.
             </p>
-
-            <!-- Verification Status Banner -->
-            <div id="tamperStatusBanner" style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:12px; margin-bottom:12px;">
-              <div style="font-weight:800; font-size:12.5px; color:#15803d;" id="tamperStatusTitle">
-                ✔ 100% BITSTREAM MATCH CONFIRMED
-              </div>
-              <div style="font-size:11px; color:#334155; margin-top:2px;" id="tamperStatusSub">
-                Matches Merkle Leaf #2 in Polygon Block #14,892,104
-              </div>
+            <div id="tamperStatusBanner" style="background:var(--green-50); border:1.5px solid var(--green-600); border-radius:8px; padding:12px; margin-bottom:12px;">
+              <div style="font-weight:700; font-size:12.5px; color:#15803d;" id="tamperStatusTitle">Document Integrity Verified</div>
+              <div style="font-size:11px; color:#334155; margin-top:2px;" id="tamperStatusSub">Document fingerprint matches the blockchain record (Block #14,892,104)</div>
             </div>
-
-            <!-- Hash Details -->
             <div style="background:#f8fafc; padding:10px; border-radius:6px; font-size:11px; margin-bottom:14px;">
-              <div style="font-weight:700; color:var(--slate-600); margin-bottom:2px;">Current Document Bitstream Hash:</div>
+              <div style="font-weight:700; color:var(--slate-600); margin-bottom:2px;">Document Fingerprint (SHA-256):</div>
               <code id="currentBitstreamHash" style="font-family:monospace; word-break:break-all; color:#0f172a;">275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044</code>
             </div>
-
-            <!-- Action Buttons -->
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="btn-m-primary" style="background:#dc2626;" onclick="triggerTamperSimulation()">
-                ⚠ Simulate 1-Byte File Corruption (Tamper Test)
-              </button>
-              <button class="btn-m-primary" style="background:#16a34a;" onclick="restoreTamperSimulation()">
-                ✔ Restore Authentic Bitstream
-              </button>
+              <button class="btn-primary" style="background:var(--red-600);" onclick="triggerTamperSimulation()">Simulate Document Tampering</button>
+              <button class="btn-primary" style="background:var(--green-600);" onclick="restoreTamperSimulation()">Restore Original Document</button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ========================================================
-           SCREEN 6: ASK CASE AI (RAG ASSISTANT)
-           ======================================================== -->
+      <!-- CASE SEARCH (RAG) -->
       <section class="screen-view" id="view-ai">
-        <div class="mobile-card">
-          <div class="mobile-card-header">
-            <div class="mobile-card-title" style="color:#7c3aed;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.2"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z"/></svg>
-              <span>Ask Case AI Assistant</span>
+        <div class="m-card">
+          <div class="m-card-head">
+            <div class="m-card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span>Case Search</span>
             </div>
-            <span class="m-badge m-badge-primary">BSA §65B Grounded</span>
+            <span class="badge badge-blue">All Documents</span>
           </div>
-          <div class="mobile-card-body">
-            <p style="font-size:12px; color:var(--slate-600); margin-bottom:12px; line-height:1.4;">
-              Grounded investigation queries. Every answer cites exact document page numbers and evidence hashes.
-            </p>
-
-            <!-- Sample Question Chips -->
-            <div style="font-size:11px; font-weight:700; color:var(--slate-500); text-transform:uppercase; margin-bottom:6px;">
-              Quick Investigation Inquiries:
-            </div>
+          <div class="m-card-body">
+            <p style="font-size:12px; color:var(--slate-600); margin-bottom:12px; line-height:1.4;">Search across all case documents. Answers cite specific document references.</p>
+            <div class="section-label">Common Questions</div>
             <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:14px;">
-              <button class="btn-m-secondary" style="justify-content:flex-start; font-size:11.5px; text-align:left;"
-                onclick="runMobileRag('What hardware and digital artifacts were seized in this case?')">
-                🔍 What hardware was seized from the scene?
-              </button>
-              <button class="btn-m-secondary" style="justify-content:flex-start; font-size:11.5px; text-align:left;"
-                onclick="runMobileRag('Show chain of custody transfers and timeline for recovered evidence')">
-                ⏱️ Show custody history and timeline
-              </button>
-              <button class="btn-m-secondary" style="justify-content:flex-start; font-size:11.5px; text-align:left;"
-                onclick="runMobileRag('Verify statutory compliance and electronic certificate under BSA 2023 §65B')">
-                ⚖️ Check BSA 2023 §65B court admissibility
-              </button>
-              <button class="btn-m-secondary" style="justify-content:flex-start; font-size:11.5px; text-align:left;"
-                onclick="runMobileRag('Summarize forensic ballistics and drive analysis findings')">
-                🔬 Summarize forensic ballistics findings
-              </button>
+              <button class="btn-outline" style="justify-content:flex-start; font-size:11.5px; text-align:left;" onclick="runMobileRag('What items were seized from the scene?')">What items were seized from the scene?</button>
+              <button class="btn-outline" style="justify-content:flex-start; font-size:11.5px; text-align:left;" onclick="runMobileRag('Show chain of custody for the recovered evidence')">Show chain of custody for the evidence</button>
+              <button class="btn-outline" style="justify-content:flex-start; font-size:11.5px; text-align:left;" onclick="runMobileRag('Is this evidence admissible in court under BSA 2023?')">Is this evidence admissible in court?</button>
+              <button class="btn-outline" style="justify-content:flex-start; font-size:11.5px; text-align:left;" onclick="runMobileRag('Summarize the forensic ballistics findings')">Summarize the forensic findings</button>
             </div>
-
-            <!-- Custom Input Box -->
             <div style="display:flex; gap:8px; margin-bottom:14px;">
-              <input type="text" id="mobileRagInput" placeholder="Ask specific question about Case 1457..." style="flex:1; height:42px; border:1.2px solid #cbd5e1; border-radius:8px; padding:0 12px; font-size:13px;" onkeydown="if(event.key==='Enter') runMobileRag()">
-              <button class="btn-m-primary" style="width:auto; padding:0 14px; background:#7c3aed;" onclick="runMobileRag()">Ask</button>
+              <input type="text" id="mobileRagInput" placeholder="Type your question..." style="flex:1; height:42px; border:1.2px solid #cbd5e1; border-radius:8px; padding:0 12px; font-size:13px;" onkeydown="if(event.key==='Enter') runMobileRag()">
+              <button class="btn-primary" style="width:auto; padding:0 14px;" onclick="runMobileRag()">Search</button>
             </div>
-
-            <!-- AI Response Box -->
             <div id="mobileRagResultCard" style="display:none; background:#f8fafc; border:1.5px solid #bfdbfe; border-radius:8px; padding:14px;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #e2e8f0; padding-bottom:6px;">
-                <span class="m-badge m-badge-primary">AI Briefing</span>
-                <span class="m-badge m-badge-success" id="mobileRagConf">Confidence: 98.4%</span>
+                <span class="badge badge-blue">Search Results</span>
+                <span class="badge badge-green" id="mobileRagConf"></span>
               </div>
               <div id="mobileRagAnswerText" style="font-size:12.5px; color:#1e293b; line-height:1.6; white-space:pre-line; margin-bottom:10px;"></div>
-              <div style="font-size:10.5px; color:var(--slate-500); font-family:var(--font-mono); background:#f1f5f9; padding:6px; border-radius:4px;">
-                Citations: [DOC-2024-001 §4] [EVD-2024-002] • BSA §65B Admissible
-              </div>
+              <div style="font-size:10.5px; color:var(--slate-500); background:#f1f5f9; padding:6px; border-radius:4px;">Sources: DOC-2024-001, EVD-2024-002 — Verified documents</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ========================================================
-           SCREEN 7: OFFICER PROFILE & SETTINGS
-           ======================================================== -->
+      <!-- PROFILE & AUDIT LOG -->
       <section class="screen-view" id="view-profile">
-        <div class="mobile-card">
-          <div class="mobile-card-body" style="text-align:center; padding:20px 16px;">
-            <div style="width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
-              IO
-            </div>
-            <h3 style="font-size:16px; font-weight:800; color:var(--navy-900);" id="profOfficerName">Lead Investigating Officer</h3>
-            <div style="font-size:12px; color:var(--slate-500); margin-bottom:16px;" id="profOfficerBadge">UP-STF-0842 • Special Task Force</div>
-
+        <div class="m-card">
+          <div class="m-card-body" style="text-align:center; padding:20px 16px;">
+            <div style="width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;"><span id="profAvatarText">RK</span></div>
+            <h3 style="font-size:16px; font-weight:800; color:var(--navy-900);" id="profOfficerName">Inspector Rajesh Kumar</h3>
+            <div style="font-size:12px; color:var(--slate-500); margin-bottom:16px;" id="profOfficerBadge">UP-STF-0842 — Special Task Force</div>
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:left; font-size:12px; line-height:1.6; margin-bottom:16px;">
-              <div><strong>Clearance:</strong> Top Secret // STF Cyber Cell</div>
-              <div><strong>Statutory Authority:</strong> Bharatiya Nagarik Suraksha Sanhita (BNSS §105)</div>
-              <div><strong>PKI Certificate:</strong> Valid (CrimeNet Institutional Sub-CA)</div>
-              <div><strong>Local Storage:</strong> Encrypted AES-256 (Always Enforced)</div>
+              <div><strong>Clearance Level:</strong> Top Secret — STF Cyber Cell</div>
+              <div><strong>Authority:</strong> BNSS §105 (Search &amp; Seizure)</div>
+              <div><strong>Digital Certificate:</strong> Valid — Institutional Sub-CA</div>
+              <div><strong>Encryption:</strong> AES-256 (Always Enforced)</div>
             </div>
-
-            <!-- TOTP Authenticator Code Widget -->
-            <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:8px; padding:12px; text-align:left; margin-bottom:16px;">
-              <div style="font-size:11px; font-weight:700; color:#1d4ed8; text-transform:uppercase; margin-bottom:4px;">
-                2-Factor Authenticator (TOTP Live Key)
-              </div>
+            <div style="background:var(--primary-light); border:1.5px solid #bfdbfe; border-radius:8px; padding:12px; text-align:left; margin-bottom:16px;">
+              <div style="font-size:11px; font-weight:700; color:var(--primary); margin-bottom:4px;">Two-Factor Authentication Code</div>
               <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span id="totpDisplayCode" style="font-family:monospace; font-size:20px; font-weight:800; letter-spacing:3px; color:#1e40af;">482 910</span>
-                <span id="totpTimerSec" style="font-size:11px; color:#2563eb; font-weight:700;">30s</span>
+                <span id="totpDisplayCode" style="font-family:monospace; font-size:20px; font-weight:800; letter-spacing:3px; color:var(--primary-dark);">482 910</span>
+                <span id="totpTimerSec" style="font-size:11px; color:var(--primary); font-weight:700;">30s</span>
               </div>
             </div>
-
-            <button class="btn-m-primary" style="background:#dc2626;" onclick="handleLogout()">
-              Sign Out from Mobile Terminal
-            </button>
           </div>
         </div>
+        <div class="m-card">
+          <div class="m-card-head">
+            <div class="m-card-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="12 8 12 12 14 14"/><circle cx="12" cy="12" r="10"/></svg>
+              <span>Recent Activity</span>
+            </div>
+            <span class="badge badge-blue">Last 24h</span>
+          </div>
+          <div class="m-card-body" style="padding:10px 16px;">
+            <div class="audit-item"><div class="audit-time">2m ago</div><div class="audit-text">Signed in to mobile terminal</div></div>
+            <div class="audit-item"><div class="audit-time">15m ago</div><div class="audit-text">Viewed FIR-2024-00892 (Signed Copy)</div></div>
+            <div class="audit-item"><div class="audit-time">1h ago</div><div class="audit-text">Ran integrity check on DOC-2024-001</div></div>
+            <div class="audit-item"><div class="audit-time">3h ago</div><div class="audit-text">Scanned document — saved to vault</div></div>
+            <div class="audit-item"><div class="audit-time">5h ago</div><div class="audit-text">Transferred custody of EVD-2024-001 to FSL</div></div>
+            <div class="audit-item"><div class="audit-time">8h ago</div><div class="audit-text">Searched: "chain of custody timeline"</div></div>
+          </div>
+        </div>
+        <button class="btn-primary" style="background:var(--red-600);" onclick="handleLogout()">Sign Out</button>
       </section>
-
     </main>
 
-    <!-- Bottom Navigation Bar (Hidden on login view) -->
     <nav class="app-bottom-nav" id="appBottomNav" style="display:none;">
-      <div class="bottom-nav-tab active" id="tab-case" onclick="switchMobileTab('case')">
-        <div class="tab-icon-box">
-          <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <span>Cases</span>
-      </div>
-
-      <div class="bottom-nav-tab" id="tab-ocr" onclick="switchMobileTab('ocr')">
-        <div class="tab-icon-box">
-          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        </div>
-        <span>OCR Scan</span>
-      </div>
-
-      <div class="bottom-nav-tab" id="tab-storage" onclick="switchMobileTab('storage')">
-        <div class="tab-icon-box">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <span>Storage</span>
-      </div>
-
-      <div class="bottom-nav-tab" id="tab-blockchain" onclick="switchMobileTab('blockchain')">
-        <div class="tab-icon-box">
-          <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-        </div>
-        <span>Proof</span>
-      </div>
-
-      <div class="bottom-nav-tab" id="tab-ai" onclick="switchMobileTab('ai')">
-        <div class="tab-icon-box">
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z"/></svg>
-        </div>
-        <span>Case AI</span>
-      </div>
-
-      <div class="bottom-nav-tab" id="tab-profile" onclick="switchMobileTab('profile')">
-        <div class="tab-icon-box">
-          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
-        <span>Profile</span>
-      </div>
+      <div class="bottom-nav-tab active" id="tab-case" onclick="switchMobileTab('case')"><div class="tab-icon-box"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><span>Cases</span></div>
+      <div class="bottom-nav-tab" id="tab-ocr" onclick="switchMobileTab('ocr')"><div class="tab-icon-box"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><span>Scanner</span></div>
+      <div class="bottom-nav-tab" id="tab-storage" onclick="switchMobileTab('storage')"><div class="tab-icon-box"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><span>Vault</span></div>
+      <div class="bottom-nav-tab" id="tab-blockchain" onclick="switchMobileTab('blockchain')"><div class="tab-icon-box"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span>Verify</span></div>
+      <div class="bottom-nav-tab" id="tab-ai" onclick="switchMobileTab('ai')"><div class="tab-icon-box"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><span>Search</span></div>
+      <div class="bottom-nav-tab" id="tab-profile" onclick="switchMobileTab('profile')"><div class="tab-icon-box"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span>Profile</span></div>
     </nav>
-
   </div>
 
-  <!-- Toast Notification -->
-  <div class="mobile-toast" id="mToast">
-    <span id="mToastText">Operation verified</span>
-  </div>
+  <div class="mobile-toast" id="mToast"><span id="mToastText">Done</span></div>
 
-  <!-- Slide-up Modal: Document Proof & Tamper Inspector -->
-  <div class="sheet-backdrop" id="proofModal" onclick="closeSheetOnBackdrop(event, 'proofModal')">
+  <!-- Modal: Document Verification -->
+  <div class="sheet-backdrop" id="proofModal" onclick="closeSheetOnBackdrop(event,'proofModal')">
     <div class="sheet-card" onclick="event.stopPropagation()">
       <div class="sheet-drag-handle"></div>
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h4 style="font-size:15px; font-weight:800; color:var(--navy-900);" id="modalDocTitle">FIR-2024-00892</h4>
+        <h4 style="font-size:15px; font-weight:800;" id="modalDocTitle">FIR-2024-00892</h4>
         <button onclick="closeSheet('proofModal')" style="background:none; border:none; font-size:22px; cursor:pointer;">&times;</button>
       </div>
-
-      <div style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:12px;">
-        <div style="font-size:12.5px; font-weight:800; color:#15803d;">✔ ON-CHAIN PROOF VERIFIED</div>
-        <div style="font-size:11px; color:#334155; margin-top:2px;">Document SHA-256 matches Merkle Leaf in Polygon Amoy Contract</div>
+      <div style="background:var(--green-50); border:1.5px solid var(--green-600); border-radius:8px; padding:12px;">
+        <div style="font-size:12.5px; font-weight:700; color:#15803d;">Document Integrity Verified</div>
+        <div style="font-size:11px; color:#334155; margin-top:2px;">Fingerprint matches the blockchain record.</div>
       </div>
-
       <div style="font-size:11.5px; line-height:1.6; background:#f8fafc; padding:10px; border-radius:8px;">
-        <div><strong>Document SHA-256:</strong></div>
+        <div><strong>SHA-256:</strong></div>
         <code style="word-break:break-all; font-family:monospace; background:#e2e8f0; padding:2px 4px; border-radius:3px;">275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044</code>
-        <div style="margin-top:6px;"><strong>Smart Contract:</strong> <code>0x6B76859551315E47041064F48E201b0c2E5832a7</code></div>
-        <div><strong>Leaf Position:</strong> Leaf #2 of Batch #048</div>
+        <div style="margin-top:6px;"><strong>Contract:</strong> <code>0x6B76...32a7</code></div>
+        <div><strong>Block:</strong> #14,892,104 (Polygon)</div>
       </div>
-
       <div style="display:flex; flex-direction:column; gap:8px;">
-        <button class="btn-m-primary" style="background:#16a34a;" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">
-          Open Certified PDF ↗
-        </button>
-        <button class="btn-m-primary" style="background:#dc2626;" onclick="closeSheet('proofModal'); switchMobileTab('blockchain'); triggerTamperSimulation();">
-          ⚠ Run Tamper Test on Blockchain Screen
-        </button>
-        <button class="btn-m-secondary" onclick="closeSheet('proofModal')">Close</button>
+        <button class="btn-primary" style="background:var(--green-600);" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf','_blank')">Open Signed Document</button>
+        <button class="btn-primary" style="background:var(--red-600);" onclick="closeSheet('proofModal'); switchMobileTab('blockchain'); triggerTamperSimulation();">Run Tamper Test</button>
+        <button class="btn-outline" onclick="closeSheet('proofModal')">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- Slide-up Modal: PAdES Digital Seal -->
-  <div class="sheet-backdrop" id="padesModal" onclick="closeSheetOnBackdrop(event, 'padesModal')">
+  <!-- Modal: Digital Signature -->
+  <div class="sheet-backdrop" id="padesModal" onclick="closeSheetOnBackdrop(event,'padesModal')">
     <div class="sheet-card" onclick="event.stopPropagation()">
       <div class="sheet-drag-handle"></div>
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h4 style="font-size:15px; font-weight:800; color:#15803d;">✔ PAdES Digital Certificate</h4>
+        <h4 style="font-size:15px; font-weight:800; color:#15803d;">Digital Signature — Verified</h4>
         <button onclick="closeSheet('padesModal')" style="background:none; border:none; font-size:22px; cursor:pointer;">&times;</button>
       </div>
-
-      <div style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:12px; font-size:12px; line-height:1.6;">
-        <div><strong>Signed By:</strong> Lead Investigating Officer</div>
-        <div><strong>Badge / ID:</strong> UP-STF-0842 (Cyber Division)</div>
-        <div><strong>Standard:</strong> ETSI TS 102 778 PAdES-BES</div>
-        <div><strong>Statutory Law:</strong> IT Act 2000 §3A • BSA 2023 §65B</div>
-        <div><strong>Certifying Authority:</strong> CrimeNet Institutional Sub-CA</div>
-        <div><strong>Verification Status:</strong> Non-Repudiable Court Exhibit</div>
+      <div style="background:var(--green-50); border:1.5px solid var(--green-600); border-radius:8px; padding:12px; font-size:12px; line-height:1.6;">
+        <div><strong>Signed By:</strong> Investigating Officer</div>
+        <div><strong>Badge:</strong> UP-STF-0842 (Cyber Division)</div>
+        <div><strong>Standard:</strong> PAdES (PDF Advanced Electronic Signatures)</div>
+        <div><strong>Legal Authority:</strong> IT Act §3A, BSA 2023 §65B</div>
+        <div><strong>Certificate Authority:</strong> CrimeNet Institutional CA</div>
+        <div><strong>Court Validity:</strong> Admissible as evidence</div>
       </div>
-
-      <button class="btn-m-primary" style="background:#16a34a;" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">
-        Open Signed PDF with Visual Green Seal ↗
-      </button>
-      <button class="btn-m-secondary" onclick="closeSheet('padesModal')">Close</button>
+      <button class="btn-primary" style="background:var(--green-600);" onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf','_blank')">Open Signed Document</button>
+      <button class="btn-outline" onclick="closeSheet('padesModal')">Close</button>
     </div>
   </div>
 
-  <!-- Slide-up Modal: Version Diff (v1 vs v2) -->
-  <div class="sheet-backdrop" id="diffModal" onclick="closeSheetOnBackdrop(event, 'diffModal')">
+  <!-- Modal: Version Comparison -->
+  <div class="sheet-backdrop" id="diffModal" onclick="closeSheetOnBackdrop(event,'diffModal')">
     <div class="sheet-card" onclick="event.stopPropagation()">
       <div class="sheet-drag-handle"></div>
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h4 style="font-size:15px; font-weight:800; color:var(--navy-900);">Document Versioning (WORM Diff)</h4>
+        <h4 style="font-size:15px; font-weight:800;">Version Comparison</h4>
         <button onclick="closeSheet('diffModal')" style="background:none; border:none; font-size:22px; cursor:pointer;">&times;</button>
       </div>
-
-      <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:10px; font-size:11.5px;">
-        <div style="font-weight:700; color:var(--navy-900);">v1: Original Ballistics Report</div>
-        <div style="color:var(--slate-500); font-size:10.5px;">12-May-2024 • Initial Scene Lodging</div>
-        <div style="margin-top:4px;">Recovered 9mm spent cartridge tagged at Sector 4 Grid.</div>
+      <div style="background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:10px; font-size:11.5px;">
+        <div style="font-weight:700;">Version 1 — Original Report</div>
+        <div style="color:var(--slate-500); font-size:10.5px;">12 May 2024 — Initial Scene Report</div>
+        <div style="margin-top:4px;">Recovered 9mm spent cartridge at Sector 4 grid location.</div>
       </div>
-
-      <div style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:10px; font-size:11.5px;">
-        <div style="font-weight:700; color:#15803d;">v2: Supplementary FSL Annexure</div>
-        <div style="color:var(--slate-500); font-size:10.5px;">14-May-2024 • FSL Ballistics Expert</div>
-        <div style="color:#15803d; margin-top:4px;">
-          + Striation match confirmed between Glock 17 barrel and cartridge.<br>
-          + Chained to parent hash: <code>275eb6b6c389...</code>
-        </div>
+      <div style="background:var(--green-50); border:1.5px solid var(--green-600); border-radius:8px; padding:10px; font-size:11.5px;">
+        <div style="font-weight:700; color:#15803d;">Version 2 — Supplementary Lab Report</div>
+        <div style="color:var(--slate-500); font-size:10.5px;">14 May 2024 — Forensic Science Lab</div>
+        <div style="color:#15803d; margin-top:4px;">+ Barrel striation match confirmed (Glock 17 Gen 5).<br>+ Linked to parent document: <code>275eb6b6c389...</code></div>
       </div>
-
-      <button class="btn-m-secondary" onclick="closeSheet('diffModal')">Close</button>
+      <button class="btn-outline" onclick="closeSheet('diffModal')">Close</button>
     </div>
   </div>
 
   <script>
-    // Current Officer State
-    let currentOfficer = {
-      name: "Lead Investigating Officer",
-      badge: "UP-STF-0842",
-      dept: "Special Task Force"
-    };
+    let currentOfficer = { name: "Inspector Rajesh Kumar", badge: "UP-STF-0842", dept: "Special Task Force" };
 
-    // Screen Switching
     function switchMobileTab(tabId) {
       document.querySelectorAll('.screen-view').forEach(v => v.classList.remove('active-screen'));
       document.querySelectorAll('.bottom-nav-tab').forEach(t => t.classList.remove('active'));
-
       const target = document.getElementById('view-' + tabId);
       if (target) target.classList.add('active-screen');
-
       const tabBtn = document.getElementById('tab-' + tabId);
       if (tabBtn) tabBtn.classList.add('active');
-
       const viewport = document.querySelector('.app-viewport');
       if (viewport) viewport.scrollTop = 0;
     }
 
     function quickMobileLogin(name, badge, dept) {
-      currentOfficer.name = name;
-      currentOfficer.badge = badge;
-      currentOfficer.dept = dept;
+      currentOfficer = { name, badge, dept };
       completeLogin();
     }
 
     function handleManualLogin(e) {
       if (e) e.preventDefault();
-      const badge = document.getElementById('mAuthBadge').value;
-      currentOfficer.badge = badge || "UP-STF-0842";
+      currentOfficer.badge = document.getElementById('mAuthBadge').value || "UP-STF-0842";
       completeLogin();
     }
 
     function completeLogin() {
       document.getElementById('appHeader').style.display = 'flex';
       document.getElementById('appBottomNav').style.display = 'flex';
-      
       const profName = document.getElementById('profOfficerName');
       const profBadge = document.getElementById('profOfficerBadge');
+      const profAvatar = document.getElementById('profAvatarText');
       if (profName) profName.textContent = currentOfficer.name;
-      if (profBadge) profBadge.textContent = currentOfficer.badge + " • " + currentOfficer.dept;
-
+      if (profBadge) profBadge.textContent = currentOfficer.badge + " — " + currentOfficer.dept;
+      if (profAvatar) {
+        const initials = currentOfficer.name.split(' ').filter(w => w.length > 2).map(w => w[0]).join('').substring(0,2).toUpperCase();
+        profAvatar.textContent = initials || 'U';
+      }
       switchMobileTab('case');
-      showToast("Clearance Verified: " + currentOfficer.name);
+      showToast("Signed in as " + currentOfficer.name);
     }
 
     function handleLogout() {
       document.getElementById('appHeader').style.display = 'none';
       document.getElementById('appBottomNav').style.display = 'none';
       switchMobileTab('auth');
-      showToast("Signed out. Session closed.");
+      showToast("Signed out successfully");
     }
 
-    // Modal Sheet Handlers
     function openMobileProofSheet(docId, title) {
       const modal = document.getElementById('proofModal');
       const titleEl = document.getElementById('modalDocTitle');
       if (titleEl) titleEl.textContent = title || docId;
       if (modal) modal.classList.add('active');
     }
+    function openPadesVisualSheet() { document.getElementById('padesModal')?.classList.add('active'); }
+    function openVersionDiffSheet() { document.getElementById('diffModal')?.classList.add('active'); }
+    function closeSheet(id) { document.getElementById(id)?.classList.remove('active'); }
+    function closeSheetOnBackdrop(e, id) { if (e.target.classList.contains('sheet-backdrop')) closeSheet(id); }
 
-    function openPadesVisualSheet() {
-      const modal = document.getElementById('padesModal');
-      if (modal) modal.classList.add('active');
-    }
-
-    function openVersionDiffSheet() {
-      const modal = document.getElementById('diffModal');
-      if (modal) modal.classList.add('active');
-    }
-
-    function openQuickAiSheet() {
-      switchMobileTab('ai');
-    }
-
-    function closeSheet(id) {
-      const modal = document.getElementById(id);
-      if (modal) modal.classList.remove('active');
-    }
-
-    function closeSheetOnBackdrop(e, id) {
-      if (e.target.classList.contains('sheet-backdrop')) {
-        closeSheet(id);
-      }
-    }
-
-    // Tamper Simulation
     const AUTHENTIC_HASH = '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044';
     const TAMPERED_HASH  = '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf00ff';
 
@@ -1228,17 +646,12 @@
       const sub = document.getElementById('tamperStatusSub');
       const badge = document.getElementById('proofStatusBadge');
       const hashEl = document.getElementById('currentBitstreamHash');
-
-      banner.style.background = '#fef2f2';
-      banner.style.borderColor = '#dc2626';
-      title.style.color = '#b91c1c';
-      title.textContent = '✖ TAMPER DETECTED: ON-CHAIN MISMATCH!';
-      sub.textContent = 'Altered file rejected by Court under Section 65B BSA 2023.';
-      badge.className = 'm-badge m-badge-danger';
-      badge.textContent = 'Inadmissible';
       if (hashEl) hashEl.textContent = TAMPERED_HASH;
-
-      showToast('CRITICAL: 1-byte file alteration rejected by Polygon ledger!');
+      if (banner) { banner.style.background = 'var(--red-50)'; banner.style.borderColor = 'var(--red-600)'; }
+      if (title) { title.style.color = '#dc2626'; title.textContent = 'TAMPERING DETECTED — Document Modified'; }
+      if (sub) sub.textContent = 'Document fingerprint does NOT match the blockchain record. This document has been altered.';
+      if (badge) { badge.textContent = 'Tampered'; badge.className = 'badge badge-red'; }
+      showToast('Tampering detected — document integrity compromised');
     }
 
     function restoreTamperSimulation() {
@@ -1247,276 +660,162 @@
       const sub = document.getElementById('tamperStatusSub');
       const badge = document.getElementById('proofStatusBadge');
       const hashEl = document.getElementById('currentBitstreamHash');
-
-      banner.style.background = '#f0fdf4';
-      banner.style.borderColor = '#16a34a';
-      title.style.color = '#15803d';
-      title.textContent = '✔ 100% BITSTREAM MATCH CONFIRMED';
-      sub.textContent = 'Matches Merkle Leaf #2 in Polygon Block #14,892,104';
-      badge.className = 'm-badge m-badge-success';
-      badge.textContent = 'Verified';
       if (hashEl) hashEl.textContent = AUTHENTIC_HASH;
-
-      showToast('Restored authentic document bitstream. 100% On-Chain match confirmed.');
+      if (banner) { banner.style.background = 'var(--green-50)'; banner.style.borderColor = 'var(--green-600)'; }
+      if (title) { title.style.color = '#15803d'; title.textContent = 'Document Integrity Verified'; }
+      if (sub) sub.textContent = 'Document fingerprint matches the blockchain record (Block #14,892,104)';
+      if (badge) { badge.textContent = 'Verified'; badge.className = 'badge badge-green'; }
+      showToast('Original document restored — integrity verified');
     }
 
     function transferMobileCustody() {
-      showToast('Updating custody register... Verifying dual key handoff...');
-      setTimeout(() => {
-        const el = document.getElementById('mobileCustodianName');
-        if (el) el.textContent = 'Forensic Science Lab (FSL-4410)';
-        showToast('Custody Transferred: Physical evidence received by FSL Examiner.');
-      }, 1000);
+      const el = document.getElementById('mobileCustodianName');
+      if (el) el.textContent = 'Dr. P. Sharma (FSL-4410)';
+      showToast('Evidence custody transferred to Forensic Science Lab');
     }
 
-    // Interactive Canvas OCR Engine
     let currentImageObj = null;
     function handleOcrPhotoUpload(e) {
-      const file = e.target.files && e.target.files[0];
+      const file = e.target.files?.[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(evt) {
         const img = new Image();
         img.onload = function() {
           currentImageObj = img;
-          renderCanvasWithFilter('AUTO');
+          const canvas = document.getElementById('ocrPreviewCanvas');
+          const text = document.getElementById('canvasPlaceholderText');
+          if (text) text.style.display = 'none';
+          canvas.width = Math.min(img.width, 380);
+          canvas.height = (img.height / img.width) * canvas.width;
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
           displayOcrResults(file.name);
         };
         img.src = evt.target.result;
       };
       reader.readAsDataURL(file);
-      showToast('Analyzing document with image enhancement...');
+      showToast('Processing document...');
     }
 
     function loadSampleFirOcr() {
       const canvas = document.getElementById('ocrPreviewCanvas');
       const text = document.getElementById('canvasPlaceholderText');
       if (text) text.style.display = 'none';
-
-      canvas.width = 380;
-      canvas.height = 240;
+      canvas.width = 380; canvas.height = 240;
       const ctx = canvas.getContext('2d');
-
-      // Draw simulated FIR document on canvas
-      ctx.fillStyle = '#f8fafc';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#f8fafc'; ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#0f172a';
-      ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('STATE POLICE SPECIAL TASK FORCE', 20, 30);
+      ctx.font = 'bold 13px sans-serif'; ctx.fillText('STATE POLICE SPECIAL TASK FORCE', 20, 30);
       ctx.font = '11px sans-serif';
       ctx.fillText('FIRST INFORMATION REPORT (FIR-2024-00892)', 20, 52);
       ctx.fillText('Police Station: Cyber Crime Cell, Lucknow', 20, 72);
       ctx.fillText('Offense: IPC 302, 120B / BNS §103, §61', 20, 92);
       ctx.fillText('Recovered: 1x 128GB MicroSD, 1x 2TB SSD', 20, 112);
-      ctx.fillText('Sealing Status: WORM Tamper-Evident Lock', 20, 132);
-      ctx.fillText('Section 65B BSA 2023 Electronic Certificate Active', 20, 152);
-
-      // Green official seal stamp
-      ctx.strokeStyle = '#16a34a';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(240, 160, 120, 55);
-      ctx.fillStyle = '#16a34a';
-      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText('Sealing Status: Tamper-Proof Storage', 20, 132);
+      ctx.fillText('Electronic Certificate under BSA 2023 §65B', 20, 152);
+      ctx.strokeStyle = '#16a34a'; ctx.lineWidth = 2; ctx.strokeRect(240, 160, 120, 55);
+      ctx.fillStyle = '#16a34a'; ctx.font = 'bold 10px sans-serif';
       ctx.fillText('STF SEAL VERIFIED', 246, 185);
       ctx.fillText('BSA §65B CERTIFIED', 246, 202);
-
       displayOcrResults('FIR-2024-00892_STF.pdf');
-      showToast('Loaded FIR-2024-00892 sample document into OCR canvas.');
+      showToast('Sample FIR loaded.');
     }
 
     function applyCanvasFilter(filterType) {
-      ['filterAutoBtn', 'filterBwBtn', 'filterGrayBtn', 'filterHighBtn'].forEach(id => {
+      ['filterAutoBtn','filterBwBtn','filterGrayBtn','filterHighBtn'].forEach(id => {
         const b = document.getElementById(id);
-        if (b) {
-          b.style.background = '#ffffff';
-          b.style.color = '#334155';
-          b.style.borderColor = '#cbd5e1';
-        }
+        if (b) { b.style.background = '#fff'; b.style.color = '#334155'; b.style.borderColor = '#cbd5e1'; }
       });
-
-      const activeBtnMap = {
-        'AUTO': 'filterAutoBtn',
-        'BW': 'filterBwBtn',
-        'GRAY': 'filterGrayBtn',
-        'HIGH': 'filterHighBtn'
-      };
-      const activeEl = document.getElementById(activeBtnMap[filterType]);
-      if (activeEl) {
-        activeEl.style.background = 'var(--primary)';
-        activeEl.style.color = '#ffffff';
-        activeEl.style.borderColor = 'var(--primary)';
-      }
-
+      const map = { 'AUTO':'filterAutoBtn','BW':'filterBwBtn','GRAY':'filterGrayBtn','HIGH':'filterHighBtn' };
+      const el = document.getElementById(map[filterType]);
+      if (el) { el.style.background = 'var(--primary)'; el.style.color = '#fff'; el.style.borderColor = 'var(--primary)'; }
       const canvas = document.getElementById('ocrPreviewCanvas');
-      if (!canvas) return;
+      if (!canvas || !canvas.width) return;
       const ctx = canvas.getContext('2d');
+      if (filterType === 'AUTO') { loadSampleFirOcr(); return; }
       const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imgData.data;
-
       if (filterType === 'BW') {
-        for (let i = 0; i < data.length; i += 4) {
-          const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-          const v = avg > 140 ? 255 : 0;
-          data[i] = v; data[i + 1] = v; data[i + 2] = v;
-        }
-        ctx.putImageData(imgData, 0, 0);
-        showToast('Clean Binary B&W thresholding applied.');
+        for (let i = 0; i < data.length; i += 4) { const v = ((data[i]+data[i+1]+data[i+2])/3) > 140 ? 255 : 0; data[i]=v; data[i+1]=v; data[i+2]=v; }
+        ctx.putImageData(imgData, 0, 0); showToast('Black & white filter applied.');
       } else if (filterType === 'GRAY') {
-        for (let i = 0; i < data.length; i += 4) {
-          const avg = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
-          data[i] = avg; data[i + 1] = avg; data[i + 2] = avg;
-        }
-        ctx.putImageData(imgData, 0, 0);
-        showToast('Denoise grayscale filter applied.');
+        for (let i = 0; i < data.length; i += 4) { const avg = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114; data[i]=avg; data[i+1]=avg; data[i+2]=avg; }
+        ctx.putImageData(imgData, 0, 0); showToast('Grayscale filter applied.');
       } else if (filterType === 'HIGH') {
-        const factor = (259 * (128 + 255)) / (255 * (259 - 128));
-        for (let i = 0; i < data.length; i += 4) {
-          data[i] = factor * (data[i] - 128) + 128;
-          data[i+1] = factor * (data[i+1] - 128) + 128;
-          data[i+2] = factor * (data[i+2] - 128) + 128;
-        }
-        ctx.putImageData(imgData, 0, 0);
-        showToast('High-contrast sharpening applied.');
-      } else {
-        loadSampleFirOcr();
+        const f = (259*(128+255))/(255*(259-128));
+        for (let i = 0; i < data.length; i += 4) { data[i]=f*(data[i]-128)+128; data[i+1]=f*(data[i+1]-128)+128; data[i+2]=f*(data[i+2]-128)+128; }
+        ctx.putImageData(imgData, 0, 0); showToast('High contrast filter applied.');
       }
     }
 
-    function displayOcrResults(filename) {
-      const card = document.getElementById('ocrResultsCard');
-      const badge = document.getElementById('ocrStatusBadge');
-      if (card) card.style.display = 'block';
-      if (badge) {
-        badge.textContent = 'Extracted 100%';
-        badge.className = 'm-badge m-badge-success';
-      }
-    }
+    function displayOcrResults() { const card = document.getElementById('ocrResultsCard'); if (card) card.style.display = 'block'; }
 
     let customSavedDocCount = 0;
     function saveOcrToStorage() {
       customSavedDocCount++;
       const vaultList = document.getElementById('vaultDocList');
       const docCode = 'DOC-2024-00' + (2 + customSavedDocCount);
-      
       if (vaultList) {
         const item = document.createElement('div');
-        item.style.borderBottom = '1px solid #e2e8f0';
-        item.style.paddingBottom = '10px';
-        item.style.animation = 'fadeIn 0.3s ease';
-        item.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-weight:700; font-size:13px; color:var(--navy-900);">${docCode}: Scanned FIR Artifact</span>
-            <span class="m-badge m-badge-success">✔ Newly Vaulted</span>
-          </div>
-          <div style="font-size:11px; color:var(--slate-500); margin:3px 0 6px;">SHA-256: 4e910a3c72b1... • AES-256-GCM • WORM Locked</div>
-          <div style="display:flex; gap:6px;">
-            <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px; color:#16a34a;" onclick="showToast('${docCode} verified in Polygon Amoy Block #14,892,110')">Verify Hash ✔</button>
-            <button class="btn-m-secondary" style="font-size:11px; padding:4px 8px; color:#7c3aed;" onclick="openMobileProofSheet('${docCode}', 'Scanned FIR Artifact')">Tamper Check ⬡</button>
-          </div>
-        `;
+        item.className = 'doc-item'; item.style.animation = 'fadeIn 0.3s ease';
+        item.innerHTML = `<div class="doc-item-header"><span class="doc-item-name">${docCode}: Scanned Document</span><span class="badge badge-green">New</span></div><div class="doc-item-meta">SHA-256: 4e910a3c72b1... — Encrypted</div><div class="doc-item-actions"><button class="btn-outline" style="font-size:11px; padding:4px 8px; color:var(--green-600);" onclick="showToast('${docCode} verified')">Verify</button><button class="btn-outline" style="font-size:11px; padding:4px 8px; color:var(--indigo-600);" onclick="openMobileProofSheet('${docCode}','Scanned Document')">Check Integrity</button></div>`;
         vaultList.insertBefore(item, vaultList.firstChild);
       }
-      showToast('Document saved & encrypted in offline WORM storage!');
-      setTimeout(() => {
-        switchMobileTab('storage');
-      }, 700);
+      showToast('Document saved to vault');
+      setTimeout(() => switchMobileTab('storage'), 700);
     }
 
-    // Case AI (RAG)
     async function runMobileRag(customQuery) {
       const input = document.getElementById('mobileRagInput');
-      const q = customQuery || (input ? input.value.trim() : '');
+      const q = customQuery || input?.value.trim() || '';
       if (!q) return;
-
       if (input && customQuery) input.value = customQuery;
-
       const card = document.getElementById('mobileRagResultCard');
       const textEl = document.getElementById('mobileRagAnswerText');
       const confEl = document.getElementById('mobileRagConf');
-
       if (card) card.style.display = 'block';
-      if (textEl) textEl.innerHTML = '<span style="color:#2563eb;">Searching authorized case records and citing document hashes...</span>';
-
+      if (textEl) textEl.innerHTML = '<span style="color:var(--primary);">Searching case documents...</span>';
       try {
-        const resp = await fetch('/api/v1/ai/query', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ caseId: 'FIR-2024-00892', query: q })
-        });
-        if (resp.ok) {
-          const res = await resp.json();
-          const d = res.data || res;
-          textEl.textContent = d.response || 'No response found.';
-          if (confEl) confEl.textContent = 'Confidence: ' + Math.round((d.confidence || 0.984) * 100) + '%';
-          showToast('Case AI query completed with verified legal citations.');
-          return;
-        }
-      } catch (err) {
-        console.log('Using local AI synthesis fallback');
-      }
-
-      // Offline synthesis fallback
+        const resp = await fetch('/api/v1/ai/query', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ caseId: 'FIR-2024-00892', query: q }) });
+        if (resp.ok) { const res = await resp.json(); const d = res.data || res; textEl.textContent = d.response || 'No results found.'; if (confEl) confEl.textContent = 'From ' + (d.sourceCount||3) + ' documents'; showToast('Search complete.'); return; }
+      } catch(err) { console.log('Using local search fallback'); }
       setTimeout(() => {
-        let ans = "Case CC/2025/1457 Investigation Summary:\n• Target: FIR-2024-00892 (State vs. Criminal Syndicate)\n• Investigating Agency: UP Police Special Task Force\n• Seized Artifacts: Western Digital 2TB SSD, 2x MicroSD cards.\n• Legal Compliance: Section 65B BSA 2023 Certified.";
+        let ans = "Case CC/2025/1457 — Summary:\n\nCase: FIR-2024-00892 (State vs. Criminal Syndicate)\nAgency: UP Police Special Task Force\nSeized Items: Western Digital 2TB SSD, 2x MicroSD cards\nCompliance: Certified under BSA 2023 §65B\n\nAll documents verified against blockchain records.";
         const low = q.toLowerCase();
-        if (low.includes('weapon') || low.includes('seiz') || low.includes('hard')) {
-          ans = "Seized Hardware & Digital Artifacts:\n• Primary Seizure: 1x Western Digital 2TB NVMe SSD, 2x SanDisk 128GB MicroSD cards, 1x Apple iPhone 14 Pro.\n• Authority: Seized under Section 105 BNSS / Cr.P.C. §102.\n• Chain of Custody: SHA-256 integrity hash anchored to Polygon Amoy Ledger immediately post-seizure.\n\nVerified Citations: [DOC-2024-001 §4: Seizure Memo], [EVD-2024-002].";
-        } else if (low.includes('custody') || low.includes('transfer')) {
-          ans = "Chain of Custody Provenance:\n• 12/05/2024 14:30: Recovered on-site by STF Cyber Operations.\n• 12/05/2024 17:15: Deposited in STF Evidence Malkhana (Locker B-14).\n• 13/05/2024 10:00: Transferred to State Forensic Science Lab (FSL) under dual key sign-off.\n\nVerified Citations: [CUSTODY-LOG-892], [AUDIT-HASH-77a1].";
-        } else if (low.includes('bsa') || low.includes('65b') || low.includes('court')) {
-          ans = "Statutory Evidence Admissibility (BSA 2023 §65B):\n• Statutory Form: Certificate under Section 65B Bharatiya Sakshya Adhiniyam, 2023 generated and signed.\n• Bitstream Proof: Physical disk duplicate verified via SHA-256 pre- and post-acquisition.\n• Judicial Admissibility: 100% admissible without secondary oral evidence.\n\nVerified Citations: [BSA-65B-CERT-00892].";
+        if (low.includes('seiz') || low.includes('item') || low.includes('weapon') || low.includes('hard')) {
+          ans = "Seized Items:\n\n1. Western Digital 2TB NVMe SSD\n2. 2x SanDisk 128GB MicroSD cards\n3. Apple iPhone 14 Pro\n\nSeized under BNSS §105. Chain of custody hash recorded on blockchain after seizure.\n\nSource: DOC-2024-001 (Seizure Memo), EVD-2024-002";
+        } else if (low.includes('custody') || low.includes('transfer') || low.includes('chain')) {
+          ans = "Chain of Custody:\n\n12 May 2024, 14:30 — Recovered by STF Cyber Operations\n12 May 2024, 17:15 — Deposited in Evidence Room (Locker B-14)\n13 May 2024, 10:00 — Transferred to Forensic Science Lab\n\nAll transfers logged with dual sign-off and blockchain verification.\n\nSource: CUSTODY-LOG-892";
+        } else if (low.includes('court') || low.includes('admiss') || low.includes('bsa') || low.includes('65b')) {
+          ans = "Court Admissibility (BSA 2023 §65B):\n\nCertificate under Section 65B has been generated and signed.\nDigital copy verified via SHA-256 hash comparison.\nAdmissible in court without secondary oral evidence.\n\nSource: BSA-65B-CERT-00892";
+        } else if (low.includes('forensic') || low.includes('ballistic') || low.includes('finding')) {
+          ans = "Forensic Findings:\n\n9mm spent cartridge recovered from scene.\nBarrel striation analysis: Match confirmed (Glock 17 Gen 5).\nReport by: State Forensic Science Lab.\nBoth versions (v1, v2) stored in vault.\n\nSource: DOC-2024-002";
         }
         textEl.textContent = ans;
-        showToast('Case AI briefing ready with citations.');
-      }, 350);
+        if (confEl) confEl.textContent = 'From 3 documents';
+        showToast('Search complete.');
+      }, 400);
     }
 
-    // 2FA TOTP Live Counter
-    let totpInterval;
     function initTotp() {
       let sec = 30;
-      const timerEl = document.getElementById('totpTimerSec');
-      const codeEl = document.getElementById('totpDisplayCode');
-      
       setInterval(() => {
         sec--;
-        if (sec <= 0) {
-          sec = 30;
-          const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
-          if (codeEl) codeEl.textContent = randomCode.substring(0, 3) + ' ' + randomCode.substring(3);
-        }
-        if (timerEl) timerEl.textContent = sec + 's';
+        if (sec <= 0) { sec = 30; const c = Math.floor(100000 + Math.random()*900000).toString(); const el = document.getElementById('totpDisplayCode'); if (el) el.textContent = c.substring(0,3)+' '+c.substring(3); }
+        const t = document.getElementById('totpTimerSec'); if (t) t.textContent = sec+'s';
       }, 1000);
     }
 
-    // Toast Popup Helper
     let toastTimer;
     function showToast(msg) {
-      const toast = document.getElementById('mToast');
-      const text = document.getElementById('mToastText');
+      const toast = document.getElementById('mToast'); const text = document.getElementById('mToastText');
       if (!toast || !text) return;
-      text.textContent = msg;
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
+      text.textContent = msg; toast.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
-      });
-    }
-
-    // Init on load
-    window.addEventListener('DOMContentLoaded', () => {
-      initTotp();
-      // Load sample image into canvas so OCR is ready immediately
-      setTimeout(loadSampleFirOcr, 500);
-    });
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+    window.addEventListener('DOMContentLoaded', () => { initTotp(); setTimeout(loadSampleFirOcr, 500); });
   </script>
 </body>
 </html>

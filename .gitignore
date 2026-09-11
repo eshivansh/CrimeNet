@@ -42,7 +42,6 @@ build/
 ppt/
 node_modules/
 **/node_modules/
-
 ### Signing material and deployment secrets ###
 # Prevents new key material being committed. Note this does NOT untrack files that are
 # already in the index or remove anything from history.
@@ -52,3 +51,5 @@ contracts/*wallet*.json
 **/*.pem
 **/*.p12
 **/*.jks
+*.log
+
