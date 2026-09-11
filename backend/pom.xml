@@ -36,7 +36,7 @@
         <!-- 1.78.1: CVE-2025-14813 (GOST CTR keystream reuse), CVE-2026-0636 (LDAP injection) -->
         <bouncycastle.version>1.84</bouncycastle.version>
         <web3j.version>4.10.3</web3j.version>
-        <okhttp.version>4.12.0</okhttp.version>
+        <okhttp.version>5.5.0</okhttp.version>
     </properties>
 
     <dependencies>
