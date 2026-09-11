@@ -96,6 +96,18 @@
             "user.attribute": "org_id",
             "jsonType.label": "String"
           }
+        },
+        {
+          "name": "crimenet-backend-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "crimenet-backend",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
         }
       ]
     },
@@ -162,6 +174,18 @@
             "claim.name": "org_id",
             "user.attribute": "org_id",
             "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "crimenet-backend-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "crimenet-backend",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
           }
         }
       ]

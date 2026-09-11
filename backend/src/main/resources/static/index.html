@@ -1371,11 +1371,13 @@
             window.open('/api/v1/evidence/' + ev.id + '/bsa-certificate', '_blank');
             showToast("Downloaded BSA §65B Certificate for " + code + "!");
           } else {
-            showToast("Certificate generated with forensic SHA-256 hash & verification QR!");
+            showToast("No evidence records available to certify.");
           }
         })
-        .catch(() => {
-          showToast("Certificate generated with forensic SHA-256 hash & verification QR!");
+        .catch(err => {
+          // Reporting a statutory certificate as "generated" when the call failed is the
+          // same class of problem as the fabricated gateway response above.
+          showToast("Could not generate the certificate: " + err);
         });
     }
 
@@ -1391,33 +1393,18 @@
           showToast(`Response received from ${system} adapter.`);
         })
         .catch(err => {
-          // If backend server is currently offline in demo mode, display high-fidelity simulated response
-          const simulated = (system === 'ICJS') ? {
-            source: "ICJS",
-            externalId: id,
-            status: "ACTIVE",
-            caseType: "CRIMINAL",
-            court: "District & Sessions Court, Lucknow",
-            nextHearing: "2026-10-15",
-            judge: "Hon. Principal Sessions Judge",
-            protocol: "NICNET / SWAN (mTLS X.509 Secured)",
-            mock: false,
-            timestamp: new Date().toISOString()
-          } : {
-            source: "CCTNS",
-            externalId: id,
-            firNumber: "FIR-2026-UP-" + id,
-            policeStation: "Cyber Crime Cell, Lucknow",
-            sections: "IT Act §66C, §66D; BNS §316, §318",
-            status: "UNDER_INVESTIGATION",
-            io: "Sub-Inspector (Investigating Officer)",
-            registeredAt: "2026-03-15T10:30:00Z",
-            protocol: "State Police Intranet / WSDL (HMAC-SHA256)",
-            mock: false,
-            timestamp: new Date().toISOString()
-          };
-          if (box) box.textContent = `[SIMULATED ADAPTER GATEWAY RESPONSE - NICNET SECURED]\n` + JSON.stringify(simulated, null, 2);
-          showToast(`Retrieved ${system} record via gateway adapter.`);
+          // This used to render invented FIR numbers, sections, courts and hearing dates
+          // tagged "mock": false under a banner claiming a secured NICNET response - so a
+          // failed call showed an officer fabricated case data as though it were real.
+          // A system of record must never invent a record. Errors surface as errors.
+          if (box) {
+            box.textContent =
+              `[GATEWAY ERROR] No response from the ${system} adapter for record ${id}.\n\n` +
+              `${err}\n\n` +
+              `Nothing is displayed for this record because nothing was returned. ` +
+              `Check that you are signed in and that the integration gateway is reachable.`;
+          }
+          showToast(`${system} gateway unavailable - no data returned.`);
         });
     }
 
