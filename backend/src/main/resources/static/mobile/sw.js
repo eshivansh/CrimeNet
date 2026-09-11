@@ -1,20 +1,17 @@
-// CrimeNet PWA Service Worker
-const CACHE_NAME = 'crimenet-mobile-v1';
+// CrimeNet PWA Service Worker v2 (Bust Cache)
+const CACHE_NAME = 'crimenet-mobile-v2';
 const ASSETS_TO_CACHE = [
-  './index.html',
   './manifest.json',
   '../assets/Crimenet_logo_v2.png'
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE).catch(() => {
-        // Continue even if some optional assets are missed
-      });
+      return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
     })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -33,13 +30,21 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests for same origin or cached assets
   if (event.request.method !== 'GET') return;
-  
+
+  // Always use network-first for HTML pages so user always sees the latest updates
+  if (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-cache' })
+        .then((response) => response)
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Clone and cache successful responses
         if (response && response.status === 200) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -48,13 +53,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => {
-        return caches.match(event.request).then((cached) => {
-          return cached || new Response('Offline - CrimeNet Cached Workspace', {
-            status: 200,
-            headers: { 'Content-Type': 'text/plain' }
-          });
-        });
-      })
+      .catch(() => caches.match(event.request))
   );
 });

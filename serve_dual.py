@@ -28,7 +28,9 @@ class CrimeNetHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', '*')
-        self.send_header('Cache-Control', 'no-cache, must-revalidate')
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
         super().end_headers()
 
     def do_OPTIONS(self):
@@ -103,6 +105,23 @@ class CrimeNetHandler(http.server.SimpleHTTPRequestHandler):
         self.send_error(404, "Endpoint not found")
 
     def do_GET(self):
+        # Automatic mobile detection and seamless routing
+        ua = self.headers.get('User-Agent', '').lower()
+        is_mobile = any(m in ua for m in ['iphone', 'ipad', 'ipod', 'android', 'mobile'])
+
+        clean_path = self.path.split('?')[0].rstrip('/')
+        if clean_path in ['', '/index.html'] and is_mobile:
+            self.send_response(302)
+            self.send_header('Location', '/mobile/index.html')
+            self.end_headers()
+            return
+
+        if clean_path in ['/mobile', '/mobile-app']:
+            self.send_response(302)
+            self.send_header('Location', '/mobile/index.html')
+            self.end_headers()
+            return
+
         if self.path.startswith('/api/v1/integrations/ICJS/fetch/'):
             doc_id = self.path.split('/')[-1]
             data = {
@@ -210,23 +229,35 @@ class SecureTCPServer(socketserver.TCPServer):
                 pass
             raise
 
+HTTP_PORT_80 = 80
+
+def run_http_80():
+    try:
+        with ReusableTCPServer(("", HTTP_PORT_80), CrimeNetHandler) as httpd:
+            print(f"[*] Standard Port 80 Server active on http://0.0.0.0:{HTTP_PORT_80}", flush=True)
+            httpd.serve_forever()
+    except Exception as e:
+        print(f"[!] Note: Port 80 binding skipped: {e}", flush=True)
+
 def run_http():
     with ReusableTCPServer(("", HTTP_PORT), CrimeNetHandler) as httpd:
-        print(f"[*] Plain HTTP Server active on http://0.0.0.0:{HTTP_PORT} (http://10.50.1.249:{HTTP_PORT} / http://172.20.10.2:{HTTP_PORT})", flush=True)
+        print(f"[*] Plain HTTP Server active on http://0.0.0.0:{HTTP_PORT} (http://10.50.1.249:{HTTP_PORT} / http://100.79.221.75:{HTTP_PORT})", flush=True)
         httpd.serve_forever()
 
 def run_https():
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.load_cert_chain(certfile=CERT_FILE, keyfile=KEY_FILE)
     with SecureTCPServer(("", HTTPS_PORT), CrimeNetHandler, context) as httpsd:
-        print(f"[*] Secure HTTPS Server active on https://0.0.0.0:{HTTPS_PORT} (https://10.50.1.249:{HTTPS_PORT} / https://172.20.10.2:{HTTPS_PORT})", flush=True)
+        print(f"[*] Secure HTTPS Server active on https://0.0.0.0:{HTTPS_PORT} (https://10.50.1.249:{HTTPS_PORT} / https://100.79.221.75:{HTTPS_PORT})", flush=True)
         httpsd.serve_forever()
 
 if __name__ == '__main__':
+    t0 = threading.Thread(target=run_http_80, daemon=True)
     t1 = threading.Thread(target=run_http, daemon=True)
     t2 = threading.Thread(target=run_https, daemon=True)
+    t0.start()
     t1.start()
     t2.start()
-    print("[*] CrimeNet Dual HTTP/HTTPS Server initialized with Multi-SAN Certificate.", flush=True)
+    print("[*] CrimeNet Multi-Port Server initialized across Port 80, 8080 & 8443.", flush=True)
     t1.join()
     t2.join()
