@@ -54,6 +54,17 @@ public class AuditController {
         return ResponseEntity.ok(ApiResponse.ok(toPageResponse(result)));
     }
 
+    /**
+     * Walks the most recent events, recomputing each hash from its own stored fields and
+     * checking the linkage. Nothing previously verified the chain through any API.
+     */
+    @GetMapping("/verify-chain")
+    public ResponseEntity<ApiResponse<AuditService.ChainVerificationResult>> verifyChain(
+            @RequestParam(defaultValue = "500") int limit) {
+        int bounded = Math.min(Math.max(limit, 1), 5000);
+        return ResponseEntity.ok(ApiResponse.ok(auditService.verifyChain(bounded)));
+    }
+
     private <T> PageResponse<T> toPageResponse(Page<T> page) {
         return PageResponse.<T>builder()
                 .content(page.getContent())

@@ -50,6 +50,16 @@ public class EvidenceController {
         return ResponseEntity.ok(ApiResponse.ok(evidenceService.getCustodyChain(id)));
     }
 
+    /**
+     * Recomputes every custody link and reports a per-link verdict. The chain was
+     * tamper-evident in structure, but nothing ever read that evidence back.
+     */
+    @GetMapping("/evidence/{id}/chain/verify")
+    public ResponseEntity<ApiResponse<CustodyChainService.CustodyChainVerification>> verifyCustodyChain(
+            @PathVariable UUID id) {
+        return ResponseEntity.ok(ApiResponse.ok(evidenceService.verifyCustodyChain(id)));
+    }
+
     @PostMapping("/evidence/{id}/artifacts")
     public ResponseEntity<ApiResponse<EvidenceArtifact>> addArtifact(
             @PathVariable UUID id,
