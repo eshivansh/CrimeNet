@@ -31,7 +31,7 @@
         <maven.compiler.release>21</maven.compiler.release>
         <lombok.version>1.18.48</lombok.version>
         <!-- 8.5.13: CVE-2025-59952, XML tag values substituted from environment variables -->
-        <minio.version>8.6.0</minio.version>
+        <minio.version>9.0.3</minio.version>
         <springdoc.version>2.7.0</springdoc.version>
         <!-- 1.78.1: CVE-2025-14813 (GOST CTR keystream reuse), CVE-2026-0636 (LDAP injection) -->
         <bouncycastle.version>1.84</bouncycastle.version>
