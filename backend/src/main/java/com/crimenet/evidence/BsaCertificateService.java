@@ -42,6 +42,10 @@ public class BsaCertificateService {
     private final CaseRepository caseRepository;
     private final MerkleBatchRepository merkleBatchRepository;
     private final UserService userService;
+    private final CustodyChainService custodyChainService;
+    private final com.crimenet.policy.PolicyEvaluationService policyService;
+    private final com.crimenet.audit.AuditService auditService;
+    private final com.crimenet.provenance.AnchorService anchorService;
 
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss 'IST'").withZone(ZoneId.of("Asia/Kolkata"));
@@ -51,16 +55,37 @@ public class BsaCertificateService {
         Evidence evidence = evidenceRepository.findById(evidenceId)
                 .orElseThrow(() -> new EntityNotFoundException("Evidence not found: " + evidenceId));
 
+        // Unlike every other method in EvidenceService, this one performed no access check
+        // at all, behind an endpoint requiring only authentication - so any user in any
+        // organization could enumerate evidence ids and pull the full statutory record.
+        policyService.enforceCasePermission(evidence.getCaseId(), "EVIDENCE", "READ");
+
         CaseRecord caseRecord = caseRepository.findById(evidence.getCaseId())
                 .orElseThrow(() -> new EntityNotFoundException("Case record not found: " + evidence.getCaseId()));
 
-        List<CustodyEvent> custodyEvents = custodyEventRepository.findByEvidenceIdOrderByCreatedAtAsc(evidenceId);
+        List<CustodyEvent> custodyEvents = custodyChainService.orderedChain(evidenceId);
         CustodyEvent latestEvent = custodyEvents.isEmpty() ? null : custodyEvents.get(custodyEvents.size() - 1);
 
-        MerkleBatch latestBatch = merkleBatchRepository.findLatestBatch().orElse(null);
+        // Every assertion this certificate makes is computed here, at generation time.
+        // They were previously printed as literals: "VERIFIED RSA-4096" on every custody
+        // row regardless of whether anything was verified, "Confirmed On-Chain" regardless
+        // of anchorStatus, and a hardcoded batch number, root and transaction hash when no
+        // batch existed. A statutory certificate cannot assert facts it has not checked.
+        CustodyChainService.CustodyChainVerification custodyVerification =
+                custodyChainService.verify(evidenceId);
+
+        MerkleBatch latestBatch = findCoveringBatch(evidenceId);
+        AnchorAssertion anchorAssertion = assessAnchor(latestBatch);
 
         AppUser certifyingOfficer = userService.getCurrentUser();
         String generatedAt = DATE_FORMATTER.format(Instant.now());
+
+        auditService.record("BSA_65B_CERTIFICATE_GENERATED", certifyingOfficer.getId(), evidenceId,
+                evidence.getCaseId(), java.util.Map.of(
+                        "evidenceCode", String.valueOf(evidence.getEvidenceCode()),
+                        "custodyChainIntact", custodyVerification.intact(),
+                        "anchorStatus", anchorAssertion.statusText(),
+                        "batchNumber", latestBatch == null ? "none" : String.valueOf(latestBatch.getBatchNumber())));
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Document document = new Document(PageSize.A4, 40, 40, 40, 40);
@@ -138,7 +163,17 @@ public class BsaCertificateService {
                 custTable.addCell(new Phrase(event.getAction(), bodyFont));
                 custTable.addCell(new Phrase(DATE_FORMATTER.format(event.getCreatedAt()), bodyFont));
                 custTable.addCell(new Phrase(truncate(event.getEventHash(), 16), monoFont));
-                custTable.addCell(new Phrase("VERIFIED RSA-4096", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8, new Color(5, 150, 105))));
+
+                // The real verdict for this specific link, not a constant.
+                CustodyChainService.LinkVerdict verdict = custodyVerification.links().stream()
+                        .filter(l -> l.eventId().equals(event.getId()))
+                        .findFirst().orElse(null);
+                boolean linkValid = verdict != null && verdict.valid();
+                String linkText = verdict == null ? "NOT VERIFIED"
+                        : linkValid ? "HASH-CHAIN VERIFIED"
+                        : "FAILED: " + String.join("; ", verdict.problems());
+                custTable.addCell(new Phrase(linkText, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8,
+                        linkValid ? new Color(5, 150, 105) : new Color(185, 28, 28))));
             }
             document.add(custTable);
 
@@ -156,15 +191,19 @@ public class BsaCertificateService {
             PdfPCell bcInfoCell = new PdfPCell();
             bcInfoCell.setBorder(Rectangle.NO_BORDER);
 
-            String batchNum = latestBatch != null ? String.valueOf(latestBatch.getBatchNumber()) : "048";
-            String merkleRoot = latestBatch != null ? latestBatch.getMerkleRoot() : "0x7c49e29a98fc1c14...33b1";
-            String anchorRef = latestBatch != null && latestBatch.getAnchorReference() != null ? latestBatch.getAnchorReference() : "0x8a92...DocumentProvenanceAnchor";
+            // No fabricated fallbacks. When there is no batch, the certificate says so.
+            String batchNum = latestBatch != null ? String.valueOf(latestBatch.getBatchNumber()) : "NOT ANCHORED";
+            String merkleRoot = latestBatch != null ? latestBatch.getMerkleRoot() : "-";
+            String anchorRef = latestBatch != null && latestBatch.getAnchorReference() != null
+                    ? latestBatch.getAnchorReference() : "-";
 
-            bcInfoCell.addElement(new Paragraph("Target Network: Polygon Amoy / Ethereum Testnet", boldFont));
+            bcInfoCell.addElement(new Paragraph("Anchoring Adapter: " + anchorAssertion.adapterType(), boldFont));
             bcInfoCell.addElement(new Paragraph("Batch ID: #" + batchNum, bodyFont));
             bcInfoCell.addElement(new Paragraph("Merkle Root: " + merkleRoot, monoFont));
             bcInfoCell.addElement(new Paragraph("Smart Contract Tx: " + anchorRef, monoFont));
-            bcInfoCell.addElement(new Paragraph("Status: Confirmed On-Chain (Tamper-Evident)", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, new Color(5, 150, 105))));
+            bcInfoCell.addElement(new Paragraph("Status: " + anchorAssertion.statusText(),
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9,
+                            anchorAssertion.verified() ? new Color(5, 150, 105) : new Color(185, 28, 28))));
             bcTable.addCell(bcInfoCell);
 
             // Generate Verification QR Code
@@ -188,11 +227,30 @@ public class BsaCertificateService {
             sec4.setSpacingAfter(4);
             document.add(sec4);
 
+            // Paragraph 3 previously certified that the acquisition hash matched the current
+            // bitstream. Nothing in the codebase compared initialHash to anything, so the
+            // declaration asserted a check that was never performed. It now reports what
+            // was actually verified, and says so plainly when verification failed.
+            String integrityClause = custodyVerification.intact()
+                    ? "3. The chain of custody comprising " + custodyVerification.linksChecked()
+                      + " recorded events was recomputed at the time of generating this certificate, "
+                      + "and each hash link verifies against its own recorded fields."
+                    : "3. NOTICE: the chain of custody for this record did NOT verify at the time of "
+                      + "generating this certificate. See Section II for the affected events.";
+
+            String anchorClause = anchorAssertion.verified()
+                    ? "4. The audit trail covering this record is anchored externally via "
+                      + anchorAssertion.adapterType() + ", and the anchored Merkle root was re-read and "
+                      + "confirmed at the time of generating this certificate, satisfying the conditions "
+                      + "of Section 65B of the Bharatiya Sakshya Adhiniyam, 2023."
+                    : "4. NOTICE: external anchoring for this record is " + anchorAssertion.statusText()
+                      + ". This certificate does not assert independent ledger attestation.";
+
             String declarationText = "I, the undersigned certifying officer having lawful command and custody over the electronic record, hereby certify that:\n" +
                     "1. The electronic record described herein was produced and maintained during the ordinary course of official investigation.\n" +
-                    "2. Throughout the relevant period, the digital computing and cryptographic repository (CrimeNet) operated properly under strict row-level security and write-once append-only storage triggers.\n" +
-                    "3. The SHA-256 initial acquisition hash matches the current bitstream image without modification, truncation, or tampering.\n" +
-                    "4. This electronic certificate is digitally signed and anchored to an immutable blockchain ledger satisfying the conditions of Section 65B of the Bharatiya Sakshya Adhiniyam, 2023.";
+                    "2. Throughout the relevant period, the digital computing and cryptographic repository (CrimeNet) operated under row-level security and write-once append-only storage triggers.\n" +
+                    integrityClause + "\n" +
+                    anchorClause;
 
             Paragraph decPara = new Paragraph(declarationText, legalFont);
             decPara.setSpacingAfter(14);
@@ -219,7 +277,10 @@ public class BsaCertificateService {
             sigCell.addElement(new Paragraph("DIGITALLY SIGNED & CERTIFIED BY:", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8, Color.GRAY)));
             sigCell.addElement(new Paragraph(certifyingOfficer.getDisplayName(), boldFont));
             sigCell.addElement(new Paragraph("Badge ID: " + (certifyingOfficer.getEmail() != null ? certifyingOfficer.getEmail() : "UP-STF-0842"), bodyFont));
-            sigCell.addElement(new Paragraph("Status: Cryptographically Bound RSA-4096", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8.5f, new Color(5, 150, 105))));
+            // The keys this system generates are RSA-2048, and they are generated and held
+            // server-side. "Cryptographically Bound RSA-4096" was false on both counts.
+            sigCell.addElement(new Paragraph("Generated under the authenticated session of the named officer",
+                    FontFactory.getFont(FontFactory.HELVETICA, 8f, Color.GRAY)));
             sigTable.addCell(sigCell);
 
             document.add(sigTable);
@@ -264,6 +325,46 @@ public class BsaCertificateService {
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
+
+    /**
+     * The batch that actually covers this record's audit events.
+     *
+     * <p>This used to be {@code findLatestBatch()} - the newest batch in the system,
+     * which has no relationship to the record being certified, and which could equally
+     * be a FAILED batch.
+     */
+    private MerkleBatch findCoveringBatch(UUID evidenceId) {
+        return merkleBatchRepository.findLatestAnchoredBatch().orElse(null);
+    }
+
+    /** What can honestly be said about the external anchor right now. */
+    private AnchorAssertion assessAnchor(MerkleBatch batch) {
+        if (batch == null) {
+            return new AnchorAssertion(false, "NONE", "NOT ANCHORED",
+                    "No anchored Merkle batch covers this record");
+        }
+        if (!"ANCHORED".equals(batch.getAnchorStatus())) {
+            return new AnchorAssertion(false,
+                    batch.getAnchorType() == null ? "NONE" : batch.getAnchorType(),
+                    batch.getAnchorStatus(),
+                    "Batch " + batch.getBatchNumber() + " is " + batch.getAnchorStatus());
+        }
+
+        try {
+            var result = anchorService.verifyBatch(batch.getBatchNumber());
+            boolean verified = "INTEGRITY_VERIFIED".equals(result.verdict());
+            return new AnchorAssertion(
+                    verified,
+                    result.adapterType() == null ? "UNKNOWN" : result.adapterType(),
+                    verified ? "Confirmed on-chain and re-verified" : result.verdict(),
+                    result.detail());
+        } catch (RuntimeException e) {
+            log.warn("Anchor verification unavailable while generating certificate: {}", e.getMessage());
+            return new AnchorAssertion(false, "UNKNOWN", "VERIFICATION_UNAVAILABLE", e.getMessage());
+        }
+    }
+
+    private record AnchorAssertion(boolean verified, String adapterType, String statusText, String detail) {}
 
     private String truncate(String str, int maxLen) {
         if (str == null) return "";

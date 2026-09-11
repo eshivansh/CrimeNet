@@ -39,6 +39,8 @@ public class EvidenceService {
     private final PolicyEvaluationService policyService;
     private final AuditService auditService;
     private final ObjectMapper objectMapper;
+    private final com.crimenet.common.IdentifierSequenceService identifierSequenceService;
+    private final CustodyChainService custodyChainService;
 
     @Value("${crimenet.documents.max-size-bytes:52428800}")
     private long maxSizeBytes;
@@ -84,22 +86,17 @@ public class EvidenceService {
 
         evidence = evidenceRepository.save(evidence);
 
-        // Create initial custody event: REGISTERED
-        String payload = canonicalPayload(Map.of(
-                "action", "REGISTERED",
-                "evidenceId", evidence.getId().toString(),
-                "toActor", currentUser.getId().toString()
-        ));
-        String eventHash = hashService.computeChainedHash(null, payload);
-
+        // Create initial custody event: REGISTERED. Hashed over every field, like every
+        // later link, so the origin of the chain is protected the same way.
         CustodyEvent initialEvent = CustodyEvent.builder()
                 .evidenceId(evidence.getId())
                 .toActor(currentUser.getId())
                 .action("REGISTERED")
                 .purpose("Initial evidence registration")
                 .location(request.location())
-                .eventHash(eventHash)
                 .build();
+        initialEvent.setCreatedAt(Instant.now());
+        initialEvent.setEventHash(custodyChainService.computeEventHash(initialEvent, null));
 
         custodyEventRepository.save(initialEvent);
 
@@ -154,16 +151,14 @@ public class EvidenceService {
             throw new SecurityException("Cross-tenant custody transfer denied: Recipient officer belongs to a different organization");
         }
 
-        // Build hash-linked event
-        String payload = canonicalPayload(Map.of(
-                "action", request.action(),
-                "evidenceId", evidenceId.toString(),
-                "fromActor", currentUser.getId().toString(),
-                "toActor", request.toActorId().toString(),
-                "previousEventId", currentHead.getId().toString()
-        ));
-        String eventHash = hashService.computeChainedHash(currentHead.getEventHash(), payload);
-
+        // Build the hash-linked event.
+        //
+        // The hash used to cover action, evidenceId, fromActor, toActor and previousEventId
+        // only — leaving purpose, location, notes, signature and the timestamp persisted but
+        // unauthenticated. The recorded location of a seizure could be rewritten and the
+        // chain still validated perfectly, which is exactly the claim a §65B certificate
+        // rests on. Every persisted field is now covered.
+        Instant occurredAt = Instant.now();
         CustodyEvent event = CustodyEvent.builder()
                 .evidenceId(evidenceId)
                 .fromActor(currentUser.getId())
@@ -172,11 +167,13 @@ public class EvidenceService {
                 .purpose(request.purpose())
                 .location(request.location())
                 .notes(request.notes())
-                .eventHash(eventHash)
                 .previousEventId(currentHead.getId())
                 .previousEventHash(currentHead.getEventHash())
                 .signature(request.signature())
                 .build();
+        event.setCreatedAt(occurredAt);
+        event.setEventHash(custodyChainService.computeEventHash(event, currentHead.getEventHash()));
+        String eventHash = event.getEventHash();
 
         event = custodyEventRepository.save(event);
 
@@ -196,7 +193,21 @@ public class EvidenceService {
         Evidence evidence = evidenceRepository.findById(evidenceId)
                 .orElseThrow(() -> new EntityNotFoundException("Evidence not found: " + evidenceId));
         policyService.enforceCaseAccess(evidence.getCaseId());
-        return custodyEventRepository.findByEvidenceIdOrderByCreatedAtAsc(evidenceId);
+        return custodyChainService.orderedChain(evidenceId);
+    }
+
+    /**
+     * Recompute and walk the custody chain for an evidence item.
+     *
+     * <p>The chain was tamper-evident in structure and nothing ever read that evidence:
+     * no code path recomputed an event hash or checked the linkage, so a break was
+     * invisible through every API.
+     */
+    public CustodyChainService.CustodyChainVerification verifyCustodyChain(UUID evidenceId) {
+        Evidence evidence = evidenceRepository.findById(evidenceId)
+                .orElseThrow(() -> new EntityNotFoundException("Evidence not found: " + evidenceId));
+        policyService.enforceCaseAccess(evidence.getCaseId());
+        return custodyChainService.verify(evidenceId);
     }
 
     /**
@@ -317,8 +328,8 @@ public class EvidenceService {
     }
 
     private String generateEvidenceCode() {
-        long count = evidenceRepository.count() + 1;
-        return String.format("E-%06d", count);
+        long serial = identifierSequenceService.next("evidence_code_seq");
+        return String.format("E-%06d", serial);
     }
 
     private String canonicalPayload(Map<String, String> data) {
