@@ -170,8 +170,9 @@ public class BsaCertificateService {
                         .findFirst().orElse(null);
                 boolean linkValid = verdict != null && verdict.valid();
                 String linkText = verdict == null ? "NOT VERIFIED"
-                        : linkValid ? "HASH-CHAIN VERIFIED"
-                        : "FAILED: " + String.join("; ", verdict.problems());
+                        : !linkValid ? "FAILED: " + String.join("; ", verdict.problems())
+                        : verdict.legacy() ? "VERIFIED (legacy hash: core fields only)"
+                        : "HASH-CHAIN VERIFIED";
                 custTable.addCell(new Phrase(linkText, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8,
                         linkValid ? new Color(5, 150, 105) : new Color(185, 28, 28))));
             }

@@ -26,7 +26,7 @@ public class BreakGlassController {
     private final BreakGlassService breakGlassService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('INVESTIGATOR', 'SUPERVISOR', 'FORENSIC_ANALYST', 'PROSECUTOR', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('INVESTIGATOR', 'SUPERVISOR', 'FORENSIC_OFFICER', 'PROSECUTOR', 'ADMIN')")
     public ResponseEntity<ApiResponse<BreakGlassGrant>> request(@Valid @RequestBody BreakGlassRequest request) {
         BreakGlassGrant grant = breakGlassService.requestBreakGlass(request.caseId(), request.reason());
         return ResponseEntity.ok(ApiResponse.ok(grant));

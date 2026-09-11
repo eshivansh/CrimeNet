@@ -118,6 +118,24 @@ class CustodyChainServiceTest {
         assertThat(ordered.get(1).getId()).isEqualTo(events.get(1).getId());
     }
 
+    @Test
+    @DisplayName("the hash survives PostgreSQL's microsecond round trip")
+    void hashIsStableAcrossStoredPrecision() {
+        // Regression: Instant.now() carries sub-microsecond digits; TIMESTAMPTZ keeps six.
+        // Hashing the in-memory value made every freshly written event fail its own
+        // verification the moment it was read back. The earlier tests used whole-second
+        // timestamps, which is exactly why they did not catch it.
+        CustodyEvent inMemory = transfer("FSL Lucknow", "Imaging", "Sealed", null);
+        inMemory.setCreatedAt(Instant.parse("2026-09-11T14:47:24.387620300Z"));
+
+        CustodyEvent asStored = transfer("FSL Lucknow", "Imaging", "Sealed", null);
+        asStored.setId(inMemory.getId());
+        asStored.setCreatedAt(Instant.parse("2026-09-11T14:47:24.387620Z"));
+
+        assertThat(chain.computeEventHash(asStored, null))
+                .isEqualTo(chain.computeEventHash(inMemory, null));
+    }
+
     // ── helpers ──
 
     private List<CustodyEvent> buildChain() {

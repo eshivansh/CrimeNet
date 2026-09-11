@@ -95,7 +95,7 @@ public class EvidenceService {
                 .purpose("Initial evidence registration")
                 .location(request.location())
                 .build();
-        initialEvent.setCreatedAt(Instant.now());
+        initialEvent.setCreatedAt(Instant.now().truncatedTo(java.time.temporal.ChronoUnit.MICROS));
         initialEvent.setEventHash(custodyChainService.computeEventHash(initialEvent, null));
 
         custodyEventRepository.save(initialEvent);
@@ -158,7 +158,7 @@ public class EvidenceService {
         // unauthenticated. The recorded location of a seizure could be rewritten and the
         // chain still validated perfectly, which is exactly the claim a §65B certificate
         // rests on. Every persisted field is now covered.
-        Instant occurredAt = Instant.now();
+        Instant occurredAt = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.MICROS);
         CustodyEvent event = CustodyEvent.builder()
                 .evidenceId(evidenceId)
                 .fromActor(currentUser.getId())

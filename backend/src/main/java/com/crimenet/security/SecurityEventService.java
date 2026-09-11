@@ -50,6 +50,13 @@ public class SecurityEventService {
         }
     }
 
+    /**
+     * Carries its own REQUIRES_NEW. It delegates to {@link #record} on {@code this}, which
+     * bypasses the transactional proxy — so without this annotation the event joined the
+     * caller's transaction and was rolled back together with the request it recorded the
+     * refusal of, which is to say every time.
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void denied(String eventType, UUID actorId, UUID caseId, String description) {
         record(eventType, "HIGH", actorId, caseId, null, description);
     }

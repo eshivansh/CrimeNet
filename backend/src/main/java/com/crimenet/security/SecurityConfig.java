@@ -95,7 +95,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/v1/audit/**").hasAnyRole("AUDITOR", "ADMIN")
 
                     // Security events — the denial trail
-                    .requestMatchers("/api/v1/security-events/**").hasAnyRole("AUDITOR", "ADMIN", "SECURITY_OFFICER")
+                    .requestMatchers("/api/v1/security-events/**").hasAnyRole("AUDITOR", "ADMIN")
 
                     // Integration — admin only
                     .requestMatchers("/api/v1/integrations/**").hasRole("ADMIN")

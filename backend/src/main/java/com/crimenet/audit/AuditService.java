@@ -89,7 +89,9 @@ public class AuditService {
         String canonicalPayload = canonicalize(payload);
         String payloadHash = hashService.computeSha256(canonicalPayload);
 
-        Instant createdAt = Instant.now();
+        // Microseconds: the precision TIMESTAMPTZ stores, so the hashed value survives the
+        // round trip through the database unchanged.
+        Instant createdAt = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.MICROS);
         String canonicalEvent = canonicalizeEvent(
                 eventType, actorId, resourceId, resourceType, caseId, createdAt, payloadHash);
         String eventHash = hashService.computeChainedHash(previousEventHash, canonicalEvent);
@@ -183,6 +185,7 @@ public class AuditService {
         java.util.Collections.reverse(ordered);
 
         List<String> problems = new java.util.ArrayList<>();
+        int legacyEvents = 0;
         String expectedPrevious = null;
 
         for (int i = 0; i < ordered.size(); i++) {
@@ -207,8 +210,9 @@ public class AuditService {
                 String legacyHash =
                         hashService.computeChainedHash(event.getPreviousEventHash(), canonicalPayload);
                 if (legacyHash.equals(event.getEventHash())) {
-                    problems.add("Event " + event.getId() + ": legacy v1 chain hash "
-                            + "(covers the payload only, not the actor or resource)");
+                    // Written before the hash covered the identity columns. Old-format, not
+                    // tampered - counted separately so it does not read as a failure.
+                    legacyEvents++;
                 } else {
                     problems.add("Event " + event.getId() + ": event_hash does not match its own fields");
                 }
@@ -226,10 +230,15 @@ public class AuditService {
             log.error("AUDIT_CHAIN_VERIFICATION_FAILED: {} problem(s) across {} events",
                     problems.size(), ordered.size());
         }
-        return new ChainVerificationResult(ordered.size(), intact, problems);
+        return new ChainVerificationResult(ordered.size(), intact, legacyEvents, problems);
     }
 
-    public record ChainVerificationResult(int eventsChecked, boolean intact, List<String> problems) {}
+    /**
+     * @param legacyEvents events hashed under the v1 scheme, which covers the payload but not
+     *                     the actor, type, resource or case. Intact, but less protected.
+     */
+    public record ChainVerificationResult(int eventsChecked, boolean intact, int legacyEvents,
+                                          List<String> problems) {}
 
     /**
      * List audit events (AUDITOR role only — enforced at controller level).
@@ -265,7 +274,8 @@ public class AuditService {
                 .append("resource=").append(nullSafe(resourceId)).append('|')
                 .append("resourceType=").append(nullSafe(resourceType)).append('|')
                 .append("case=").append(nullSafe(caseId)).append('|')
-                .append("at=").append(createdAt == null ? "" : createdAt.toString()).append('|')
+                .append("at=").append(createdAt == null ? ""
+                        : createdAt.truncatedTo(java.time.temporal.ChronoUnit.MICROS).toString()).append('|')
                 .append("payloadHash=").append(nullSafe(payloadHash))
                 .toString();
     }

@@ -51,8 +51,20 @@ public class CustodyChainService {
                 .append("artifact=").append(nullSafe(event.getArtifactId())).append('|')
                 .append("signature=").append(nullSafe(event.getSignature())).append('|')
                 .append("prevEvent=").append(nullSafe(event.getPreviousEventId())).append('|')
-                .append("at=").append(event.getCreatedAt() == null ? "" : event.getCreatedAt().toString())
+                .append("at=").append(storedPrecision(event.getCreatedAt()))
                 .toString();
+    }
+
+    /**
+     * The timestamp exactly as PostgreSQL will return it.
+     *
+     * <p>TIMESTAMPTZ keeps microseconds; Instant.now() on this JDK carries sub-microsecond
+     * digits. Hashing the in-memory value meant every event failed its own verification
+     * the moment it was read back. The canonical form uses the stored precision, so the
+     * value that is hashed is the value that can be recomputed.
+     */
+    static String storedPrecision(Instant instant) {
+        return instant == null ? "" : instant.truncatedTo(java.time.temporal.ChronoUnit.MICROS).toString();
     }
 
     public String computeEventHash(CustodyEvent event, String previousEventHash) {
@@ -124,13 +136,13 @@ public class CustodyChainService {
 
             String recomputed = computeEventHash(event, event.getPreviousEventHash());
             boolean hashMatches = recomputed.equals(event.getEventHash());
+            boolean legacy = false;
 
             if (!hashMatches) {
                 // Events written before the hash covered every field are recognised as
-                // legacy rather than reported as tampering.
+                // legacy rather than reported as tampering: intact, but less protected.
                 if (legacyHash(event).equals(event.getEventHash())) {
-                    problems.add("Legacy v1 hash: covers action, evidence, actors and previous id only — "
-                            + "purpose, location, notes and signature are not protected on this event");
+                    legacy = true;
                 } else {
                     problems.add("event_hash does not match the event's own fields");
                     intact = false;
@@ -153,7 +165,7 @@ public class CustodyChainService {
 
             verdicts.add(new LinkVerdict(
                     event.getId(), event.getAction(), event.getCreatedAt(),
-                    problems.isEmpty(), problems));
+                    problems.isEmpty(), legacy, problems));
 
             expectedPreviousHash = event.getEventHash();
             expectedPreviousId = event.getId();
@@ -185,11 +197,17 @@ public class CustodyChainService {
         return value == null ? "" : value.toString();
     }
 
+    /**
+     * @param legacy true when the link verifies under the v1 hash, which covers action,
+     *               evidence, actors and previous id only — purpose, location, notes and
+     *               signature are not protected on that event.
+     */
     public record LinkVerdict(
             UUID eventId,
             String action,
             Instant occurredAt,
             boolean valid,
+            boolean legacy,
             List<String> problems
     ) {}
 

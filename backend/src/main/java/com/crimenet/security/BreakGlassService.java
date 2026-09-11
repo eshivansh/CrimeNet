@@ -133,7 +133,7 @@ public class BreakGlassService {
         // which let an unrelated user cancel a legitimate emergency mid-incident and
         // left a false BREAK_GLASS_REVOKED entry attributed to them.
         boolean isGrantee = currentUser.getId().equals(grant.getGrantedTo());
-        boolean isSupervisor = hasAnyRole("SUPERVISOR", "ADMIN", "SECURITY_OFFICER");
+        boolean isSupervisor = hasAnyRole("SUPERVISOR", "ADMIN");
         if (!isGrantee && !isSupervisor) {
             securityEventService.denied("BREAK_GLASS_REVOKE_FORBIDDEN", currentUser.getId(), grant.getCaseId(),
                     "Attempted to revoke break-glass grant " + grantId + " belonging to " + grant.getGrantedTo());
