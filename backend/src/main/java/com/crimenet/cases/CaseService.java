@@ -29,6 +29,7 @@ public class CaseService {
     private final UserService userService;
     private final PolicyEvaluationService policyService;
     private final AuditService auditService;
+    private final com.crimenet.common.IdentifierSequenceService identifierSequenceService;
 
     /**
      * Create a new case and auto-assign the creator.
@@ -167,7 +168,7 @@ public class CaseService {
     }
 
     private String generateCaseNumber(UUID orgId) {
-        long count = caseRepository.count() + 1;
-        return String.format("CASE-%s-UP-%06d", Year.now().getValue(), count);
+        long serial = identifierSequenceService.next("case_number_seq");
+        return String.format("CASE-%s-UP-%06d", Year.now().getValue(), serial);
     }
 }
