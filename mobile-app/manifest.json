@@ -2,7 +2,7 @@
   "name": "CrimeNet — Zero-Trust Investigation & Evidence Fabric",
   "short_name": "CrimeNet",
   "description": "Institutional Law Enforcement Evidence & Document Provenance Fabric",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
@@ -11,13 +11,13 @@
   "categories": ["government", "productivity", "utilities"],
   "icons": [
     {
-      "src": "assets/Crimenet_logo_v2.png",
+      "src": "../assets/Crimenet_logo_v2.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/Crimenet_logo_v2.png",
+      "src": "../assets/Crimenet_logo_v2.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
