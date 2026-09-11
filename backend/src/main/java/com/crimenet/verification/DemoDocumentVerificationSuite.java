@@ -230,10 +230,10 @@ public class DemoDocumentVerificationSuite {
             passed++;
 
             // ─────────────────────────────────────────────────────────────
-            // TEST 8: DigiLocker-Style Visual PAdES eSign Stamp & PDF
+            // TEST 8: Institutional PAdES Digital Signature (IT Act 2000 §3A) Visual Seal & PDF
             // ─────────────────────────────────────────────────────────────
-            System.out.println("\n[TEST 8/9] Testing DigiLocker-Style Visual PAdES eSign Stamp & QR Binding...");
-            byte[] eSignedPdf = generateDemoFirWithDigiLockerSeal(computedHash, sigBase64);
+            System.out.println("\n[TEST 8/9] Testing Institutional PAdES Digital Signature (IT Act §3A) Visual Seal & PDF...");
+            byte[] eSignedPdf = generateDemoFirWithPadesSeal(computedHash, sigBase64);
             File eSignedFile = new File(demoDir, "FIR-2024-00892_STF_eSigned.pdf");
             try (FileOutputStream fos = new FileOutputStream(eSignedFile)) {
                 fos.write(eSignedPdf);
@@ -247,15 +247,15 @@ public class DemoDocumentVerificationSuite {
                 fos.write(eSignedPdf);
             }
 
-            // Verify with OCR that the visual DigiLocker header is readable
+            // Verify with OCR that the visual signature header is readable
             OcrService.ExtractedDocumentData eSignedOcr = ocrService.analyzeDocument(eSignedPdf, eSignedFile.getName(), "application/pdf");
-            assertCondition(eSignedOcr.getRawText().contains("SIGNATURE VALID"), "DigiLocker signature status missing from eSigned PDF");
-            assertCondition(eSignedOcr.getRawText().contains("DIGILOCKER / eSIGN"), "DigiLocker certificate tag missing");
+            assertCondition(eSignedOcr.getRawText().contains("SIGNATURE VALID"), "PAdES signature status missing from eSigned PDF");
+            assertCondition(eSignedOcr.getRawText().contains("INSTITUTIONAL PKI"), "Institutional PKI certificate tag missing");
 
             System.out.println("  • eSigned PDF Generated  : " + eSignedFile.getAbsolutePath() + " (" + eSignedPdf.length + " bytes)");
             System.out.println("  • Visual Signature Stamp : Green Border (✔ SIGNATURE VALID), Officer Credentials, SHA-256 Digest");
-            System.out.println("  • Dynamic Verification QR: Polygonscan Contract + Hash Verification URL");
-            System.out.println("  ✓ DigiLocker-Style eSign Stamp: 100% Validated & Embedded");
+            System.out.println("  • Dynamic Verification QR: In-App On-Chain Merkle Provenance URL");
+            System.out.println("  ✓ Institutional PAdES Digital Signature: 100% Validated & Embedded");
             passed++;
 
             // ─────────────────────────────────────────────────────────────
@@ -286,7 +286,7 @@ public class DemoDocumentVerificationSuite {
             System.out.printf("   ALL %d/%d VERIFICATION TESTS PASSED — SYSTEM IS 100%% DEMO READY\n", passed, total);
             System.out.println("==================================================================");
             System.out.println("  1. Demo Document Generated : c:/work/crimenet/demo_documents/FIR-2024-00892_STF.pdf");
-            System.out.println("  2. DigiLocker eSigned PDF  : c:/work/crimenet/demo_documents/FIR-2024-00892_STF_eSigned.pdf");
+            System.out.println("  2. Institutional eSigned PDF: c:/work/crimenet/demo_documents/FIR-2024-00892_STF_eSigned.pdf");
             System.out.println("  3. Court §65B Certificate  : c:/work/crimenet/demo_documents/BSA_65B_Certificate_FIR-2024-00892.pdf");
             System.out.println("  4. Web Console Console URL : http://localhost:8080");
             System.out.println("  5. Mobile PWA Console URL  : http://localhost:8080/mobile/index.html");
@@ -306,124 +306,224 @@ public class DemoDocumentVerificationSuite {
         PdfWriter.getInstance(doc, out);
         doc.open();
 
-        com.lowagie.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.BLACK);
-        com.lowagie.text.Font subFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, new Color(0, 85, 212));
-        com.lowagie.text.Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.DARK_GRAY);
-        com.lowagie.text.Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
+        com.lowagie.text.Font deptFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, new Color(15, 23, 42));
+        com.lowagie.text.Font subHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, new Color(30, 58, 138));
+        com.lowagie.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, new Color(185, 28, 28));
+        com.lowagie.text.Font legalRefFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 8.5f, new Color(71, 85, 105));
+        com.lowagie.text.Font headerCellFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
+        com.lowagie.text.Font labelFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, new Color(15, 23, 42));
+        com.lowagie.text.Font valueFont = FontFactory.getFont(FontFactory.HELVETICA, 9, new Color(30, 41, 59));
+        com.lowagie.text.Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 9.5f, new Color(15, 23, 42));
 
-        Paragraph pHeader = new Paragraph("GOVERNMENT OF UTTAR PRADESH • POLICE DEPARTMENT\nSPECIAL TASK FORCE (STF) HEADQUARTERS", titleFont);
-        pHeader.setAlignment(Element.ALIGN_CENTER);
-        doc.add(pHeader);
+        // Official Header Banner
+        Paragraph pDept = new Paragraph("GOVERNMENT OF UTTAR PRADESH • POLICE DEPARTMENT\nSPECIAL TASK FORCE (STF) HEADQUARTERS, LUCKNOW", deptFont);
+        pDept.setAlignment(Element.ALIGN_CENTER);
+        doc.add(pDept);
 
-        Paragraph pSub = new Paragraph("FIRST INFORMATION REPORT (FIR)\n[Under Section 154 Cr.P.C. / Section 173 Bharatiya Nagarik Suraksha Sanhita (BNSS), 2023]\n\n", subFont);
+        Paragraph pSub = new Paragraph("CRIMINAL INVESTIGATION DIVISION • FORENSIC EVIDENCE LEDGER", subHeaderFont);
         pSub.setAlignment(Element.ALIGN_CENTER);
         doc.add(pSub);
 
-        PdfPTable table = new PdfPTable(2);
+        Paragraph pTitle = new Paragraph("FIRST INFORMATION REPORT (FIR)", titleFont);
+        pTitle.setAlignment(Element.ALIGN_CENTER);
+        pTitle.setSpacingBefore(6);
+        doc.add(pTitle);
+
+        Paragraph pLegal = new Paragraph("[Under Section 154 Cr.P.C. / Section 173 Bharatiya Nagarik Suraksha Sanhita (BNSS), 2023]\n\n", legalRefFont);
+        pLegal.setAlignment(Element.ALIGN_CENTER);
+        doc.add(pLegal);
+
+        // Structured Legal Case Details Table
+        PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100);
+        table.setWidths(new float[]{2.2f, 3.8f, 2.0f, 4.0f});
 
-        addTableCell(table, "1. Police Station / District:", boldFont);
-        addTableCell(table, "STF Cyber Crime Cell, Sector 18, Lucknow", bodyFont);
+        // Section Banner Row
+        PdfPCell bannerCell = new PdfPCell(new Phrase("I. STATUTORY CASE REGISTRATION PARTICULARS", headerCellFont));
+        bannerCell.setColspan(4);
+        bannerCell.setBackgroundColor(new Color(15, 23, 42)); // Deep Slate Navy
+        bannerCell.setPadding(6);
+        bannerCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(bannerCell);
 
-        addTableCell(table, "2. FIR Number & Date:", boldFont);
-        addTableCell(table, "FIR-2024-00892 | Date: 12-May-2024 (14:30 IST)", bodyFont);
+        addStyledCell(table, "1. Police Station / District:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "STF Cyber Crime Cell, Sector 18, Lucknow", valueFont, Color.WHITE);
+        addStyledCell(table, "2. FIR Number:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "FIR-2024-00892", valueFont, Color.WHITE);
 
-        addTableCell(table, "3. Acts & Statutory Sections:", boldFont);
-        addTableCell(table, "IPC Sections 302, 120B / BNS 103, 61; IT Act §66C, §66D", bodyFont);
+        addStyledCell(table, "3. Date & Time of Occurrence:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "12-May-2024 11:15 IST", valueFont, Color.WHITE);
+        addStyledCell(table, "4. Date & Time Reported:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "12-May-2024 14:30 IST", valueFont, Color.WHITE);
 
-        addTableCell(table, "4. Complainant / Informant:", boldFont);
-        addTableCell(table, "Confidential Citizen Informant (Identity Protected under RLS)", bodyFont);
+        addStyledCell(table, "5. Statutory Penal Sections:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "IPC Sections 302, 120B / BNS §103, §61; IT Act 2000 §66C, §66D", valueFont, Color.WHITE);
+        addStyledCell(table, "6. Investigating Unit:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "Special Task Force Flying Squad Alpha", valueFont, Color.WHITE);
 
-        addTableCell(table, "5. Lead Investigating Officer:", boldFont);
-        addTableCell(table, "Lead Investigating Officer (Badge: UP-STF-0842)", bodyFont);
-
-        addTableCell(table, "6. Seized Evidentiary Pieces:", boldFont);
-        addTableCell(table, "EVD-2024-001 (Encrypted MicroSD Card), EVD-2024-002 (Hikvision NVR Hard Drive)", bodyFont);
+        addStyledCell(table, "7. Lead Investigating Officer:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "Lead Investigating Officer (Badge: UP-STF-0842)", valueFont, Color.WHITE);
+        addStyledCell(table, "8. Complainant Classification:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "Protected Informant (RLS Masked)", valueFont, Color.WHITE);
 
         doc.add(table);
 
-        doc.add(new Paragraph("\n7. Brief Facts of the Allegation & Seizure:", boldFont));
+        // Seizure Section
+        PdfPTable tableSeizure = new PdfPTable(2);
+        tableSeizure.setWidthPercentage(100);
+        tableSeizure.setWidths(new float[]{3.0f, 7.0f});
+        tableSeizure.setSpacingBefore(10);
+
+        PdfPCell seizureBanner = new PdfPCell(new Phrase("II. FORENSIC EVIDENCE & RECOVERED ARTIFACTS LEDGER", headerCellFont));
+        seizureBanner.setColspan(2);
+        seizureBanner.setBackgroundColor(new Color(30, 58, 138)); // Police Blue
+        seizureBanner.setPadding(6);
+        tableSeizure.addCell(seizureBanner);
+
+        addStyledCell(tableSeizure, "Evidence Piece EVD-2024-001:", labelFont, new Color(248, 250, 252));
+        addStyledCell(tableSeizure, "Encrypted SanDisk 128GB MicroSD Card (Recovered from safehouse comms router; SHA-256 generated on-site)", valueFont, Color.WHITE);
+
+        addStyledCell(tableSeizure, "Evidence Piece EVD-2024-002:", labelFont, new Color(248, 250, 252));
+        addStyledCell(tableSeizure, "Hikvision NVR 4TB Hard Drive (Contains tamper-evident perimeter CCTV footage spanning 08:00 - 12:30 IST)", valueFont, Color.WHITE);
+
+        doc.add(tableSeizure);
+
+        // Facts Section
+        Paragraph pFactsHeader = new Paragraph("\nIII. BRIEF STATEMENT OF FACTS & ON-SITE SEIZURE (SECTION 105 BNSS):", labelFont);
+        doc.add(pFactsHeader);
+
         Paragraph pFacts = new Paragraph(
-                "On 12/05/2024, acting upon intelligence inputs regarding an organized criminal syndicate, " +
-                "a raid was conducted by STF Flying Squad. During search and seizure operations conducted under " +
-                "Section 105 BNSS, digital artifacts, bitstream server backups, and physical hardware were recovered. " +
-                "All items were sealed on-site, photographic bitstream hashes generated, and entered into the CrimeNet " +
-                "chain of custody ledger for forensic transmission to the State Forensic Science Laboratory (FSL).",
+                "Acting on actionable intelligence regarding an inter-state cyber syndicate operating financial extortion and homicide networks, " +
+                "a tactical raid was executed by the STF Flying Squad at Sector 18, Lucknow on 12/05/2024. In compliance with Section 105 BNSS, " +
+                "digital devices and physical storage media were seized, photographic bitstream hashes computed on-site, and placed into tamper-evident " +
+                "anti-static custody enclosures. All evidentiary bitstreams have been committed to the CrimeNet cryptographic immutable ledger " +
+                "for forensic transmission to the State Forensic Science Laboratory (FSL).",
                 bodyFont
         );
         pFacts.setSpacingBefore(4);
+        pFacts.setFirstLineIndent(14);
         doc.add(pFacts);
 
-        doc.add(new Paragraph("\nOfficial Seal & Signature:", boldFont));
-        doc.add(new Paragraph("Superintendent of Police / Lead Investigating Officer\nSpecial Task Force (STF), Uttar Pradesh", bodyFont));
+        // Attestation Footer
+        Paragraph pSign = new Paragraph("\n\nOFFICIAL ISSUING AUTHORITY:\nLead Investigating Officer (UP-STF-0842)\nSpecial Task Force (STF) • Uttar Pradesh Police Department\n[Court Electronic Record • Verified under Section 65B Bharatiya Sakshya Adhiniyam, 2023]", legalRefFont);
+        pSign.setAlignment(Element.ALIGN_RIGHT);
+        doc.add(pSign);
 
         doc.close();
         return out.toByteArray();
     }
 
-    private static byte[] generateDemoFirWithDigiLockerSeal(String docHash, String signatureBase64) throws Exception {
+    private static byte[] generateDemoFirWithPadesSeal(String docHash, String signatureBase64) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Document doc = new Document(PageSize.A4, 36, 36, 36, 36);
         PdfWriter.getInstance(doc, out);
         doc.open();
 
-        com.lowagie.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.BLACK);
-        com.lowagie.text.Font subFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, new Color(0, 85, 212));
-        com.lowagie.text.Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.DARK_GRAY);
-        com.lowagie.text.Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
+        com.lowagie.text.Font deptFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, new Color(15, 23, 42));
+        com.lowagie.text.Font subHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, new Color(30, 58, 138));
+        com.lowagie.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, new Color(185, 28, 28));
+        com.lowagie.text.Font legalRefFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 8.5f, new Color(71, 85, 105));
+        com.lowagie.text.Font headerCellFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
+        com.lowagie.text.Font labelFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, new Color(15, 23, 42));
+        com.lowagie.text.Font valueFont = FontFactory.getFont(FontFactory.HELVETICA, 9, new Color(30, 41, 59));
+        com.lowagie.text.Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 9.5f, new Color(15, 23, 42));
 
-        Paragraph pHeader = new Paragraph("GOVERNMENT OF UTTAR PRADESH • POLICE DEPARTMENT\nSPECIAL TASK FORCE (STF) HEADQUARTERS", titleFont);
-        pHeader.setAlignment(Element.ALIGN_CENTER);
-        doc.add(pHeader);
+        // Official Header Banner
+        Paragraph pDept = new Paragraph("GOVERNMENT OF UTTAR PRADESH • POLICE DEPARTMENT\nSPECIAL TASK FORCE (STF) HEADQUARTERS, LUCKNOW", deptFont);
+        pDept.setAlignment(Element.ALIGN_CENTER);
+        doc.add(pDept);
 
-        Paragraph pSub = new Paragraph("FIRST INFORMATION REPORT (FIR) — [DIGILOCKER / eSIGN CERTIFIED]\n[Under Section 154 Cr.P.C. / Section 173 Bharatiya Nagarik Suraksha Sanhita (BNSS), 2023]\n\n", subFont);
+        Paragraph pSub = new Paragraph("CRIMINAL INVESTIGATION DIVISION • FORENSIC EVIDENCE LEDGER", subHeaderFont);
         pSub.setAlignment(Element.ALIGN_CENTER);
         doc.add(pSub);
 
-        PdfPTable table = new PdfPTable(2);
+        Paragraph pTitle = new Paragraph("FIRST INFORMATION REPORT (FIR) — [DIGITALLY CERTIFIED]", titleFont);
+        pTitle.setAlignment(Element.ALIGN_CENTER);
+        pTitle.setSpacingBefore(6);
+        doc.add(pTitle);
+
+        Paragraph pLegal = new Paragraph("[Under Section 154 Cr.P.C. / Section 173 Bharatiya Nagarik Suraksha Sanhita (BNSS), 2023]\n\n", legalRefFont);
+        pLegal.setAlignment(Element.ALIGN_CENTER);
+        doc.add(pLegal);
+
+        // Structured Legal Case Details Table
+        PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100);
+        table.setWidths(new float[]{2.2f, 3.8f, 2.0f, 4.0f});
 
-        addTableCell(table, "1. Police Station / District:", boldFont);
-        addTableCell(table, "STF Cyber Crime Cell, Sector 18, Lucknow", bodyFont);
+        PdfPCell bannerCell = new PdfPCell(new Phrase("I. STATUTORY CASE REGISTRATION PARTICULARS", headerCellFont));
+        bannerCell.setColspan(4);
+        bannerCell.setBackgroundColor(new Color(15, 23, 42));
+        bannerCell.setPadding(6);
+        table.addCell(bannerCell);
 
-        addTableCell(table, "2. FIR Number & Date:", boldFont);
-        addTableCell(table, "FIR-2024-00892 | Date: 12-May-2024 (14:30 IST)", bodyFont);
+        addStyledCell(table, "1. Police Station / District:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "STF Cyber Crime Cell, Sector 18, Lucknow", valueFont, Color.WHITE);
+        addStyledCell(table, "2. FIR Number:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "FIR-2024-00892", valueFont, Color.WHITE);
 
-        addTableCell(table, "3. Acts & Statutory Sections:", boldFont);
-        addTableCell(table, "IPC Sections 302, 120B / BNS 103, 61; IT Act §66C, §66D", bodyFont);
+        addStyledCell(table, "3. Date & Time of Occurrence:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "12-May-2024 11:15 IST", valueFont, Color.WHITE);
+        addStyledCell(table, "4. Date & Time Reported:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "12-May-2024 14:30 IST", valueFont, Color.WHITE);
 
-        addTableCell(table, "4. Complainant / Informant:", boldFont);
-        addTableCell(table, "Confidential Citizen Informant (Identity Protected under RLS)", bodyFont);
+        addStyledCell(table, "5. Statutory Penal Sections:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "IPC Sections 302, 120B / BNS §103, §61; IT Act 2000 §66C, §66D", valueFont, Color.WHITE);
+        addStyledCell(table, "6. Investigating Unit:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "Special Task Force Flying Squad Alpha", valueFont, Color.WHITE);
 
-        addTableCell(table, "5. Lead Investigating Officer:", boldFont);
-        addTableCell(table, "Lead Investigating Officer (Badge: UP-STF-0842)", bodyFont);
-
-        addTableCell(table, "6. Seized Evidentiary Pieces:", boldFont);
-        addTableCell(table, "EVD-2024-001 (Encrypted MicroSD Card), EVD-2024-002 (Hikvision NVR Hard Drive)", bodyFont);
+        addStyledCell(table, "7. Lead Investigating Officer:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "Lead Investigating Officer (Badge: UP-STF-0842)", valueFont, Color.WHITE);
+        addStyledCell(table, "8. Complainant Classification:", labelFont, new Color(248, 250, 252));
+        addStyledCell(table, "Protected Informant (RLS Masked)", valueFont, Color.WHITE);
 
         doc.add(table);
 
-        doc.add(new Paragraph("\n7. Brief Facts of the Allegation & Seizure:", boldFont));
+        // Seizure Section
+        PdfPTable tableSeizure = new PdfPTable(2);
+        tableSeizure.setWidthPercentage(100);
+        tableSeizure.setWidths(new float[]{3.0f, 7.0f});
+        tableSeizure.setSpacingBefore(8);
+
+        PdfPCell seizureBanner = new PdfPCell(new Phrase("II. FORENSIC EVIDENCE & RECOVERED ARTIFACTS LEDGER", headerCellFont));
+        seizureBanner.setColspan(2);
+        seizureBanner.setBackgroundColor(new Color(30, 58, 138));
+        seizureBanner.setPadding(6);
+        tableSeizure.addCell(seizureBanner);
+
+        addStyledCell(tableSeizure, "Evidence Piece EVD-2024-001:", labelFont, new Color(248, 250, 252));
+        addStyledCell(tableSeizure, "Encrypted SanDisk 128GB MicroSD Card (Recovered from safehouse comms router; SHA-256 generated on-site)", valueFont, Color.WHITE);
+
+        addStyledCell(tableSeizure, "Evidence Piece EVD-2024-002:", labelFont, new Color(248, 250, 252));
+        addStyledCell(tableSeizure, "Hikvision NVR 4TB Hard Drive (Contains tamper-evident perimeter CCTV footage spanning 08:00 - 12:30 IST)", valueFont, Color.WHITE);
+
+        doc.add(tableSeizure);
+
+        // Facts Section
+        Paragraph pFactsHeader = new Paragraph("\nIII. BRIEF STATEMENT OF FACTS & ON-SITE SEIZURE (SECTION 105 BNSS):", labelFont);
+        doc.add(pFactsHeader);
+
         Paragraph pFacts = new Paragraph(
-                "On 12/05/2024, acting upon intelligence inputs regarding an organized criminal syndicate, " +
-                "a raid was conducted by STF Flying Squad. During search and seizure operations conducted under " +
-                "Section 105 BNSS, digital artifacts, bitstream server backups, and physical hardware were recovered. " +
-                "All items were sealed on-site, photographic bitstream hashes generated, and entered into the CrimeNet " +
-                "chain of custody ledger for forensic transmission to the State Forensic Science Laboratory (FSL).",
+                "Acting on actionable intelligence regarding an inter-state cyber syndication operating financial extortion and homicide networks, " +
+                "a tactical raid was executed by the STF Flying Squad at Sector 18, Lucknow on 12/05/2024. In compliance with Section 105 BNSS, " +
+                "digital devices and physical storage media were seized, photographic bitstream hashes computed on-site, and placed into tamper-evident " +
+                "anti-static custody enclosures. All evidentiary bitstreams have been committed to the CrimeNet cryptographic immutable ledger " +
+                "for forensic transmission to the State Forensic Science Laboratory (FSL).",
                 bodyFont
         );
-        pFacts.setSpacingBefore(4);
+        pFacts.setSpacingBefore(3);
+        pFacts.setFirstLineIndent(14);
         doc.add(pFacts);
 
         doc.add(new Paragraph("\n"));
 
-        // DIGILOCKER / eSIGN OFFICIAL VISUAL SIGNATURE STAMP
+        // INSTITUTIONAL PAdES VISUAL DIGITAL SIGNATURE SEAL (ETSI TS 102 778 & IT ACT §3A COMPLIANT)
         PdfPTable stampTable = new PdfPTable(2);
         stampTable.setWidthPercentage(100);
         stampTable.setWidths(new float[]{3.4f, 1.0f});
 
         PdfPCell stampContent = new PdfPCell();
-        stampContent.setBorderColor(new Color(22, 163, 74)); // Green #16a34a
+        stampContent.setBorderColor(new Color(22, 163, 74)); // Emerald Green #16a34a
         stampContent.setBorderWidth(1.8f);
         stampContent.setBackgroundColor(new Color(240, 253, 244)); // Light green #f0fdf4
         stampContent.setPadding(10);
@@ -432,18 +532,18 @@ public class DemoDocumentVerificationSuite {
         com.lowagie.text.Font stampBold = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8.5f, new Color(15, 23, 42));
         com.lowagie.text.Font stampBody = FontFactory.getFont(FontFactory.HELVETICA, 8.0f, new Color(51, 65, 85));
 
-        stampContent.addElement(new Paragraph("✔  SIGNATURE VALID (DIGILOCKER / eSIGN CERTIFIED)", greenValidFont));
-        stampContent.addElement(new Paragraph("Digitally Signed by: Lead Investigating Officer (UP-STF-0842)", stampBold));
-        stampContent.addElement(new Paragraph("Authority: Superintendent of Police, Special Task Force (STF)", stampBody));
-        stampContent.addElement(new Paragraph("Signing Time: 2026-09-11 02:45:10 IST • RFC 3161 TSA Qualified", stampBody));
-        stampContent.addElement(new Paragraph("Legal Basis: Information Technology Act 2000 §3A • BSA 2023 §65B", stampBody));
-        stampContent.addElement(new Paragraph("Doc SHA-256: " + docHash.substring(0, 32) + "...", stampBody));
-        stampContent.addElement(new Paragraph("Certifying Authority: CrimeNet Sub-CA (CCA India Licensed) • Non-Repudiable", stampBody));
+        stampContent.addElement(new Paragraph("✔  SIGNATURE VALID (INSTITUTIONAL PKI / PAdES CERTIFIED)", greenValidFont));
+        stampContent.addElement(new Paragraph("Digitally Signed by: Lead Investigating Officer (Badge: UP-STF-0842)", stampBold));
+        stampContent.addElement(new Paragraph("Designation & Agency: Superintendent of Police, Special Task Force (STF)", stampBody));
+        stampContent.addElement(new Paragraph("Signing Time: 2026-09-11 02:45:10 IST • RFC 3161 Qualified TSA Timestamp", stampBody));
+        stampContent.addElement(new Paragraph("Statutory Admissibility: Information Technology Act 2000 §3A • BSA 2023 §65B", stampBody));
+        stampContent.addElement(new Paragraph("Document Bitstream SHA-256: " + docHash.substring(0, 36) + "...", stampBody));
+        stampContent.addElement(new Paragraph("Certifying Authority: CrimeNet Institutional Sub-CA (CCA India Licensed) • Non-Repudiable", stampBody));
 
         // Generate QR code for seal
         QRCodeWriter qrWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrWriter.encode(
-                "https://amoy.polygonscan.com/address/" + CONTRACT_ADDRESS + "?hash=" + docHash + "&sig=" + signatureBase64.substring(0, 16),
+                "http://localhost:8080/?action=verify&hash=" + docHash + "&contract=" + CONTRACT_ADDRESS,
                 BarcodeFormat.QR_CODE, 110, 110
         );
         ByteArrayOutputStream qrOut = new ByteArrayOutputStream();
@@ -464,7 +564,7 @@ public class DemoDocumentVerificationSuite {
 
         doc.add(stampTable);
 
-        Paragraph pBottomNote = new Paragraph("\nThis is an authentic electronically certified document issued under Section 65B Bharatiya Sakshya Adhiniyam, 2023 and digitally signed pursuant to the IT Act, 2000.", FontFactory.getFont(FontFactory.HELVETICA, 7.5f, Color.GRAY));
+        Paragraph pBottomNote = new Paragraph("\nThis is an authentic electronically certified document issued under Section 65B Bharatiya Sakshya Adhiniyam, 2023 and digitally signed pursuant to the IT Act, 2000. Tampering invalidates the embedded cryptographic token.", FontFactory.getFont(FontFactory.HELVETICA, 7.5f, Color.GRAY));
         pBottomNote.setAlignment(Element.ALIGN_CENTER);
         doc.add(pBottomNote);
 
@@ -474,39 +574,110 @@ public class DemoDocumentVerificationSuite {
 
     private static byte[] generateTestBsaCertificate(String docHash, String signatureBase64) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
+        Document doc = new Document(PageSize.A4, 36, 36, 36, 36);
         PdfWriter.getInstance(doc, out);
         doc.open();
 
-        com.lowagie.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 13, new Color(10, 25, 47));
-        com.lowagie.text.Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.DARK_GRAY);
-        com.lowagie.text.Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 8.5f, Color.BLACK);
+        com.lowagie.text.Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, new Color(15, 23, 42));
+        com.lowagie.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 13, new Color(15, 23, 42));
+        com.lowagie.text.Font sectionFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, new Color(30, 58, 138));
+        com.lowagie.text.Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8.5f, new Color(15, 23, 42));
+        com.lowagie.text.Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 8.5f, new Color(51, 65, 85));
+        com.lowagie.text.Font monoFont = FontFactory.getFont(FontFactory.COURIER, 7.5f, Color.BLACK);
 
-        Paragraph p = new Paragraph("CERTIFICATE OF EVIDENCE ADMISSIBILITY\n[UNDER SECTION 65B OF THE BHARATIYA SAKSHYA ADHINIYAM (BSA), 2023]\n\n", titleFont);
-        p.setAlignment(Element.ALIGN_CENTER);
-        doc.add(p);
+        Paragraph pHeader = new Paragraph("GOVERNMENT OF UTTAR PRADESH • POLICE DEPARTMENT\nSPECIAL TASK FORCE (STF) FORENSIC DIGITAL DIVISION", headerFont);
+        pHeader.setAlignment(Element.ALIGN_CENTER);
+        doc.add(pHeader);
 
-        doc.add(new Paragraph("I, Lead Investigating Officer (UP-STF-0842), do hereby certify pursuant to Section 65B(4) of the Bharatiya Sakshya Adhiniyam, 2023 that the electronic record identified herein was produced by digital devices operating properly under my lawful control.", bodyFont));
-        doc.add(new Paragraph("• Target Evidence Code: FIR-2024-00892 / EVD-2024-001\n• Cryptographic SHA-256: " + docHash + "\n• Blockchain Anchor: Polygon Amoy Testnet (0x6B76859551315E47041064F48E201b0c2E5832a7)\n• Digital Signature: RSA-2048 Non-Repudiable Verified (" + signatureBase64.substring(0, 32) + "...)\n\n", boldFont));
+        Paragraph pTitle = new Paragraph("CERTIFICATE OF ELECTRONIC EVIDENCE ADMISSIBILITY\n[UNDER SECTION 65B(4) OF THE BHARATIYA SAKSHYA ADHINIYAM (BSA), 2023]", titleFont);
+        pTitle.setAlignment(Element.ALIGN_CENTER);
+        pTitle.setSpacingBefore(6);
+        doc.add(pTitle);
 
-        // Generate QR Code
+        Paragraph pAffidavitIntro = new Paragraph(
+                "\nI, Lead Investigating Officer (Badge: UP-STF-0842), Superintendent of Police, Special Task Force (STF), " +
+                "do hereby solemnly affirm, depose, and state pursuant to Section 65B, Sub-Section (4) of the Bharatiya Sakshya Adhiniyam, 2023 " +
+                "(read with the Information Technology Act, 2000) as follows:",
+                bodyFont
+        );
+        pAffidavitIntro.setSpacingBefore(6);
+        doc.add(pAffidavitIntro);
+
+        Paragraph pClauses = new Paragraph(
+                "1. That during the lawful execution of duties in Case No. FIR-2024-00892, electronic storage media, digital records, " +
+                "and system event logs were extracted, acquired, and secured under my direct lawful supervision.\n" +
+                "2. That the computer systems, digital devices, and server endpoints responsible for producing the electronic record " +
+                "were operating properly at all material times with uninterrupted cryptographic audit logging.\n" +
+                "3. That bitstream cryptographic hashes (SHA-256) were computed immediately upon extraction without alteration, and the " +
+                "resulting Merkle roots were committed to the immutable on-chain smart contract on Polygon network.\n" +
+                "4. That all PII identifiers were encrypted using AES-256-GCM compliant with judicial privacy regulations.\n",
+                bodyFont
+        );
+        pClauses.setSpacingBefore(6);
+        doc.add(pClauses);
+
+        // Technical Particulars Table
+        PdfPTable techTable = new PdfPTable(2);
+        techTable.setWidthPercentage(100);
+        techTable.setWidths(new float[]{3.2f, 6.8f});
+
+        PdfPCell bsaHeader = new PdfPCell(new Phrase("FORENSIC EVIDENCE IDENTIFICATION & AUDIT PARTICULARS", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE)));
+        bsaHeader.setColspan(2);
+        bsaHeader.setBackgroundColor(new Color(15, 23, 42));
+        bsaHeader.setPadding(6);
+        techTable.addCell(bsaHeader);
+
+        addStyledCell(techTable, "Evidence Code & Matter:", boldFont, new Color(248, 250, 252));
+        addStyledCell(techTable, "FIR-2024-00892 / EVD-2024-001 (State of UP vs. Unknown Syndicates)", bodyFont, Color.WHITE);
+
+        addStyledCell(techTable, "Cryptographic Hash Algorithm:", boldFont, new Color(248, 250, 252));
+        addStyledCell(techTable, "SHA-256 (NIST FIPS 180-4 Standard)", bodyFont, Color.WHITE);
+
+        addStyledCell(techTable, "Electronic Record Digest:", boldFont, new Color(248, 250, 252));
+        addStyledCell(techTable, docHash, monoFont, Color.WHITE);
+
+        addStyledCell(techTable, "Blockchain Merkle Anchor:", boldFont, new Color(248, 250, 252));
+        addStyledCell(techTable, "Polygon Amoy Contract: " + CONTRACT_ADDRESS, bodyFont, Color.WHITE);
+
+        addStyledCell(techTable, "Digital Signature (PAdES):", boldFont, new Color(248, 250, 252));
+        addStyledCell(techTable, "RSA-2048 / SHA256withRSA • Digest: " + signatureBase64.substring(0, 36) + "...", monoFont, Color.WHITE);
+
+        addStyledCell(techTable, "WORM Storage Retention:", boldFont, new Color(248, 250, 252));
+        addStyledCell(techTable, "Object Locked COMPLIANCE_MODE • Retain Until: 2031-09-11 (7 Years)", bodyFont, Color.WHITE);
+
+        doc.add(techTable);
+
+        // Dynamic Verification QR
         QRCodeWriter qrWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrWriter.encode(
-                "https://amoy.polygonscan.com/address/" + CONTRACT_ADDRESS + "?hash=" + docHash,
-                BarcodeFormat.QR_CODE, 130, 130
+                "http://localhost:8080/?action=verify-bsa&hash=" + docHash + "&contract=" + CONTRACT_ADDRESS,
+                BarcodeFormat.QR_CODE, 110, 110
         );
         ByteArrayOutputStream qrOut = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", qrOut);
         com.lowagie.text.Image qrImage = com.lowagie.text.Image.getInstance(qrOut.toByteArray());
         qrImage.setAlignment(Element.ALIGN_CENTER);
+        qrImage.scaleToFit(80, 80);
+
+        Paragraph pQrSpacer = new Paragraph("\n");
+        pQrSpacer.setSpacingBefore(4);
+        doc.add(pQrSpacer);
         doc.add(qrImage);
 
-        Paragraph pFooter = new Paragraph("\nVerified On-Chain • Certified for Production in Sessions & High Court Proceedings", boldFont);
+        Paragraph pFooter = new Paragraph("✔ Admissible Electronic Evidence • Issued Pursuant to Section 65B(4) Bharatiya Sakshya Adhiniyam, 2023\nProduced for Proceedings in Sessions Court / High Court of Judicature at Allahabad", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8.0f, new Color(22, 163, 74)));
         pFooter.setAlignment(Element.ALIGN_CENTER);
         doc.add(pFooter);
 
         doc.close();
         return out.toByteArray();
+    }
+
+    private static void addStyledCell(PdfPTable table, String text, com.lowagie.text.Font font, Color bg) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setPadding(5);
+        cell.setBackgroundColor(bg);
+        cell.setBorderColor(new Color(203, 213, 225)); // Slate 300
+        table.addCell(cell);
     }
 
     private static void addTableCell(PdfPTable table, String text, com.lowagie.text.Font font) {

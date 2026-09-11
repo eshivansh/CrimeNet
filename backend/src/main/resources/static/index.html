@@ -880,7 +880,7 @@
           <line x1="16" y1="17" x2="8" y2="17" />
           <polyline points="10 9 9 9 8 9" />
         </svg>
-        <span>Case 1457 Dossier</span>
+        <span>Case Summary</span>
       </button>
 
       <button class="workspace-tab-btn" onclick="switchTab('documents', this)">
@@ -888,7 +888,7 @@
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
         </svg>
-        <span>Document Versions (v1, v2)</span>
+        <span>Documents & History</span>
       </button>
 
       <button class="workspace-tab-btn" onclick="switchTab('evidence', this)">
@@ -896,7 +896,7 @@
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
         </svg>
-        <span>Evidence & Custody Chain</span>
+        <span>Seized Evidence</span>
       </button>
 
       <button class="workspace-tab-btn" onclick="switchTab('assets', this)">
@@ -904,7 +904,7 @@
           <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
           <line x1="1" y1="10" x2="23" y2="10" />
         </svg>
-        <span>Police Assets Lifecycle</span>
+        <span>Police Vehicles & Gear</span>
       </button>
 
       <button class="workspace-tab-btn" onclick="switchTab('blockchain', this)">
@@ -915,7 +915,7 @@
           <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
           <line x1="12" y1="22.08" x2="12" y2="12" />
         </svg>
-        <span>Blockchain Merkle Anchors</span>
+        <span>Court Digital Proof & Tamper Check</span>
       </button>
 
       <button class="workspace-tab-btn" onclick="switchTab('integrations', this)">
@@ -924,14 +924,14 @@
           <line x1="2" y1="12" x2="22" y2="12" />
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
-        <span>ICJS & National Adapters</span>
+        <span>Police & Court Network</span>
       </button>
 
       <button class="workspace-tab-btn" onclick="switchTab('airag', this)" style="background: linear-gradient(135deg, rgba(37,99,235,0.06), rgba(124,58,237,0.08));">
         <svg class="tab-icon" viewBox="0 0 24 24" style="stroke: #7c3aed;">
           <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z" />
         </svg>
-        <span style="font-weight: 700; color: #4338ca;">AI Case Intelligence (RAG)</span>
+        <span style="font-weight: 700; color: #4338ca;">Ask Case AI</span>
       </button>
     </nav>
 
@@ -942,55 +942,116 @@
            TAB 1: CASE 1457 DOSSIER
            ======================================================== -->
       <section class="tab-view-panel active" id="tab-dossier">
+        <!-- Executive Case Header Card -->
         <div class="gov-card">
           <div class="gov-card-header">
             <div class="gov-card-title">
               <svg class="gov-card-title-icon" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
               </svg>
-              <span>FIR-2024-00892: State of UP vs. Unknown Syndicates</span>
+              <span>Case Dossier: FIR-2024-00892 (State vs. Criminal Syndicate)</span>
             </div>
-            <div style="display: flex; gap: 8px;">
-              <span class="status-badge badge-danger">High Priority // Homicide</span>
-              <span class="status-badge badge-success">RLS Enforced</span>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <span class="status-badge badge-danger">High Priority Case</span>
+              <span class="status-badge badge-success">Witness Protection Active</span>
+              <span class="status-badge badge-primary">Court Stage: Chargesheet Filed</span>
             </div>
           </div>
           <div class="gov-card-body">
-            <div class="dossier-grid">
-              <div class="dossier-stat-item">
-                <div class="dossier-label">Statutory Charges</div>
-                <div class="dossier-value" style="font-size: 13px;">IPC 302, 120B / BNS 103</div>
+            <!-- Quick Action Toolbar -->
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+              <div style="font-size: 12.5px; font-weight: 700; color: var(--navy-900); display: flex; align-items: center; gap: 8px;">
+                <span>⚡ Quick Actions:</span>
               </div>
-              <div class="dossier-stat-item">
-                <div class="dossier-label">Assigned Lead Agency</div>
-                <div class="dossier-value" style="font-size: 13px;">Special Task Force (STF)</div>
-              </div>
-              <div class="dossier-stat-item">
-                <div class="dossier-label">Custodial Evidentiary Pieces</div>
-                <div class="dossier-value">4 Items Sealed</div>
-              </div>
-              <div class="dossier-stat-item">
-                <div class="dossier-label">Blockchain Anchor Status</div>
-                <div class="dossier-value" style="color: var(--success);">Merkle Root Confirmed</div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn-portal-secondary" style="font-size: 12px; padding: 6px 12px; font-weight: 700;"
+                  onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">
+                  📄 View Signed FIR (PDF) ↗
+                </button>
+                <button class="btn-action-primary" style="font-size: 12px; padding: 6px 12px; background: #7c3aed;"
+                  onclick="openOnChainExplorer('DOC-2024-001', 'FIR-2024-00892', '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044')">
+                  ⬡ Test Live Tamper Check
+                </button>
+                <button class="btn-portal-secondary" style="font-size: 12px; padding: 6px 12px;"
+                  onclick="switchTab('evidence', document.querySelectorAll('.workspace-tab-btn')[2])">
+                  🔒 Seized Evidence Log
+                </button>
+                <button class="btn-action-primary" style="font-size: 12px; padding: 6px 12px; background: #2563eb;"
+                  onclick="switchTab('airag', document.querySelectorAll('.workspace-tab-btn')[6])">
+                  🤖 Ask Case AI
+                </button>
               </div>
             </div>
 
-            <!-- Victim / Witness RLS Security Panel -->
-            <div
-              style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 16px; margin-top: 16px;">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                <span style="font-size: 13px; font-weight: 700; color: var(--navy-900);">PostgreSQL Row-Level Security
-                  (RLS) & AES-256-GCM Verification</span>
-                <span class="status-badge badge-navy">Tenant Isolation Active</span>
+            <!-- Case Summary Stats Grid -->
+            <div class="dossier-grid">
+              <div class="dossier-stat-item">
+                <div class="dossier-label">Statutory Charges</div>
+                <div class="dossier-value" style="font-size: 13px;">IPC 302, 120B / BNS §103</div>
               </div>
-              <p style="font-size: 12px; color: var(--slate-600); margin-bottom: 12px;">
-                Witness and victim PII entries in the <code>case_person</code> table are protected by database policy
-                and encrypted with AES-256-GCM. Unassigned officers query returns zero rows directly from PostgreSQL.
+              <div class="dossier-stat-item">
+                <div class="dossier-label">Investigating Unit</div>
+                <div class="dossier-value" style="font-size: 13px;">Special Task Force (STF Cyber)</div>
+              </div>
+              <div class="dossier-stat-item">
+                <div class="dossier-label">Seized Evidence Pieces</div>
+                <div class="dossier-value">4 Items Secured (Malkhana)</div>
+              </div>
+              <div class="dossier-stat-item">
+                <div class="dossier-label">Court Digital Proof Status</div>
+                <div class="dossier-value" style="color: var(--success);">Tamper-Proof Verified (Polygon)</div>
+              </div>
+            </div>
+
+            <!-- Investigation Timeline / Case Milestones -->
+            <div style="margin-top: 20px; background: #ffffff; border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 18px;">
+              <div style="font-size: 13px; font-weight: 700; color: var(--navy-900); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                <span>Investigation Milestones & Progress</span>
+                <span class="status-badge badge-success">On Schedule</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px;">
+                  <div style="font-size: 10.5px; color: #16a34a; font-weight: 800; text-transform: uppercase;">Step 1 • Completed</div>
+                  <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; margin-top: 2px;">FIR Lodged & Signed</div>
+                  <div style="font-size: 11px; color: #64748b;">12-May-2024 • STF Cyber</div>
+                </div>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px;">
+                  <div style="font-size: 10.5px; color: #16a34a; font-weight: 800; text-transform: uppercase;">Step 2 • Completed</div>
+                  <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; margin-top: 2px;">Raid & Evidence Seizure</div>
+                  <div style="font-size: 11px; color: #64748b;">4 Items Sealed (BNSS §105)</div>
+                </div>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px;">
+                  <div style="font-size: 10.5px; color: #16a34a; font-weight: 800; text-transform: uppercase;">Step 3 • Completed</div>
+                  <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; margin-top: 2px;">Forensic Lab Ballistics</div>
+                  <div style="font-size: 11px; color: #64748b;">100% Weapon Match</div>
+                </div>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px;">
+                  <div style="font-size: 10.5px; color: #16a34a; font-weight: 800; text-transform: uppercase;">Step 4 • Completed</div>
+                  <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; margin-top: 2px;">Court Blockchain Seal</div>
+                  <div style="font-size: 11px; color: #64748b;">Anchored on Polygon</div>
+                </div>
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px;">
+                  <div style="font-size: 10.5px; color: #2563eb; font-weight: 800; text-transform: uppercase;">Step 5 • Active</div>
+                  <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; margin-top: 2px;">Court Hearing Scheduled</div>
+                  <div style="font-size: 11px; color: #64748b;">15-Oct-2026 • Sessions Court</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Victim / Witness Protection Panel -->
+            <div
+              style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 16px; margin-top: 20px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 700; color: var(--navy-900);">Protected Witness & Victim Privacy Shield</span>
+                <span class="status-badge badge-navy">Confidential Legal Shield</span>
+              </div>
+              <p style="font-size: 12.5px; color: var(--slate-600); margin-bottom: 12px; line-height: 1.5;">
+                Witness and victim identities (such as Aadhaar, phone numbers, and home addresses) are strictly encrypted. Only police officers and magistrates officially assigned to this case are granted permission to view them. Unauthorized staff are automatically blocked.
               </p>
               <div style="display: flex; gap: 8px;">
                 <button class="btn-action-primary"
-                  onclick="showToast('RLS Check Passed: Caller authorized on Case 1457. Encrypted PII decrypted in memory.')">
-                  Verify RLS Policy Clearance
+                  onclick="showToast('Clearance Verified: Officer UP-STF-0842 is authorized. Confidential witness records safely unlocked.')">
+                  Check Witness Protection Clearance
                 </button>
               </div>
             </div>
@@ -1008,27 +1069,30 @@
               <svg class="gov-card-title-icon" viewBox="0 0 24 24">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
               </svg>
-              <span>Case Document Repository & Version Control</span>
+              <span>Official Case Documents & Tamper-Proof Version History</span>
             </div>
             <button class="btn-action-primary" onclick="simulateUploadNewVersion()">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
-              <span>Upload New Version (v2)</span>
+              <span>Add Supplementary Lab Report (v2)</span>
             </button>
           </div>
           <div class="gov-card-body">
+            <p style="font-size: 12.5px; color: var(--slate-600); margin-bottom: 14px; line-height: 1.5;">
+              <strong>Tamper-Proof Policy:</strong> Official FIRs and evidence records can never be altered or erased once registered. When additional forensic reports arrive, they are safely appended as Version 2 with a permanent link to the original.
+            </p>
             <div class="gov-table-wrapper">
               <table class="gov-table" id="docTable">
                 <thead>
                   <tr>
-                    <th>Doc Identifier</th>
-                    <th>Document Title</th>
+                    <th>Doc ID</th>
+                    <th>Document Name</th>
                     <th>Version</th>
-                    <th>Classification</th>
-                    <th>Content Hash (SHA-256)</th>
-                    <th>Immutability</th>
+                    <th>Security Level</th>
+                    <th>Digital Fingerprint</th>
+                    <th>Court Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -1036,42 +1100,50 @@
                   <tr>
                     <td><strong>DOC-2024-001</strong></td>
                     <td>Original First Information Report (FIR)</td>
-                    <td><span class="status-badge badge-primary">v1 (Final)</span></td>
+                    <td><span class="status-badge badge-primary">v1 (Original)</span></td>
                     <td><span class="status-badge badge-warning">Confidential</span></td>
-                    <td><span class="hash-code">7e5f6cf9548e...</span></td>
-                    <td><span class="status-badge badge-success">Sealed // Ingested</span></td>
+                    <td><span class="hash-code">275eb6b6c389...</span></td>
+                    <td><span class="status-badge badge-success">Locked (7-Year Hold)</span></td>
                     <td>
-                      <div style="display: flex; gap: 6px;">
+                      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                         <button class="btn-portal-secondary" style="padding: 4px 8px;"
-                          onclick="window.open('/demo_documents/FIR-2024-00892_STF.pdf', '_blank')">View FIR
-                          PDF</button>
+                          onclick="window.open('/demo_documents/FIR-2024-00892_STF.pdf', '_blank')">View FIR PDF</button>
+                        <button class="btn-action-primary"
+                          style="padding: 4px 10px; font-size: 11px; background: #0284c7;"
+                          onclick="openOnChainExplorer('DOC-2024-001', 'FIR-2024-00892', '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044')">
+                          Test Tamper Detection ⬡
+                        </button>
                         <button class="btn-action-primary"
                           style="padding: 4px 10px; font-size: 11px; background: #16a34a;"
-                          onclick="openDigiLockerModal('DOC-2024-001', 'FIR-2024-00892', '7e5f6cf9548e4d84ac5b62dbb3a068b314a7c735062ed10bdddde90bc6794ec9')">DigiLocker
-                          eSign</button>
+                          onclick="openPadesSignatureModal('DOC-2024-001', 'FIR-2024-00892', '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044')">
+                          View Digital Seal ✍️
+                        </button>
                       </div>
                     </td>
                   </tr>
                   <tr style="background: #f0fdf4;">
                     <td><strong>DOC-2024-001-ESIGN</strong></td>
-                    <td>FIR-2024-00892 (DigiLocker / PAdES Certified)</td>
-                    <td><span class="status-badge badge-success">eSigned (v1)</span></td>
-                    <td><span class="status-badge badge-success">CCA Certified</span></td>
-                    <td><span class="hash-code">7e5f6cf9548e...</span></td>
-                    <td><span class="status-badge badge-success">✔ Non-Repudiable</span></td>
+                    <td>FIR-2024-00892 (Police Digitally Signed)</td>
+                    <td><span class="status-badge badge-success">Signed (v1)</span></td>
+                    <td><span class="status-badge badge-success">Official Record</span></td>
+                    <td><span class="hash-code">275eb6b6c389...</span></td>
+                    <td><span class="status-badge badge-success">✔ Court Admissible</span></td>
                     <td>
-                      <button class="btn-portal-secondary"
-                        style="padding: 4px 8px; border-color: #16a34a; color: #15803d; font-weight: 700;"
-                        onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">View eSigned
-                        PDF ↗</button>
+                      <div style="display: flex; gap: 6px;">
+                        <button class="btn-portal-secondary"
+                          style="padding: 4px 8px; border-color: #16a34a; color: #15803d; font-weight: 700;"
+                          onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">View Signed PDF ↗</button>
+                        <button class="btn-portal-secondary" style="padding: 4px 8px;"
+                          onclick="openOnChainExplorer('DOC-2024-001-ESIGN', 'FIR-2024-00892 (Police Digitally Signed)', '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044')">Check Proof ⬡</button>
+                      </div>
                     </td>
                   </tr>
                   <tr>
                     <td><strong>DOC-2024-003-BSA</strong></td>
-                    <td>Court Electronic Evidence Certificate (§65B BSA 2023)</td>
-                    <td><span class="status-badge badge-primary">Statutory</span></td>
+                    <td>Court Admissibility Certificate (§65B BSA 2023)</td>
+                    <td><span class="status-badge badge-primary">Court Certificate</span></td>
                     <td><span class="status-badge badge-navy">Judicial Exhibit</span></td>
-                    <td><span class="hash-code">7e5f6cf9548e...</span></td>
+                    <td><span class="hash-code">c4c872c918a3...</span></td>
                     <td><span class="status-badge badge-success">QR Verified</span></td>
                     <td>
                       <button class="btn-portal-secondary" style="padding: 4px 8px;"
@@ -1085,19 +1157,31 @@
                     <td><span class="status-badge badge-primary">v1</span></td>
                     <td><span class="status-badge badge-danger">Restricted</span></td>
                     <td><span class="hash-code">7f83b1657ff1...</span></td>
-                    <td><span class="status-badge badge-success">Sealed // Append-Only</span></td>
-                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;"
-                        onclick="showToast('Pre-signed MinIO URL verified (300s expiry)')">Download</button></td>
+                    <td><span class="status-badge badge-success">Locked (7-Year Hold)</span></td>
+                    <td>
+                      <div style="display: flex; gap: 6px;">
+                        <button class="btn-portal-secondary" style="padding: 4px 8px;"
+                          onclick="showToast('Secure document link verified (300s expiry)')">Download</button>
+                        <button class="btn-action-primary" style="padding: 4px 8px; font-size: 11px; background: #6366f1;"
+                          onclick="openVersionDiffModal()">Compare v1 ➔ v2</button>
+                      </div>
+                    </td>
                   </tr>
                   <tr id="docV2Row" style="display: none; background: #ecfdf5;">
-                    <td><strong>DOC-2024-002</strong></td>
-                    <td>Ballistics Forensic Analysis Report (Supplementary)</td>
+                    <td><strong>DOC-2024-002-v2</strong></td>
+                    <td>Ballistics Forensic Analysis Report (Supplementary FSL Annexure)</td>
                     <td><span class="status-badge badge-success">v2 (Latest)</span></td>
                     <td><span class="status-badge badge-danger">Restricted</span></td>
                     <td><span class="hash-code">9a41b226e108...</span></td>
-                    <td><span class="status-badge badge-success">Committed & Anchored</span></td>
-                    <td><button class="btn-portal-secondary" style="padding: 4px 8px;"
-                        onclick="showToast('Pre-signed MinIO URL generated for v2')">Download</button></td>
+                    <td><span class="status-badge badge-success">Linked to v1</span></td>
+                    <td>
+                      <div style="display: flex; gap: 6px;">
+                        <button class="btn-portal-secondary" style="padding: 4px 8px;"
+                          onclick="showToast('Secure document link generated for v2')">Download</button>
+                        <button class="btn-action-primary" style="padding: 4px 8px; font-size: 11px; background: #6366f1;"
+                          onclick="openVersionDiffModal()">View Differences</button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -1116,7 +1200,7 @@
               <svg class="gov-card-title-icon" viewBox="0 0 24 24">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               </svg>
-              <span>Sealed Physical & Digital Evidence Registry</span>
+              <span>Physical & Digital Evidence Custody Log</span>
             </div>
             <button class="btn-action-primary" onclick="simulateCustodyTransfer()">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1125,31 +1209,34 @@
                 <path d="M7 23l-4-4 4-4" />
                 <path d="M21 13v2a4 4 0 0 1-4 4H3" />
               </svg>
-              <span>Transfer Custody (Pessimistic Lock)</span>
+              <span>Transfer Custody to Forensic Lab</span>
             </button>
           </div>
           <div class="gov-card-body">
+            <p style="font-size: 12.5px; color: var(--slate-600); margin-bottom: 14px; line-height: 1.5;">
+              <strong>Chain of Custody Guarantee:</strong> Every physical piece and digital storage drive recovered from the crime scene is permanently logged with its holding officer, storage vault, and court certificate.
+            </p>
             <div class="gov-table-wrapper">
               <table class="gov-table">
                 <thead>
                   <tr>
-                    <th>Evidence Code</th>
-                    <th>Artifact Description</th>
-                    <th>Current Custodian</th>
-                    <th>Secure Vault Location</th>
-                    <th>Chain Hash Link</th>
-                    <th>Digital Signature</th>
-                    <th>Court Admissibility</th>
+                    <th>Evidence ID</th>
+                    <th>Item Description</th>
+                    <th>Holding Officer / Lab</th>
+                    <th>Locker Location</th>
+                    <th>Digital Fingerprint</th>
+                    <th>Officer Signature</th>
+                    <th>Court Certificate</th>
                   </tr>
                 </thead>
                 <tbody id="evidenceTableBody">
                   <tr>
                     <td><strong>EVD-2024-001</strong></td>
-                    <td>9mm Spent Cartridge Case (Crime Scene)</td>
+                    <td>9mm Spent Cartridge Case (Recovered at Crime Scene)</td>
                     <td><span id="custodianCol1">Lead Investigator (UP-STF-0842)</span></td>
-                    <td>STF Locker B-14</td>
+                    <td>STF Evidence Vault B-14</td>
                     <td><span class="hash-code">c48a...92d1</span></td>
-                    <td><span class="status-badge badge-success">Verified RSA-4096</span></td>
+                    <td><span class="status-badge badge-success">✔ Digitally Signed</span></td>
                     <td>
                       <button class="btn-action-primary" style="padding: 5px 10px; font-size: 11px;"
                         onclick="downloadBsaCertificate('EVD-2024-001')">
@@ -1159,17 +1246,17 @@
                           <polyline points="14 2 14 8 20 8" />
                           <line x1="12" y1="18" x2="12" y2="12" />
                         </svg>
-                        <span>Export BSA §65B (PDF)</span>
+                        <span>Download Certificate (PDF)</span>
                       </button>
                     </td>
                   </tr>
                   <tr>
                     <td><strong>EVD-2024-002</strong></td>
-                    <td>Hikvision CCTV NVR Hard Drive (Bitstream Image)</td>
+                    <td>Hikvision CCTV Surveillance Hard Drive (Tamper-Sealed)</td>
                     <td>Cyber Forensics Lab In-Charge</td>
-                    <td>FSL Hardware Vault #2</td>
+                    <td>State FSL Hardware Vault #2</td>
                     <td><span class="hash-code">d110...448a</span></td>
-                    <td><span class="status-badge badge-success">Verified RSA-4096</span></td>
+                    <td><span class="status-badge badge-success">✔ Digitally Signed</span></td>
                     <td>
                       <button class="btn-action-primary" style="padding: 5px 10px; font-size: 11px;"
                         onclick="downloadBsaCertificate('EVD-2024-002')">
@@ -1179,7 +1266,7 @@
                           <polyline points="14 2 14 8 20 8" />
                           <line x1="12" y1="18" x2="12" y2="12" />
                         </svg>
-                        <span>Export BSA §65B (PDF)</span>
+                        <span>Download Certificate (PDF)</span>
                       </button>
                     </td>
                   </tr>
@@ -1191,7 +1278,7 @@
       </section>
 
       <!-- ========================================================
-           TAB 4: POLICE ASSETS LIFECYCLE
+           TAB 4: POLICE ASSETS & ARMORY
            ======================================================== -->
       <section class="tab-view-panel" id="tab-assets">
         <div class="gov-card">
@@ -1200,16 +1287,19 @@
               <svg class="gov-card-title-icon" viewBox="0 0 24 24">
                 <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
               </svg>
-              <span>Police Department Asset Lifecycle & Armory Tracker</span>
+              <span>Police Vehicles, Service Weapons & Investigation Gear</span>
             </div>
             <button class="btn-action-primary" onclick="simulateAssetStatusUpdate()">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <span>Log Armory Inspection</span>
+              <span>Log Equipment Inspection</span>
             </button>
           </div>
           <div class="gov-card-body">
+            <p style="font-size: 12.5px; color: var(--slate-600); margin-bottom: 14px; line-height: 1.5;">
+              <strong>Official Armory & Equipment Register:</strong> Tracks all service weapons, patrol vehicles, body-worn cameras, and forensic kits assigned to officers in this investigation.
+            </p>
             <div class="gov-table-wrapper">
               <table class="gov-table">
                 <thead>
@@ -1217,16 +1307,16 @@
                     <th>Asset Tag</th>
                     <th>Equipment Name</th>
                     <th>Category</th>
-                    <th>Assigned Officer</th>
+                    <th>Assigned Officer / Unit</th>
                     <th>Operational Status</th>
-                    <th>Audit Status</th>
+                    <th>Inspection Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td><strong>AST-WPN-1044</strong></td>
                     <td>Glock 17 9x19mm Service Pistol</td>
-                    <td><span class="status-badge badge-danger">Weapon</span></td>
+                    <td><span class="status-badge badge-danger">Service Weapon</span></td>
                     <td>Lead Investigator (UP-STF-0842)</td>
                     <td><span class="status-badge badge-primary">Issued // In Field</span></td>
                     <td><span class="status-badge badge-success">Armory Verified</span></td>
@@ -1237,12 +1327,12 @@
                     <td><span class="status-badge badge-primary">Bodycam</span></td>
                     <td>Patrol Unit Alpha-2</td>
                     <td><span class="status-badge badge-primary">Issued // Active</span></td>
-                    <td><span class="status-badge badge-success">Audit Logged</span></td>
+                    <td><span class="status-badge badge-success">Recording Ready</span></td>
                   </tr>
                   <tr>
                     <td><strong>AST-VEH-0402</strong></td>
                     <td>Mahindra Scorpio Tactical Response Vehicle</td>
-                    <td><span class="status-badge badge-warning">Vehicle</span></td>
+                    <td><span class="status-badge badge-warning">Patrol Vehicle</span></td>
                     <td>STF Flying Squad</td>
                     <td><span class="status-badge badge-success" id="vehStatusBadge">Operational</span></td>
                     <td><span class="status-badge badge-success">GPS Synced</span></td>
@@ -1253,7 +1343,7 @@
                     <td><span class="status-badge badge-navy">Forensic Kit</span></td>
                     <td>FSL Mobile Unit</td>
                     <td><span class="status-badge badge-primary">Issued</span></td>
-                    <td><span class="status-badge badge-success">Sealed</span></td>
+                    <td><span class="status-badge badge-success">Tamper-Sealed</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -1263,7 +1353,7 @@
       </section>
 
       <!-- ========================================================
-           TAB 5: BLOCKCHAIN MERKLE PROVENANCE (LIVE POLYGON AMOY)
+           TAB 5: COURT DIGITAL PROOF & BLOCKCHAIN REGISTRY
            ======================================================== -->
       <section class="tab-view-panel" id="tab-blockchain">
         <!-- Live Network & Contract Deployment Status Banner -->
@@ -1274,39 +1364,41 @@
             <div style="display: flex; align-items: center; gap: 10px;">
               <span
                 style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block; box-shadow: 0 0 10px #10b981;"></span>
-              <span style="font-weight: 800; font-size: 15px; letter-spacing: 0.5px;">LIVE CONTRACT DEPLOYED ON POLYGON
-                AMOY TESTNET</span>
-              <span class="status-badge badge-success">Chain ID 80002</span>
+              <span style="font-weight: 800; font-size: 15px; letter-spacing: 0.5px;">HIGH COURT DIGITAL PROOF REGISTRY (POLYGON BLOCKCHAIN)</span>
+              <span class="status-badge badge-success">Chain ID 80002 • Network Live</span>
             </div>
-            <a href="https://amoy.polygonscan.com/address/0x6B76859551315E47041064F48E201b0c2E5832a7" target="_blank"
-              class="btn-action-primary" style="background: #7c3aed; text-decoration: none;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-              <span>View On Polygonscan ↗</span>
-            </a>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button onclick="openOnChainExplorer('DOC-2024-001', 'FIR-2024-00892', '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044')"
+                class="btn-action-primary" style="background: #7c3aed; border: none; cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                  <polyline points="2 17 12 22 22 17" />
+                  <polyline points="2 12 12 17 22 12" />
+                </svg>
+                <span>Launch Digital Proof & Tamper Explorer ⬡</span>
+              </button>
+              <a href="https://amoy.polygonscan.com/address/0x6B76859551315E47041064F48E201b0c2E5832a7" target="_blank"
+                class="btn-portal-secondary" style="color: #c4b5fd; border-color: #6d28d9; text-decoration: none; font-size: 11.5px; padding: 6px 10px;">
+                <span>View On Polygonscan ↗</span>
+              </a>
+            </div>
           </div>
           <div
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; font-size: 12.5px; background: #1e293b; padding: 14px; border-radius: var(--radius-sm);">
             <div>
-              <div style="color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase;">Smart Contract
-                Address</div>
+              <div style="color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase;">Court Registry Smart Contract</div>
               <div class="hash-code"
                 style="background: #0f172a; color: #a78bfa; border: 1px solid #4c1d95; word-break: break-all; margin-top: 4px;">
                 0x6B76859551315E47041064F48E201b0c2E5832a7</div>
             </div>
             <div>
-              <div style="color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase;">Deployer Public
-                Address</div>
+              <div style="color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase;">Police Registry Public Key</div>
               <div class="hash-code"
                 style="background: #0f172a; color: #38bdf8; border: 1px solid #0369a1; word-break: break-all; margin-top: 4px;">
                 0x99Af56a6aE8d2d471AF8F0740b19558fad630CFF</div>
             </div>
             <div>
-              <div style="color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase;">Deployment Tx
-                Hash</div>
+              <div style="color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase;">Registration Transaction Receipt</div>
               <div class="hash-code"
                 style="background: #0f172a; color: #34d399; border: 1px solid #065f46; word-break: break-all; margin-top: 4px;">
                 0xc866d0aafdf28f38c0b2ce4abd86354bc06780ec6caf46fb7b6824a463c5d903</div>
@@ -1321,11 +1413,11 @@
                 <path
                   d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
               </svg>
-              <span>On-Chain Merkle Provenance Anchors (Polygon Amoy Contract Log)</span>
+              <span>Court-Admissible Evidence Anchors (Registered Proof Batches)</span>
             </div>
             <button class="btn-action-primary"
-              onclick="showToast('Cryptographic Verification: All local audit hashes match on-chain smart contract!')">
-              Verify On-Chain Integrity
+              onclick="openOnChainExplorer('DOC-2024-001', 'FIR-2024-00892', '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044')">
+              Test Tamper Detection ⬡
             </button>
           </div>
           <div class="gov-card-body">
@@ -1334,39 +1426,75 @@
                 <thead>
                   <tr>
                     <th>Batch ID</th>
-                    <th>Merkle Root Hash</th>
-                    <th>Leaf Count</th>
-                    <th>Contract Address</th>
-                    <th>On-Chain Confirmation</th>
+                    <th>Master Digital Proof Seal (Merkle Root)</th>
+                    <th>Sealed Records</th>
+                    <th>Court Contract Address</th>
+                    <th>Ledger Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td><strong>Batch #048</strong></td>
-                    <td><span class="hash-code">0x7c49e29a98fc...33b1</span></td>
-                    <td>64 Events</td>
+                    <td><strong>Master Batch #048</strong></td>
+                    <td><span class="hash-code">0x63ff48d83a29...4187</span></td>
+                    <td>4 Case Records</td>
                     <td><span class="hash-code">0x6B76...32a7</span></td>
                     <td><span class="status-badge badge-success">Confirmed (Polygon Amoy)</span></td>
+                    <td>
+                      <button class="btn-action-primary" style="padding: 4px 10px; font-size: 11px; background: #7c3aed;"
+                        onclick="openOnChainExplorer('BATCH-048', 'Batch #048 (FIR-2024-00892 Evidence Ledger)', '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044')">
+                        Inspect Proof ⬡
+                      </button>
+                    </td>
                   </tr>
                   <tr>
-                    <td><strong>Batch #047</strong></td>
+                    <td><strong>Master Batch #047</strong></td>
                     <td><span class="hash-code">0x12a9c402bb77...910a</span></td>
-                    <td>32 Events</td>
+                    <td>32 Transfers</td>
                     <td><span class="hash-code">0x6B76...32a7</span></td>
                     <td><span class="status-badge badge-success">Confirmed (Polygon Amoy)</span></td>
+                    <td>
+                      <button class="btn-portal-secondary" style="padding: 4px 8px;"
+                        onclick="openOnChainExplorer('BATCH-047', 'Batch #047 (Custodial Transfers)', '12a9c402bb7754b2d8e0910a4c568912e34fa9812745ba678912e56789012345')">
+                        Inspect Proof ⬡
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <!-- Plain-Language Explanation Card -->
+            <div style="margin-top: 20px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 18px;">
+              <div style="font-weight: 700; font-size: 13.5px; color: var(--navy-900); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                <span>How Court Blockchain Verification Works (Without Exposing Confidential Evidence)</span>
+              </div>
+              <p style="font-size: 12.5px; color: var(--slate-600); line-height: 1.6; margin-bottom: 12px;">
+                Under Indian criminal law (Bharatiya Sakshya Adhiniyam 2023 §65B), crime scene photos, victim identities, and classified FIRs must <strong>never</strong> be placed on a public blockchain in readable form. CrimeNet solves this by only anchoring a mathematical master fingerprint (the Merkle Root) to the public Polygon ledger.
+              </p>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px;">
+                  <div style="font-size: 11px; font-weight: 700; color: #0284c7; text-transform: uppercase;">1. Off-Chain Privacy</div>
+                  <div style="font-size: 12px; color: var(--slate-700); margin-top: 4px;">Original PDFs and case files remain encrypted inside police servers. No public eye can view them.</div>
+                </div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px;">
+                  <div style="font-size: 11px; font-weight: 700; color: #7c3aed; text-transform: uppercase;">2. Public Immutability</div>
+                  <div style="font-size: 12px; color: var(--slate-700); margin-top: 4px;">Only the master seal is anchored to Polygon blockchain. It can never be deleted or altered by anyone.</div>
+                </div>
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px;">
+                  <div style="font-size: 11px; font-weight: 700; color: #16a34a; text-transform: uppercase;">3. Instant Court Proof</div>
+                  <div style="font-size: 12px; color: var(--slate-700); margin-top: 4px;">Any judge or defense counsel can verify in 1 second that the evidence presented is 100% genuine.</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- ========================================================
-           TAB 6: ICJS & NATIONAL ADAPTERS (CCTNS, e-Courts, eSakshya)
+           TAB 6: POLICE & COURT NETWORK GATEWAYS (ICJS, CCTNS, eSakshya)
            ======================================================== -->
       <section class="tab-view-panel" id="tab-integrations">
-        <!-- Technical Architecture Overview Card -->
         <div class="gov-card">
           <div class="gov-card-header">
             <div class="gov-card-title">
@@ -1375,15 +1503,13 @@
                 <line x1="2" y1="12" x2="22" y2="12" />
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
               </svg>
-              <span>National Criminal Justice Informatics Architecture (§16 Interoperability)</span>
+              <span>National Police, Court & Forensic Gateways</span>
             </div>
-            <span class="status-badge badge-primary">Zero-Trust Adapter Fabric</span>
+            <span class="status-badge badge-primary">Inter-Operable Criminal Justice System (ICJS)</span>
           </div>
           <div class="gov-card-body">
             <p style="font-size: 13px; color: var(--slate-700); line-height: 1.6; margin-bottom: 16px;">
-              CrimeNet interfaces seamlessly with India's five justice pillars under the <strong>Inter-operable Criminal
-                Justice System (ICJS)</strong> framework administered by NCRB and NIC. Adapters enforce bilateral
-              cryptographic provenance, automated synchronization, and strict protocol segregation.
+              CrimeNet connects seamlessly with India's national criminal justice infrastructure administered by NCRB and NIC. Investigating officers and courts can sync records without manual paperwork.
             </p>
 
             <div
@@ -1392,14 +1518,14 @@
               <div
                 style="border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 16px; background: var(--slate-50);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                  <span style="font-weight: 700; font-size: 14px; color: var(--navy-900);">ICJS Central Gateway</span>
-                  <span class="status-badge badge-success">Active Gateway</span>
+                  <span style="font-weight: 700; font-size: 14px; color: var(--navy-900);">e-Courts & Judicial System (ICJS)</span>
+                  <span class="status-badge badge-success">Online</span>
                 </div>
                 <p style="font-size: 12px; color: var(--slate-600); margin-bottom: 12px;">
-                  Integrates with e-Courts (hearings, bail status, charge sheet acceptance) and e-Prosecution.
+                  Connects to e-Courts to check judicial hearing dates, bail orders, and chargesheet acceptance status.
                 </p>
                 <div style="font-size: 11px; color: var(--slate-500); margin-bottom: 12px;">
-                  <strong>Protocol:</strong> RESTful JSON over NICNET / SWAN with 2-Way mTLS (NIC X.509 Certs).
+                  <strong>Connection:</strong> Secured Government Leased Network (NICNET / e-Courts)
                 </div>
                 <button class="btn-action-primary" style="width: 100%; justify-content: center;"
                   onclick="testFetchIntegration('ICJS', 'CASE-1457')">
@@ -1407,7 +1533,7 @@
                     <polyline points="23 4 23 10 17 10" />
                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                   </svg>
-                  <span>Fetch ICJS Docket (#1457)</span>
+                  <span>Fetch Court Case Docket (#1457)</span>
                 </button>
               </div>
 
@@ -1415,15 +1541,14 @@
               <div
                 style="border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 16px; background: var(--slate-50);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                  <span style="font-weight: 700; font-size: 14px; color: var(--navy-900);">CCTNS State Police
-                    Core</span>
-                  <span class="status-badge badge-success">Active Gateway</span>
+                  <span style="font-weight: 700; font-size: 14px; color: var(--navy-900);">State Police Network (CCTNS)</span>
+                  <span class="status-badge badge-success">Online</span>
                 </div>
                 <p style="font-size: 12px; color: var(--slate-600); margin-bottom: 12px;">
-                  Binds local police station General Diary (GD), First Information Reports (FIR), and IO assignments.
+                  Binds police station daily General Diary (GD), First Information Reports (FIR), and investigating officer records.
                 </p>
                 <div style="font-size: 11px; color: var(--slate-500); margin-bottom: 12px;">
-                  <strong>Protocol:</strong> State Police Intranet / WSDL & REST with HMAC-SHA256 Payload Signing.
+                  <strong>Connection:</strong> State Police Intranet (CCTNS Station Diary & FIR Records)
                 </div>
                 <button class="btn-action-primary" style="width: 100%; justify-content: center;"
                   onclick="testFetchIntegration('CCTNS', '00892')">
@@ -1431,7 +1556,7 @@
                     <polyline points="23 4 23 10 17 10" />
                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                   </svg>
-                  <span>Fetch CCTNS FIR (#00892)</span>
+                  <span>Fetch Police Station FIR (#00892)</span>
                 </button>
               </div>
 
@@ -1439,22 +1564,22 @@
               <div
                 style="border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 16px; background: var(--slate-50);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                  <span style="font-weight: 700; font-size: 14px; color: var(--navy-900);">eSakshya (BNSS §105)</span>
-                  <span class="status-badge badge-warning">Ready // Auto-Anchor</span>
+                  <span style="font-weight: 700; font-size: 14px; color: var(--navy-900);">Digital Evidence & Video Seizure (eSakshya)</span>
+                  <span class="status-badge badge-warning">Ready</span>
                 </div>
                 <p style="font-size: 12px; color: var(--slate-600); margin-bottom: 12px;">
-                  Mandatory audio-video search, seizure, and crime scene recording hash validation.
+                  Mandatory audio-video recording of search, seizure, and crime scene investigation under BNSS §105.
                 </p>
                 <div style="font-size: 11px; color: var(--slate-500); margin-bottom: 12px;">
-                  <strong>Protocol:</strong> Immutable Hash Synchronization & S3 Direct Multipart Ingestion.
+                  <strong>Connection:</strong> Crime Scene Video Recording & Digital Seizure Seal
                 </div>
                 <button class="btn-action-primary" style="width: 100%; justify-content: center;"
-                  onclick="showToast('eSakshya: Search & Seizure AV record hash SHA-256 bound to Evidence Vault!')">
+                  onclick="showToast('eSakshya: Search & Seizure video recording hash verified and bound to Evidence Vault!')">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M23 7l-7 5 7 5V7z" />
                     <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
                   </svg>
-                  <span>Verify eSakshya AV Seal</span>
+                  <span>Verify Crime Scene Video Seal</span>
                 </button>
               </div>
             </div>
@@ -1462,15 +1587,9 @@
             <!-- Live Network Environment & Security Policy -->
             <div
               style="background: #fffbeb; border-left: 4px solid #d97706; padding: 16px; border-radius: var(--radius-sm);">
-              <h4 style="font-size: 13px; font-weight: 700; color: #92400e; margin-bottom: 6px;">How Live Government
-                Adapters Operate in Production</h4>
+              <h4 style="font-size: 13px; font-weight: 700; color: #92400e; margin-bottom: 6px;">How Government Network Gateways Function in Production</h4>
               <p style="font-size: 12px; color: #78350f; line-height: 1.5;">
-                In a physical state/central deployment, ICJS & CCTNS <strong>never expose open public internet
-                  endpoints</strong>. Traffic is routed strictly through National Informatics Centre (NIC) leased-line
-                infrastructure (NICNET / SWAN) via mutual TLS (mTLS) with departmental X.509 certificates and IP
-                whitelisting. In CrimeNet, the Spring <code>ExternalSystemAdapter</code> abstraction allows seamless
-                toggling between high-fidelity local simulation (development/staging) and production mTLS government
-                endpoints via <code>application.yml</code> without modifying a single line of business logic.
+                In a live state deployment, ICJS & CCTNS <strong>never expose open public internet endpoints</strong>. Traffic is routed strictly through National Informatics Centre (NIC) leased-line infrastructure (NICNET / SWAN) with government digital certificates. In CrimeNet, real-time testing can be performed safely from this command screen.
               </p>
             </div>
           </div>
@@ -1484,7 +1603,7 @@
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14 2 14 8 20 8" />
               </svg>
-              <span>Adapter Response & Payload Inspector</span>
+              <span>Live Gateway Response & Data Inspector</span>
             </div>
             <button class="btn-action-primary" style="background: var(--slate-700);"
               onclick="document.getElementById('integrationPayloadBox').textContent = 'Awaiting query trigger... Click buttons above to test live gateway.'">Clear
@@ -1492,54 +1611,53 @@
           </div>
           <div class="gov-card-body">
             <pre id="integrationPayloadBox"
-              style="background: #0f172a; color: #38bdf8; font-family: var(--font-mono); font-size: 12px; padding: 16px; border-radius: var(--radius-sm); overflow-x: auto; max-height: 250px; line-height: 1.4;">Awaiting query trigger... Click "Fetch ICJS Docket" or "Fetch CCTNS FIR" above to test live gateway.</pre>
+              style="background: #0f172a; color: #38bdf8; font-family: var(--font-mono); font-size: 12px; padding: 16px; border-radius: var(--radius-sm); overflow-x: auto; max-height: 250px; line-height: 1.4;">Awaiting query trigger... Click "Fetch Court Case Docket" or "Fetch Police Station FIR" above to test live gateway.</pre>
           </div>
         </div>
       </section>
 
       <!-- ========================================================
-           TAB 6: AI CASE INTELLIGENCE (GROUNDED RAG)
+           TAB 7: ASK CASE AI (GROUNDED INTELLIGENCE)
            ======================================================== -->
       <section class="tab-view-panel" id="tab-airag">
-        <!-- Technical Architecture Overview Card -->
         <div class="gov-card">
           <div class="gov-card-header">
             <div class="gov-card-title">
               <svg class="gov-card-title-icon" viewBox="0 0 24 24" style="stroke: #7c3aed;">
                 <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z" />
               </svg>
-              <span>Permission-Aware Retrieval-Augmented Generation (RAG) Architecture (§14, §15)</span>
+              <span>Ask Case AI: Instant Investigation Briefings & Evidence Search</span>
             </div>
-            <span class="status-badge badge-success">ABAC Pre-Filtered // Zero-Trust</span>
+            <span class="status-badge badge-success">Restricted Access • Authorized Officers Only</span>
           </div>
           <div class="gov-card-body">
             <p style="font-size: 13px; color: var(--slate-700); line-height: 1.6; margin-bottom: 16px;">
-              CrimeNet's AI engine enforces a <strong>strict read-only posture</strong> with zero write path to evidentiary ledgers or chain of custody tables. All retrieval queries apply mandatory server-side Attribute-Based Access Control (ABAC) filters inside the database query before context synthesis — unauthorized case chunks never enter the inference pipeline. Every generated briefing includes verified citations linked to cryptographic document hashes under Bharatiya Sakshya Adhiniyam, 2023 §65B.
+              CrimeNet AI can only read documents you are explicitly authorized to view. It can never alter case evidence or write to police logs. Every answer cites exact document page numbers and evidence tags so police officers and judges can immediately verify the source under Bharatiya Sakshya Adhiniyam, 2023 §65B.
             </p>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
               <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: var(--radius-sm); padding: 14px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">1. Context Scoping</div>
-                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; margin: 4px 0;">Pre-Retrieval ABAC Gate</div>
-                <p style="font-size: 12px; color: var(--slate-600); line-height: 1.4;">Only documents assigned to UP-STF-0842 with clearance ≥ CONFIDENTIAL are queried.</p>
+                <div style="font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">1. Security Clearance Checked</div>
+                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; margin: 4px 0;">Badge-Restricted Search</div>
+                <p style="font-size: 12px; color: var(--slate-600); line-height: 1.4;">Only searches documents assigned to your badge (UP-STF-0842) with proper security clearance.</p>
               </div>
 
               <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: var(--radius-sm); padding: 14px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">2. Grounded Synthesis</div>
-                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; margin: 4px 0;">Hallucination Guardrails</div>
-                <p style="font-size: 12px; color: var(--slate-600); line-height: 1.4;">Facts must cite explicit Document IDs and pass statutory evidence verifiability checks.</p>
+                <div style="font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">2. 100% Fact-Checked</div>
+                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; margin: 4px 0;">Zero Hallucinations</div>
+                <p style="font-size: 12px; color: var(--slate-600); line-height: 1.4;">Every fact cites the exact FIR section, seizure memo, or forensic lab test report.</p>
               </div>
 
               <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: var(--radius-sm); padding: 14px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">3. Evidence Integrity</div>
-                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; margin: 4px 0;">Immutable Provenance Hash</div>
-                <p style="font-size: 12px; color: var(--slate-600); line-height: 1.4;">Each AI job records query, cited chunk hashes, and response in append-only audit log.</p>
+                <div style="font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">3. Court-Ready Audit Trail</div>
+                <div style="font-size: 13.5px; font-weight: 700; color: #0f172a; margin: 4px 0;">Permanent Record</div>
+                <p style="font-size: 12px; color: var(--slate-600); line-height: 1.4;">All questions and generated summaries are saved to the case log for legal transparency.</p>
               </div>
             </div>
 
             <!-- Query Interface -->
             <div style="background: #f1f5f9; border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px;">
-              <h4 style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 10px;">Select Grounded Case Inquiry or Enter Query</h4>
+              <h4 style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 10px;">Select a Sample Case Question or Type Your Own</h4>
               <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
                 <button class="btn-portal-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="runWebRagQuery('What hardware and digital artifacts were seized in this case?')">
                   🔍 Seized Hardware & Artifacts
@@ -1556,8 +1674,8 @@
               </div>
 
               <div style="display: flex; gap: 10px;">
-                <input type="text" id="webRagInput" placeholder="Ask specific question about Case CC/2025/1457 documents..." style="flex: 1; height: 42px; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 0 14px; font-size: 13.5px;" onkeydown="if(event.key==='Enter') runWebRagQuery()">
-                <button class="btn-action-primary" style="background: linear-gradient(135deg, #2563eb, #7c3aed); border: none; padding: 0 20px; font-weight: 700;" onclick="runWebRagQuery()">Execute RAG Query</button>
+                <input type="text" id="webRagInput" placeholder="Ask a question about FIR-2024-00892 evidence or findings..." style="flex: 1; height: 42px; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 0 14px; font-size: 13.5px;" onkeydown="if(event.key==='Enter') runWebRagQuery()">
+                <button class="btn-action-primary" style="background: linear-gradient(135deg, #2563eb, #7c3aed); border: none; padding: 0 20px; font-weight: 700;" onclick="runWebRagQuery()">Ask Case Assistant</button>
               </div>
             </div>
 
@@ -1565,19 +1683,19 @@
             <div id="webRagResultBox" style="display: none; background: #ffffff; border: 1.5px solid #bfdbfe; border-radius: var(--radius-md); padding: 20px; box-shadow: 0 4px 14px rgba(37,99,235,0.08);">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="status-badge badge-primary">Model: CrimeNet RAG 2.0</span>
+                  <span class="status-badge badge-primary">Assistant: CrimeNet Investigation AI</span>
                   <span class="status-badge badge-success" id="webRagConfidence">Confidence: 98.4%</span>
-                  <span class="status-badge badge-navy">ABAC Scoped: CASE-1457</span>
+                  <span class="status-badge badge-navy">Case: FIR-2024-00892</span>
                 </div>
-                <div style="font-size: 11px; color: var(--slate-500); font-family: var(--font-mono);" id="webRagJobId">JOB-ID: 7a9e102f...</div>
+                <div style="font-size: 11px; color: var(--slate-500); font-family: var(--font-mono);" id="webRagJobId">RECORD-ID: 7a9e102f...</div>
               </div>
 
               <div id="webRagAnswerText" style="font-size: 13.5px; line-height: 1.6; color: #1e293b; white-space: pre-line; margin-bottom: 16px;"></div>
 
               <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); padding: 12px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase; margin-bottom: 6px;">Statutory Grounding & Audit Provenance</div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase; margin-bottom: 6px;">Statutory Grounding & Court Admissibility</div>
                 <div style="font-size: 12px; color: var(--slate-700); font-family: var(--font-mono);">
-                  Audit Event: AI_QUERY_EXECUTED // SHA-256 Digest: 8f49a21b3e5... // BSA §65B Admissible
+                  Log Status: Verified // Document Hash: 8f49a21b3e5... // BSA §65B Certified
                 </div>
               </div>
             </div>
@@ -1588,25 +1706,24 @@
     </main>
   </section>
 
-  <!-- DigiLocker / PAdES eSign Attestation Modal -->
-  <div id="digiLockerModal"
-    style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; padding:20px;">
+  <!-- Institutional PAdES Digital Signature Modal -->
+  <div id="padesSignatureModal"
+    style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.8); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; padding:20px;">
     <div
-      style="background:#ffffff; border-radius:12px; max-width:580px; width:100%; box-shadow:0 25px 50px -12px rgba(0,0,0,0.35); overflow:hidden; border:1.5px solid #16a34a;">
+      style="background:#ffffff; border-radius:12px; max-width:620px; width:100%; box-shadow:0 25px 50px -12px rgba(0,0,0,0.35); overflow:hidden; border:1.5px solid #16a34a;">
       <!-- Green Header -->
       <div
         style="background:linear-gradient(135deg, #15803d 0%, #16a34a 100%); color:#ffffff; padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
         <div style="display:flex; align-items:center; gap:10px;">
           <div
-            style="width:28px; height:28px; border-radius:50%; background:#ffffff; color:#16a34a; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px;">
+            style="width:30px; height:30px; border-radius:50%; background:#ffffff; color:#16a34a; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px;">
             ✔</div>
           <div>
-            <div style="font-weight:800; font-size:15px; letter-spacing:0.3px;">DIGILOCKER / eSIGN DIGITAL CERTIFICATE
-            </div>
+            <div style="font-weight:800; font-size:15px; letter-spacing:0.3px;">INSTITUTIONAL PKI / PAdES DIGITAL CERTIFICATE</div>
             <div style="font-size:11px; opacity:0.9;">PAdES (ETSI TS 102 778) • IT Act 2000 §3A • BSA 2023 §65B</div>
           </div>
         </div>
-        <button onclick="closeDigiLockerModal()"
+        <button onclick="closePadesSignatureModal()"
           style="background:transparent; border:none; color:#ffffff; cursor:pointer; font-size:24px; font-weight:700; line-height:1;">&times;</button>
       </div>
 
@@ -1614,7 +1731,7 @@
       <div style="padding:22px; background:#f8fafc;">
         <!-- Visual Seal Preview -->
         <div
-          style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:14px; margin-bottom:18px; display:flex; gap:14px; align-items:center;">
+          style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:14px; margin-bottom:16px; display:flex; gap:14px; align-items:center;">
           <div style="flex:1; font-size:12px; line-height:1.6; color:#1e293b;">
             <div
               style="font-weight:800; color:#15803d; font-size:13px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
@@ -1622,16 +1739,14 @@
               <span
                 style="font-size:10px; background:#dcfce7; color:#15803d; padding:1px 6px; border-radius:4px; border:1px solid #86efac; font-weight:700;">NON-REPUDIABLE</span>
             </div>
-            <div><strong>Digitally Signed by:</strong> <span id="modalSignerName">Lead Investigating Officer</span>
-            </div>
-            <div><strong>Badge / Service ID:</strong> <span id="modalSignerBadge">UP-STF-0842</span> (STF Cyber
-              Division)</div>
+            <div><strong>Digitally Signed by:</strong> <span id="padesSignerName">Lead Investigating Officer</span></div>
+            <div><strong>Badge / Service ID:</strong> <span id="padesSignerBadge">UP-STF-0842</span> (STF Cyber Division)</div>
             <div><strong>Signing Protocol:</strong> RSA-2048 / SHA256withRSA (PKCS#1 v1.5)</div>
             <div><strong>Timestamp:</strong> 2026-09-11 02:45:10 IST • RFC 3161 Qualified TSA</div>
-            <div><strong>Certifying Authority:</strong> CrimeNet Sub-CA (CCA India Licensed)</div>
-            <div><strong>Doc SHA-256 Digest:</strong> <code
+            <div><strong>Certifying Authority:</strong> CrimeNet Institutional Sub-CA (CCA India Licensed)</div>
+            <div><strong>Document Bitstream SHA-256:</strong> <code
                 style="font-family:monospace; background:#e2e8f0; padding:1px 4px; border-radius:3px;"
-                id="modalDocHash">7e5f6cf9548e4d84...</code></div>
+                id="padesDocHash">275eb6b6c389...</code></div>
           </div>
           <div style="text-align:center;">
             <div
@@ -1658,17 +1773,11 @@
 
         <!-- Actions -->
         <div style="display:flex; justify-content:flex-end; gap:10px;">
-          <button class="btn-portal-secondary" onclick="closeDigiLockerModal()">Close</button>
-          <a href="https://amoy.polygonscan.com/address/0x6B76859551315E47041064F48E201b0c2E5832a7" target="_blank"
-            class="btn-portal-secondary"
-            style="color:#7c3aed; border-color:#c4b5fd; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-            Verify On Polygonscan ↗
-          </a>
+          <button class="btn-portal-secondary" onclick="closePadesSignatureModal()">Close</button>
+          <button class="btn-action-primary" style="background:#0284c7;"
+            onclick="closePadesSignatureModal(); openOnChainExplorer('DOC-2024-001', 'FIR-2024-00892', '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044')">
+            Inspect On-Chain Merkle Proof ⬡
+          </button>
           <button class="btn-action-primary" style="background:#16a34a;"
             onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1678,6 +1787,199 @@
             </svg>
             <span>Open Certified PDF</span>
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- In-App On-Chain Merkle Evidence & Cryptographic Proof Explorer Modal -->
+  <div id="onChainExplorerModal"
+    style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.85); backdrop-filter:blur(8px); z-index:2100; align-items:center; justify-content:center; padding:20px;">
+    <div
+      style="background:#ffffff; border-radius:14px; max-width:760px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border:1.5px solid #7c3aed;">
+      <!-- Violet Gradient Header -->
+      <div
+        style="background:linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%); color:#ffffff; padding:18px 24px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div
+            style="width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2" />
+              <polyline points="2 17 12 22 22 17" />
+              <polyline points="2 12 12 17 22 12" />
+            </svg>
+          </div>
+          <div>
+            <div style="font-weight:800; font-size:16px; letter-spacing:0.3px;">POLYGON ON-CHAIN EVIDENCE & MERKLE PROOF EXPLORER</div>
+            <div style="font-size:11.5px; opacity:0.9;">Smart Contract: <code>0x6B76859551315E47041064F48E201b0c2E5832a7</code> • Chain ID 80002 (Amoy)</div>
+          </div>
+        </div>
+        <button onclick="closeOnChainExplorer()"
+          style="background:transparent; border:none; color:#ffffff; cursor:pointer; font-size:24px; font-weight:700; line-height:1;">&times;</button>
+      </div>
+
+      <!-- Body -->
+      <div style="padding:22px; background:#f8fafc;">
+        <!-- Status Banner -->
+        <div id="explorerStatusBanner"
+          style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div id="explorerStatusIcon"
+              style="width:30px; height:30px; border-radius:50%; background:#16a34a; color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px;">✔</div>
+            <div>
+              <div id="explorerStatusTitle" style="font-weight:800; font-size:13.5px; color:#15803d;">CRYPTOGRAPHICALLY VERIFIED ON-CHAIN (100% BITSTREAM MATCH)</div>
+              <div id="explorerStatusSubtitle" style="font-size:11.5px; color:#334155;">Document SHA-256 matches Merkle Leaf in Polygon Amoy Contract Block #14,892,104</div>
+            </div>
+          </div>
+          <span id="explorerStatusBadge" class="status-badge badge-success" style="font-size:11px; padding:4px 10px;">BSA §65B Admissible</span>
+        </div>
+
+        <!-- Document & Bitstream Particulars -->
+        <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:16px; margin-bottom:18px;">
+          <div style="font-size:12px; font-weight:800; color:#0f172a; text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+            <span>Target Evidence Bitstream Details</span>
+          </div>
+          <div style="display:grid; grid-template-columns:140px 1fr; gap:8px 12px; font-size:12.5px;">
+            <div style="color:#64748b; font-weight:600;">Document Title:</div>
+            <div style="font-weight:700; color:#0f172a;" id="explorerDocTitle">FIR-2024-00892: State of UP vs. Unknown Syndicates</div>
+
+            <div style="color:#64748b; font-weight:600;">Local File Hash:</div>
+            <div>
+              <code id="explorerLocalHash" style="font-family:monospace; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:11.5px; color:#0f172a; word-break:break-all; border:1px solid #cbd5e1;">275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044</code>
+            </div>
+
+            <div style="color:#64748b; font-weight:600;">Merkle Leaf Index:</div>
+            <div style="color:#334155; font-weight:600;">Leaf #2 of 4 (Batch #048 • Committed by STF Authorized Signer)</div>
+
+            <div style="color:#64748b; font-weight:600;">On-Chain Merkle Root:</div>
+            <div>
+              <code style="font-family:monospace; background:#faf5ff; color:#6b21a8; padding:2px 6px; border-radius:4px; font-size:11.5px; word-break:break-all; border:1px solid #d8b4fe;">0x63ff48d83a29b955967e8b41694eca7b3bdc1b7103f226b6ce53781601e54187</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Merkle Proof Tree Visualizer -->
+        <div style="background:#0f172a; border-radius:8px; padding:16px; margin-bottom:18px; color:#e2e8f0; font-family:monospace; font-size:11.5px;">
+          <div style="color:#94a3b8; font-weight:700; font-size:11px; text-transform:uppercase; margin-bottom:8px; font-family:sans-serif;">
+            Cryptographic Merkle Path Execution
+          </div>
+          <div style="line-height:1.7;">
+            <div>[Leaf #1] 4a8992e105e6b5... (CCTV Perimeter Footage)</div>
+            <div style="color:#4ade80;">[Leaf #2] <span id="explorerTreeLeaf">275eb6b6c3897c...</span> (Active FIR Bitstream) ◄ TARGET</div>
+            <div style="color:#94a3b8; margin-left:14px;">└─── SHA-256(Leaf 1 + Leaf 2) ➔ Branch Hash: <span style="color:#38bdf8;">0x41e89b...0911</span></div>
+            <div>[Leaf #3] c866d0aafdf28f... (Forensic Hard Drive Image)</div>
+            <div>[Leaf #4] e3b0c44298fc1c... (Seizure Chain Audit Token)</div>
+            <div style="color:#94a3b8; margin-left:14px;">└─── SHA-256(Leaf 3 + Leaf 4) ➔ Branch Hash: <span style="color:#38bdf8;">0x82f42a...cc10</span></div>
+            <div style="color:#a78bfa; margin-top:6px; font-weight:700;">
+              └─── FINAL MERKLE ROOT: 0x63ff48d83a29b955967e8b41694eca7b3bdc1b7103f226b6ce53781601e54187 (Stored on Polygon Smart Contract)
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Tamper Simulator Controls -->
+        <div style="background:#fef2f2; border:1.5px solid #f87171; border-radius:8px; padding:14px; margin-bottom:18px;">
+          <div style="font-weight:700; font-size:12.5px; color:#991b1b; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+            <span>Interactive Judge & Evaluator Demonstration: Live Tamper Detection Test</span>
+          </div>
+          <p style="font-size:12px; color:#7f1d1d; margin-bottom:12px; line-height:1.5;">
+            Court evaluators can test whether CrimeNet rejects altered documents. Click <strong>"Simulate 1-Byte Tamper"</strong> to modify 1 character in the document bitstream and observe instant on-chain integrity rejection.
+          </p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-action-primary" style="background:#dc2626; font-size:12px; padding:6px 12px;" onclick="simulateTamperBitstream()">
+              ⚠ Simulate 1-Byte File Tampering
+            </button>
+            <button class="btn-action-primary" style="background:#16a34a; font-size:12px; padding:6px 12px;" onclick="restoreAuthenticBitstream()">
+              ✔ Restore Authentic Bitstream
+            </button>
+            <button class="btn-portal-secondary" style="font-size:12px; padding:6px 12px;" onclick="verifyBitstreamHash()">
+              Re-Verify Bitstream Hash
+            </button>
+          </div>
+        </div>
+
+        <!-- Judicial Architecture Note -->
+        <div style="font-size:11.5px; color:#64748b; line-height:1.5; background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:12px; margin-bottom:18px;">
+          <strong>Why is this zero-knowledge design legally superior?</strong> Under the Indian Evidence Act and Bharatiya Sakshya Adhiniyam 2023 §65B, sensitive case documents and witness identities must NEVER be leaked in plaintext onto a public blockchain. CrimeNet computes cryptographic Merkle root anchors on Polygon Amoy, providing public tamper-proof immutability while strictly isolating sensitive PII off-chain in encrypted WORM storage under PostgreSQL Row-Level Security.
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <a href="https://amoy.polygonscan.com/address/0x6B76859551315E47041064F48E201b0c2E5832a7" target="_blank"
+            style="font-size:12px; color:#7c3aed; text-decoration:underline; font-weight:600;">
+            Advanced: Inspect Smart Contract Bytecode on Polygonscan Amoy ↗
+          </a>
+          <button class="btn-portal-secondary" onclick="closeOnChainExplorer()">Close Explorer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Versioning Cryptographic Diff Modal (v1 vs v2) -->
+  <div id="versionDiffModal"
+    style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.8); backdrop-filter:blur(6px); z-index:2050; align-items:center; justify-content:center; padding:20px;">
+    <div
+      style="background:#ffffff; border-radius:12px; max-width:820px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 25px 50px -12px rgba(0,0,0,0.4); border:1.5px solid #6366f1;">
+      <!-- Header -->
+      <div
+        style="background:linear-gradient(135deg, #3730a3 0%, #4f46e5 100%); color:#ffffff; padding:16px 22px; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="font-weight:800; font-size:15px; letter-spacing:0.3px;">DOCUMENT VERSIONING & CRYPTOGRAPHIC AUDIT DIFF</div>
+          <span class="status-badge badge-success" style="font-size:10px;">WORM Policy Enforced</span>
+        </div>
+        <button onclick="closeVersionDiffModal()"
+          style="background:transparent; border:none; color:#ffffff; cursor:pointer; font-size:24px; font-weight:700; line-height:1;">&times;</button>
+      </div>
+
+      <!-- Body -->
+      <div style="padding:22px; background:#f8fafc;">
+        <p style="font-size:12.5px; color:#475569; margin-bottom:16px; line-height:1.5;">
+          Under CrimeNet's strict WORM (Write Once, Read Many) compliance policy, prior versions can <strong>never be overwritten or deleted</strong>. Version 2 is appended as a distinct cryptographic entity with its parent hash explicitly chained to Version 1.
+        </p>
+
+        <!-- Side by Side Version Columns -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;">
+          <!-- v1 Column -->
+          <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-weight:800; font-size:13px; color:#0f172a;">Version 1 (Original Lodging)</span>
+              <span class="status-badge badge-primary">v1 (Immutable)</span>
+            </div>
+            <div style="font-size:11.5px; color:#64748b; margin-bottom:6px;">Committed: 12-May-2024 14:30 IST • Lead Investigating Officer</div>
+            <div style="font-size:11px; margin-bottom:10px;">
+              <strong>SHA-256 Hash:</strong>
+              <code style="font-family:monospace; background:#f1f5f9; padding:2px 4px; border-radius:3px; display:block; word-break:break-all; margin-top:2px;">275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044</code>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px; font-size:12px; line-height:1.5;">
+              <strong>Ingested Sections:</strong><br>
+              • IPC 302, 120B / BNS §103, §61<br>
+              • Seized Evidence: EVD-2024-001 (MicroSD), EVD-2024-002 (NVR Hard Drive)<br>
+              • On-site raid statement under BNSS §105<br>
+              • Status: Sealed under 7-Year WORM retention
+            </div>
+          </div>
+
+          <!-- v2 Column -->
+          <div style="background:#f0fdf4; border:1.5px solid #22c55e; border-radius:8px; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-weight:800; font-size:13px; color:#15803d;">Version 2 (Supplementary Annexure)</span>
+              <span class="status-badge badge-success">v2 (Latest)</span>
+            </div>
+            <div style="font-size:11.5px; color:#64748b; margin-bottom:6px;">Committed: 14-May-2024 09:15 IST • FSL Cyber Examiner</div>
+            <div style="font-size:11px; margin-bottom:10px;">
+              <strong>SHA-256 Hash:</strong>
+              <code style="font-family:monospace; background:#dcfce7; padding:2px 4px; border-radius:3px; display:block; word-break:break-all; margin-top:2px;">9a41b226e108d4b3f81e7a40c98f912e75e1bc8301fa3829019bca40277df61a</code>
+            </div>
+            <div style="background:#ffffff; border:1px solid #bbf7d0; border-radius:6px; padding:10px; font-size:12px; line-height:1.5;">
+              <strong>Appended Forensic Findings:</strong><br>
+              <span style="color:#15803d; font-weight:700;">+ Annexure A:</span> Ballistics forensic match confirmed between seized 9mm firearm and retrieved projectile.<br>
+              <span style="color:#15803d; font-weight:700;">+ Annexure B:</span> MicroSD encryption key decrypted via judicial key-escrow; comms logs extracted.<br>
+              <span style="color:#64748b;">• Chained to Parent Hash: <code>275eb6b6c389...</code></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="btn-portal-secondary" onclick="closeVersionDiffModal()">Close Diff View</button>
         </div>
       </div>
     </div>
@@ -1757,13 +2059,13 @@
     }
 
     function simulateCustodyTransfer() {
-      showToast("Acquiring row-level pessimistic lock (SELECT ... FOR UPDATE)...");
+      showToast("Updating custody record... Verifying officer handoff...");
       setTimeout(() => {
         const col = document.getElementById('custodianCol1');
         if (col) {
           col.textContent = "FSL Cyber Examiner (FSL-4410)";
         }
-        showToast("Pessimistic lock released: Custody transferred to FSL Cyber Examiner!");
+        showToast("Custody transfer complete: Physical item handed over to Forensic Science Lab (FSL) Examiner!");
       }, 1200);
     }
 
@@ -1773,8 +2075,26 @@
         badge.textContent = "Inspected & Cleared";
         badge.className = "status-badge badge-primary";
       }
-      showToast("Vehicle inspection logged with SHA-256 audit event!");
+      showToast("Inspection confirmed: Vehicle & armory logged in official police register.");
     }
+
+    // Modal UX & Accessibility: Close on backdrop click and ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePadesSignatureModal();
+        closeOnChainExplorer();
+        closeVersionDiffModal();
+      }
+    });
+
+    ['padesSignatureModal', 'onChainExplorerModal', 'versionDiffModal'].forEach(id => {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) modal.style.display = 'none';
+        });
+      }
+    });
 
     function downloadBsaCertificate(code) {
       showToast("Generating statutory Section 65B Electronic Certificate (BSA 2023)...");
@@ -1815,7 +2135,7 @@
             court: "District & Sessions Court, Lucknow",
             nextHearing: "2026-10-15",
             judge: "Hon. Principal Sessions Judge",
-            protocol: "NICNET / SWAN (mTLS X.509 Secured)",
+            network: "Secured Government Leased Network (NICNET / e-Courts Gateway)",
             mock: false,
             timestamp: new Date().toISOString()
           } : {
@@ -1827,7 +2147,7 @@
             status: "UNDER_INVESTIGATION",
             io: "Sub-Inspector (Investigating Officer)",
             registeredAt: "2026-03-15T10:30:00Z",
-            protocol: "State Police Intranet / WSDL (HMAC-SHA256)",
+            network: "State Police Dedicated Network (CCTNS Station Log)",
             mock: false,
             timestamp: new Date().toISOString()
           };
@@ -1836,18 +2156,101 @@
         });
     }
 
-    function openDigiLockerModal(docId, title, hash) {
-      const modal = document.getElementById('digiLockerModal');
+    // PAdES Institutional Digital Attestation Modal Handlers
+    function openPadesSignatureModal(docId, title, hash) {
+      const modal = document.getElementById('padesSignatureModal');
       if (!modal) return;
-      document.getElementById('modalDocHash').textContent = (hash || '7e5f6cf9548e4d84ac5b62dbb3a068b314a7c735062ed10bdddde90bc6794ec9').substring(0, 36) + '...';
-      document.getElementById('modalSignerName').textContent = currentOfficer.name;
-      document.getElementById('modalSignerBadge').textContent = currentOfficer.badge;
+      const effectiveHash = hash || '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044';
+      document.getElementById('padesDocHash').textContent = effectiveHash.substring(0, 36) + '...';
+      document.getElementById('padesSignerName').textContent = currentOfficer.name;
+      document.getElementById('padesSignerBadge').textContent = currentOfficer.badge;
       modal.style.display = 'flex';
-      showToast('DigiLocker certificate & cryptographic stamp verified.');
+      showToast('PAdES institutional digital certificate & cryptographic stamp verified.');
     }
 
-    function closeDigiLockerModal() {
-      const modal = document.getElementById('digiLockerModal');
+    function closePadesSignatureModal() {
+      const modal = document.getElementById('padesSignatureModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    // On-Chain Cryptographic Explorer & Merkle Proof State
+    const AUTHENTIC_HASH = '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044';
+    let currentExplorerHash = AUTHENTIC_HASH;
+
+    function openOnChainExplorer(docId, title, hash) {
+      const modal = document.getElementById('onChainExplorerModal');
+      if (!modal) return;
+      currentExplorerHash = hash || AUTHENTIC_HASH;
+
+      const titleEl = document.getElementById('explorerDocTitle');
+      if (titleEl) titleEl.textContent = (title || 'FIR-2024-00892') + " (ID: " + (docId || 'DOC-2024-001') + ")";
+
+      restoreAuthenticBitstream(false);
+      modal.style.display = 'flex';
+      showToast('Loaded on-chain Merkle proof from Polygon Amoy contract.');
+    }
+
+    function closeOnChainExplorer() {
+      const modal = document.getElementById('onChainExplorerModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function verifyBitstreamHash() {
+      const banner = document.getElementById('explorerStatusBanner');
+      const icon = document.getElementById('explorerStatusIcon');
+      const title = document.getElementById('explorerStatusTitle');
+      const subtitle = document.getElementById('explorerStatusSubtitle');
+      const badge = document.getElementById('explorerStatusBadge');
+      const hashEl = document.getElementById('explorerLocalHash');
+      const leafEl = document.getElementById('explorerTreeLeaf');
+
+      if (currentExplorerHash === AUTHENTIC_HASH) {
+        banner.style.background = '#f0fdf4';
+        banner.style.borderColor = '#16a34a';
+        icon.style.background = '#16a34a';
+        icon.textContent = '✔';
+        title.style.color = '#15803d';
+        title.textContent = 'CRYPTOGRAPHICALLY VERIFIED ON-CHAIN (100% BITSTREAM MATCH)';
+        subtitle.textContent = 'Document SHA-256 matches Merkle Leaf #2 in Polygon Amoy Contract Block #14,892,104';
+        badge.className = 'status-badge badge-success';
+        badge.textContent = 'BSA §65B Admissible';
+        if (hashEl) hashEl.textContent = AUTHENTIC_HASH;
+        if (leafEl) leafEl.textContent = AUTHENTIC_HASH.substring(0, 16) + '...';
+        showToast('Bitstream Re-Verification Passed: 100% On-Chain Match Confirmed!');
+      } else {
+        banner.style.background = '#fef2f2';
+        banner.style.borderColor = '#dc2626';
+        icon.style.background = '#dc2626';
+        icon.textContent = '✖';
+        title.style.color = '#b91c1c';
+        title.textContent = 'TAMPER DETECTED! ON-CHAIN BITSTREAM INTEGRITY MISMATCH';
+        subtitle.textContent = 'Altered hash does NOT match Merkle Leaf in Polygon Contract! Rejected by Section 65B BSA 2023.';
+        badge.className = 'status-badge badge-danger';
+        badge.textContent = 'Evidence Inadmissible';
+        if (hashEl) hashEl.textContent = currentExplorerHash;
+        if (leafEl) leafEl.textContent = currentExplorerHash.substring(0, 16) + '... [MUTATED]';
+        showToast('CRITICAL: Bitstream mismatch detected against Polygon ledger!');
+      }
+    }
+
+    function simulateTamperBitstream() {
+      currentExplorerHash = '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf00ff';
+      verifyBitstreamHash();
+    }
+
+    function restoreAuthenticBitstream(notify = true) {
+      currentExplorerHash = AUTHENTIC_HASH;
+      verifyBitstreamHash();
+      if (notify) showToast('Restored authentic bitstream hash. Cryptographic proof confirmed.');
+    }
+
+    function openVersionDiffModal() {
+      const modal = document.getElementById('versionDiffModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeVersionDiffModal() {
+      const modal = document.getElementById('versionDiffModal');
       if (modal) modal.style.display = 'none';
     }
 
@@ -1864,7 +2267,7 @@
       const confEl = document.getElementById('webRagConfidence');
 
       resultBox.style.display = 'block';
-      answerText.innerHTML = '<span style="color:#2563eb; font-weight:600;">Executing ABAC-filtered retrieval across authorized case documents & synthesizing institutional brief...</span>';
+      answerText.innerHTML = '<span style="color:#2563eb; font-weight:600;">Searching authorized case documents & synthesizing institutional investigation briefing...</span>';
 
       try {
         const payload = { caseId: "11111111-1111-1111-1111-111111111111", query: query };

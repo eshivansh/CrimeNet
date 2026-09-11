@@ -3359,6 +3359,87 @@
     </div>
   </div>
 
+  <!-- Mobile Document Inspector & On-Chain Proof Sheet -->
+  <div class="action-sheet-overlay" id="mobileDocInspectorSheet" onclick="closeMobileDocInspector(event)">
+    <div class="action-sheet-card" onclick="event.stopPropagation()" style="max-height:85vh; overflow-y:auto;">
+      <div class="sheet-handle"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="font-weight:800; font-size:16px; color:#0f172a;" id="mobileInspectorTitle">FIR-2024-00892_STF.pdf</div>
+        <span id="mobileInspectorBadge" class="status-pill pill-verified">Verified</span>
+      </div>
+
+      <!-- Verification Banner -->
+      <div id="mobileProofBanner" style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:10px; padding:12px; margin-bottom:14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <span style="font-weight:800; color:#15803d; font-size:13px;" id="mobileProofBannerTitle">✔ SIGNATURE VALID & ANCHORED</span>
+        </div>
+        <div style="font-size:11px; color:#334155; line-height:1.4;" id="mobileProofBannerSub">
+          PAdES Institutional Certificate • IT Act §3A & BSA §65B Admissible
+        </div>
+      </div>
+
+      <!-- Bitstream Details -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; margin-bottom:14px; font-size:11.5px; line-height:1.6;">
+        <div><strong>Document SHA-256:</strong></div>
+        <div style="font-family:monospace; font-size:10.5px; background:#e2e8f0; padding:2px 6px; border-radius:4px; word-break:break-all; margin:3px 0 6px;" id="mobileInspectorHash">
+          275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044
+        </div>
+        <div><strong>Signer:</strong> Lead Investigating Officer (UP-STF-0842)</div>
+        <div><strong>Authority:</strong> Special Task Force (STF) Sub-CA</div>
+        <div><strong>Polygon Anchor:</strong> Contract <code>0x6B76...32a7</code> (Leaf #2)</div>
+      </div>
+
+      <!-- Interactive Controls -->
+      <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+        <button class="btn-action-primary" style="background:#16a34a; width:100%; justify-content:center; padding:10px;"
+          onclick="window.open('/demo_documents/FIR-2024-00892_STF_eSigned.pdf', '_blank')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Open Certified PDF (v1)</span>
+        </button>
+        <button class="btn-action-primary" style="background:#dc2626; width:100%; justify-content:center; padding:10px; font-size:12px;"
+          onclick="simulateMobileTamper()">
+          ⚠ Simulate 1-Byte File Corruption (Tamper Test)
+        </button>
+        <button class="btn-portal-secondary" style="width:100%; justify-content:center; padding:9px; font-size:12px;"
+          onclick="restoreMobileAuthentic()">
+          ✔ Restore Authentic Bitstream
+        </button>
+        <button class="btn-portal-secondary" style="width:100%; justify-content:center; padding:9px; font-size:12px;"
+          onclick="openMobileVersionDiff()">
+          Compare Version Diff (v1 ➔ v2)
+        </button>
+      </div>
+
+      <button class="btn-ocr-cancel" onclick="closeMobileDocInspector()">Close</button>
+    </div>
+  </div>
+
+  <!-- Mobile Version Diff Sheet -->
+  <div class="action-sheet-overlay" id="mobileVersionDiffSheet" onclick="closeMobileVersionDiff(event)">
+    <div class="action-sheet-card" onclick="event.stopPropagation()" style="max-height:85vh; overflow-y:auto;">
+      <div class="sheet-handle"></div>
+      <h3 style="font-size:16px; font-weight:800; color:#0f172a; margin-bottom:8px;">Version Diff: FIR-2024-00892</h3>
+      <p style="font-size:12px; color:#64748b; margin-bottom:12px;">WORM Immutability: v1 remains intact; v2 appends FSL forensic ballistics findings.</p>
+
+      <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:10px; margin-bottom:10px; font-size:11.5px;">
+        <div style="font-weight:700; color:#0f172a; margin-bottom:2px;">v1 (Original Lodging) • 12-May-2024</div>
+        <div style="color:#64748b; font-size:10px; word-break:break-all;">Hash: 275eb6b6c3897c77...</div>
+        <div style="margin-top:4px;">Seizure of EVD-2024-001 (MicroSD) & EVD-2024-002 (NVR Drive) on-site.</div>
+      </div>
+
+      <div style="background:#f0fdf4; border:1.5px solid #22c55e; border-radius:8px; padding:10px; margin-bottom:14px; font-size:11.5px;">
+        <div style="font-weight:700; color:#15803d; margin-bottom:2px;">v2 (Supplementary FSL Annexure) • 14-May-2024</div>
+        <div style="color:#64748b; font-size:10px; word-break:break-all;">Hash: 9a41b226e108d4b3... • Chained to v1</div>
+        <div style="color:#15803d; margin-top:4px;">
+          <strong>+ Annexure A:</strong> Ballistics match confirmed on 9mm firearm.<br>
+          <strong>+ Annexure B:</strong> MicroSD encrypted communications logs decoded.
+        </div>
+      </div>
+
+      <button class="btn-ocr-cancel" onclick="closeMobileVersionDiff()">Close</button>
+    </div>
+  </div>
+
   <!-- AI RAG Assistant Slide-Up Drawer -->
   <div class="ai-drawer-overlay" id="aiDrawerOverlay" onclick="closeAiDrawer(event)">
     <div class="ai-drawer-sheet" onclick="event.stopPropagation()">
@@ -3734,8 +3815,88 @@
       }
     }
 
+    const MOBILE_AUTHENTIC_HASH = '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf0044';
+    let currentMobileHash = MOBILE_AUTHENTIC_HASH;
+
     function inspectDocument(docName) {
-      showToast('Opening ' + docName + ' • Cryptographic Signature Verified');
+      const sheet = document.getElementById('mobileDocInspectorSheet');
+      if (!sheet) return;
+      const titleEl = document.getElementById('mobileInspectorTitle');
+      if (titleEl) titleEl.textContent = docName || 'FIR-2024-00892_STF.pdf';
+      restoreMobileAuthentic(false);
+      sheet.classList.add('active');
+      showToast('Loaded ' + docName + ' • PAdES Signature & Merkle Proof Verified');
+    }
+
+    function closeMobileDocInspector(event) {
+      if (event && event.target !== event.currentTarget) return;
+      const sheet = document.getElementById('mobileDocInspectorSheet');
+      if (sheet) sheet.classList.remove('active');
+    }
+
+    function simulateMobileTamper() {
+      currentMobileHash = '275eb6b6c3897c77d89375f315f14e04b01269b0ca554de209414f5e7bbf00ff';
+      const hashEl = document.getElementById('mobileInspectorHash');
+      const banner = document.getElementById('mobileProofBanner');
+      const title = document.getElementById('mobileProofBannerTitle');
+      const sub = document.getElementById('mobileProofBannerSub');
+      const badge = document.getElementById('mobileInspectorBadge');
+
+      if (hashEl) hashEl.textContent = currentMobileHash;
+      if (banner) {
+        banner.style.background = '#fef2f2';
+        banner.style.borderColor = '#dc2626';
+      }
+      if (title) {
+        title.style.color = '#b91c1c';
+        title.textContent = '✖ INTEGRITY BREACH: BITSTREAM TAMPER DETECTED';
+      }
+      if (sub) {
+        sub.textContent = 'Hash mismatch against Polygon Merkle Leaf! Evidence rejected under BSA §65B.';
+      }
+      if (badge) {
+        badge.className = 'status-pill pill-restricted';
+        badge.textContent = 'Inadmissible';
+      }
+      showToast('CRITICAL: Bitstream tamper detected! Verification failed.');
+    }
+
+    function restoreMobileAuthentic(notify = true) {
+      currentMobileHash = MOBILE_AUTHENTIC_HASH;
+      const hashEl = document.getElementById('mobileInspectorHash');
+      const banner = document.getElementById('mobileProofBanner');
+      const title = document.getElementById('mobileProofBannerTitle');
+      const sub = document.getElementById('mobileProofBannerSub');
+      const badge = document.getElementById('mobileInspectorBadge');
+
+      if (hashEl) hashEl.textContent = MOBILE_AUTHENTIC_HASH;
+      if (banner) {
+        banner.style.background = '#f0fdf4';
+        banner.style.borderColor = '#16a34a';
+      }
+      if (title) {
+        title.style.color = '#15803d';
+        title.textContent = '✔ SIGNATURE VALID & ANCHORED';
+      }
+      if (sub) {
+        sub.textContent = 'PAdES Institutional Certificate • IT Act §3A & BSA §65B Admissible';
+      }
+      if (badge) {
+        badge.className = 'status-pill pill-verified';
+        badge.textContent = 'Verified';
+      }
+      if (notify) showToast('Restored authentic bitstream. Proof valid on-chain.');
+    }
+
+    function openMobileVersionDiff() {
+      const diffSheet = document.getElementById('mobileVersionDiffSheet');
+      if (diffSheet) diffSheet.classList.add('active');
+    }
+
+    function closeMobileVersionDiff(event) {
+      if (event && event.target !== event.currentTarget) return;
+      const diffSheet = document.getElementById('mobileVersionDiffSheet');
+      if (diffSheet) diffSheet.classList.remove('active');
     }
 
     // Real Document OCR Upload & Extraction Workflow
