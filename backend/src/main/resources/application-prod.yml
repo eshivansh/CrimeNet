@@ -1,0 +1,61 @@
+# Prod profile — the settings that must not be inherited from a demo.
+#
+# Until this file existed there was no prod profile at all, and `start-demo.ps1` pinned
+# --spring.profiles.active=dev, so promoting the stack meant promoting dev logging,
+# an open Swagger UI, and a step-up bypass.
+#
+# Every credential still comes from the environment: this file adds no secrets and no
+# defaults for them, so a missing one fails startup rather than falling back.
+
+logging:
+  level:
+    root: WARN
+    com.crimenet: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+
+spring:
+  jpa:
+    show-sql: false
+
+  datasource:
+    url: ${DB_URL}          # no localhost default
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:40}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}   # must be https
+          jwk-set-uri: ${KEYCLOAK_JWKS_URI}    # must be https — an http JWKS fetch is MITM-able
+
+server:
+  ssl:
+    enabled: ${SERVER_SSL_ENABLED:true}
+
+minio:
+  endpoint: ${MINIO_ENDPOINT}      # must be https
+  sse-enabled: ${MINIO_SSE_ENABLED:true}
+
+opensearch:
+  scheme: ${OPENSEARCH_SCHEME:https}
+
+crimenet:
+  security:
+    encryption-strict: true
+    step-up:
+      # StepUpVerificationService fails startup if this is true under prod.
+      dev-bypass: false
+    malware-scan:
+      # MalwareScannerService fails startup on heuristic mode under prod.
+      mode: ${MALWARE_SCAN_MODE:clamav}
+  sharing:
+    allow-unwatermarked-view-only: false
+
+# No unauthenticated endpoint inventory.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

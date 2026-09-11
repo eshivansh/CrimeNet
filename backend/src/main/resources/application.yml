@@ -8,12 +8,18 @@ spring:
     name: crimenet
 
   # ── PostgreSQL ──
+  # No credential defaults here on purpose. Secrets belong in the environment, and a
+  # deployment that forgets one should fail loudly at startup rather than fall back to a
+  # value committed to this repository. Local development gets its values from
+  # application-dev.yml.
   datasource:
-    url: jdbc:postgresql://localhost:5432/crimenet
-    username: crimenet_app
-    password: crimenet_app_dev
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/crimenet}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
-      maximum-pool-size: 20
+      # Every mutating request opens a nested REQUIRES_NEW transaction to write its audit
+      # row, so a request needs two connections, not one. Sized for that.
+      maximum-pool-size: ${DB_POOL_SIZE:40}
       minimum-idle: 5
 
   jpa:
@@ -32,36 +38,60 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    user: crimenet
-    password: crimenet_dev
+    user: ${FLYWAY_USERNAME}
+    password: ${FLYWAY_PASSWORD}
 
   # ── Keycloak (OAuth2 Resource Server) ──
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/crimenet
-          jwk-set-uri: http://localhost:8180/realms/crimenet/protocol/openid-connect/certs
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/crimenet}
+          jwk-set-uri: ${KEYCLOAK_JWKS_URI:http://localhost:8180/realms/crimenet/protocol/openid-connect/certs}
+          # Tokens minted for another client in the same realm are not CrimeNet API
+          # tokens. Validated in SecurityConfig.
+          audiences: ${KEYCLOAK_AUDIENCE:crimenet-backend,account}
 
   # ── Redis ──
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
 
   # ── RabbitMQ ──
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: crimenet
-    password: crimenet_dev
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    listener:
+      simple:
+        # Without this, a rejected message is requeued to the head of the queue and
+        # redelivered immediately, forever — the declared dead-letter exchange was
+        # unreachable and a poison message spun the consumer at full speed.
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 2s
+          multiplier: 2
+          max-interval: 30s
+
+  # ── Multipart ──
+  # These were never configured, so Tomcat's 1 MB default applied and the 50 MB policy
+  # limit below was unreachable dead code.
+  servlet:
+    multipart:
+      max-file-size: ${MAX_UPLOAD_SIZE:50MB}
+      max-request-size: ${MAX_REQUEST_SIZE:55MB}
 
 # ── MinIO ──
 minio:
-  endpoint: http://localhost:9000
-  access-key: minioadmin
-  secret-key: minioadmin123
-  sse-enabled: ${MINIO_SSE_ENABLED:false} # Standalone MinIO lacks KES; set to true in production with AWS S3 KMS or MinIO KES
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  access-key: ${MINIO_ACCESS_KEY}
+  secret-key: ${MINIO_SECRET_KEY}
+  sse-enabled: ${MINIO_SSE_ENABLED:false} # Requires a KES/KMS-backed MinIO; forced on in prod
   buckets:
     quarantine: crimenet-quarantine
     documents: crimenet-documents
@@ -69,44 +99,98 @@ minio:
     court-packages: crimenet-court-packages
     archive: crimenet-archive
 
-# ── Document Upload Limits ──
 crimenet:
+  # ── Document Upload Limits ──
   documents:
-    max-size-bytes: 52428800 # 50 MB
+    max-size-bytes: 52428800 # 50 MB — keep in step with spring.servlet.multipart above
     allowed-mime-types: application/pdf,image/jpeg,image/png,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
+
   break-glass:
     expiry-check-ms: 60000
+
   provenance:
     anchor-interval-ms: 300000
+    # Confirmations to wait for before an anchor counts as anchored. Polygon reorgs
+    # deeper than most chains, so this is not the usual 12.
+    confirmation-blocks: ${BLOCKCHAIN_CONFIRMATIONS:64}
+    confirmation-timeout-seconds: ${BLOCKCHAIN_CONFIRMATION_TIMEOUT:180}
+
+  sharing:
+    max-lifetime-days: 30
+    # VIEW_ONLY packages hand out unwatermarked originals because watermarked streaming
+    # is not implemented. Set false to refuse them instead.
+    allow-unwatermarked-view-only: ${ALLOW_UNWATERMARKED_VIEW_ONLY:true}
+
+  security:
+    # No default. See PiiEncryptionKeyProvider — the previous default was a literal in
+    # this repository, which made encryption at rest decorative.
+    encryption-key: ${CRIMENET_ENCRYPTION_KEY}
+    encryption-strict: ${CRIMENET_ENCRYPTION_STRICT:true}
+
+    step-up:
+      # Proof of step-up comes from the IdP's own claims on the bearer token.
+      accepted-acr: gold,mfa,silver
+      accepted-amr: otp,mfa,hwk,swk,face,fpt,pin
+      max-age-seconds: 300
+      # The bundled realm ships no otpPolicy, so no token carries a step-up claim.
+      # Enabled in the dev profile only; refused outright in prod.
+      dev-bypass: ${STEP_UP_DEV_BYPASS:false}
+
+    malware-scan:
+      mode: ${MALWARE_SCAN_MODE:heuristic} # clamav | heuristic — heuristic refused in prod
+      clamav:
+        host: ${CLAMAV_HOST:localhost}
+        port: ${CLAMAV_PORT:3310}
+        timeout-ms: 10000
 
 # ── Blockchain Anchoring (Polygon Amoy Testnet / Local EVM) ──
 blockchain:
   enabled: ${BLOCKCHAIN_ENABLED:true}
   rpc-url: ${BLOCKCHAIN_RPC_URL:https://polygon-amoy-bor-rpc.publicnode.com}
-  private-key: ${BLOCKCHAIN_PRIVATE_KEY:0xb33ccddddcc977a89620e89e06d5f578f0f8e018d296cd361488d5bb9a19309d}
+  # No default: an anchoring key is a signing credential and must come from the
+  # environment or a KMS. The dev profile supplies the demo testnet key.
+  private-key: ${BLOCKCHAIN_PRIVATE_KEY}
   contract-address: ${BLOCKCHAIN_CONTRACT_ADDRESS:0x6B76859551315E47041064F48E201b0c2E5832a7}
+  chain-id: ${BLOCKCHAIN_CHAIN_ID:80002} # Polygon Amoy. Signing without this is pre-EIP-155.
 
 # ── OpenSearch ──
 opensearch:
-  host: localhost
-  port: 9200
-  scheme: http
+  host: ${OPENSEARCH_HOST:localhost}
+  port: ${OPENSEARCH_PORT:9200}
+  scheme: ${OPENSEARCH_SCHEME:http}
 
 # ── Actuator ──
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus
   endpoint:
     health:
       show-details: when_authorized
+      # Redis is not used by any code path, and RabbitMQ being down should not restart
+      # the process. Liveness answers "is this JVM healthy", readiness answers "can it
+      # serve traffic".
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: readinessState,db,minio
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
 
 # ── OpenAPI / Swagger ──
+# Disabled by default: an unauthenticated endpoint inventory is an attack map. The dev
+# profile turns it back on.
 springdoc:
   api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
     path: /api-docs
   swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha

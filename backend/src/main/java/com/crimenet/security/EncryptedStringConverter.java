@@ -3,16 +3,12 @@ package com.crimenet.security;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -32,30 +28,13 @@ public class EncryptedStringConverter implements AttributeConverter<String, Stri
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
-    private static SecretKey secretKey;
-
-    public EncryptedStringConverter(@Value("${crimenet.security.encryption-key:crimenet-pii-secret-master-encryption-key-2026-secure}") String keySeed) {
-        try {
-            MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-            byte[] keyBytes = sha256.digest(keySeed.getBytes(StandardCharsets.UTF_8));
-            secretKey = new SecretKeySpec(keyBytes, "AES");
-        } catch (Exception e) {
-            log.error("Failed to initialize AES-256 encryption key", e);
-            throw new RuntimeException("Failed to initialize PII encryption provider", e);
-        }
-    }
-
-    // Default constructor for JPA instantiation
+    /**
+     * Hibernate constructs this converter itself, so it cannot take the key as a
+     * constructor argument. The key is resolved once by {@link PiiEncryptionKeyProvider}
+     * and read from there — no hardcoded default, and no second writer.
+     */
     public EncryptedStringConverter() {
-        if (secretKey == null) {
-            try {
-                MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-                byte[] keyBytes = sha256.digest("crimenet-pii-secret-master-encryption-key-2026-secure".getBytes(StandardCharsets.UTF_8));
-                secretKey = new SecretKeySpec(keyBytes, "AES");
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to initialize PII encryption key fallback", e);
-            }
-        }
+        // Intentionally empty.
     }
 
     @Override
@@ -70,7 +49,7 @@ public class EncryptedStringConverter implements AttributeConverter<String, Stri
 
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             GCMParameterSpec parameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);
+            cipher.init(Cipher.ENCRYPT_MODE, PiiEncryptionKeyProvider.key(), parameterSpec);
 
             byte[] cipherText = cipher.doFinal(attribute.getBytes(StandardCharsets.UTF_8));
 
@@ -91,8 +70,18 @@ public class EncryptedStringConverter implements AttributeConverter<String, Stri
             return dbData;
         }
 
-        // Graceful handling for legacy/unencrypted data
         if (!dbData.startsWith(ENCRYPTED_PREFIX)) {
+            // An unprefixed value is plaintext PII sitting in a column that is supposed to
+            // be encrypted. Passing it through silently made a plaintext downgrade attack
+            // invisible and made it impossible to assert that these columns are encrypted
+            // at all. Strict mode is relaxed only while backfilling legacy rows.
+            if (PiiEncryptionKeyProvider.strict()) {
+                throw new IllegalStateException(
+                        "Encountered an unencrypted value in a PII column. Backfill the legacy "
+                                + "rows and re-encrypt them, or set crimenet.security.encryption-strict=false "
+                                + "for the duration of the migration.");
+            }
+            log.warn("PII_PLAINTEXT_COLUMN: reading an unencrypted value from an encrypted column");
             return dbData;
         }
 
@@ -109,7 +98,7 @@ public class EncryptedStringConverter implements AttributeConverter<String, Stri
 
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             GCMParameterSpec parameterSpec = new GCMParameterSpec(TAG_LENGTH_BIT, iv);
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec);
+            cipher.init(Cipher.DECRYPT_MODE, PiiEncryptionKeyProvider.key(), parameterSpec);
 
             byte[] plainText = cipher.doFinal(cipherText);
             return new String(plainText, StandardCharsets.UTF_8);

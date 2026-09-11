@@ -1,12 +1,61 @@
-# Dev profile — verbose logging, relaxed security for local testing
+# Dev profile — local demo defaults.
+#
+# Every credential the base configuration deliberately leaves undefined is supplied here
+# so `start-demo.ps1` runs without a populated environment. These are demo values for a
+# throwaway local stack; nothing here is a production secret, and the base configuration
+# will refuse to start without real ones under any other profile.
+
 logging:
   level:
     com.crimenet: DEBUG
     org.springframework.security: DEBUG
+    # SQL parameter binding is NOT enabled here. BasicBinder TRACE logs every bound value,
+    # which includes the decrypted PII being written to case_person. Turn it on by hand,
+    # briefly, if you are debugging a specific query.
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.flywaydb: DEBUG
+    org.flywaydb: INFO
 
 spring:
   jpa:
     show-sql: true
+
+  datasource:
+    username: ${DB_USERNAME:crimenet_app}
+    password: ${DB_PASSWORD:crimenet_app_dev}
+
+  flyway:
+    user: ${FLYWAY_USERNAME:crimenet}
+    password: ${FLYWAY_PASSWORD:crimenet_dev}
+
+  rabbitmq:
+    username: ${RABBITMQ_USERNAME:crimenet}
+    password: ${RABBITMQ_PASSWORD:crimenet_dev}
+
+minio:
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin123}
+
+crimenet:
+  security:
+    # Local-only key. Real deployments set CRIMENET_ENCRYPTION_KEY from a KMS or vault;
+    # there is no default in the base configuration.
+    encryption-key: ${CRIMENET_ENCRYPTION_KEY:dev-only-local-pii-key-not-for-real-case-data}
+    # Legacy demo rows may predate the converter, so reading them is tolerated here.
+    encryption-strict: ${CRIMENET_ENCRYPTION_STRICT:false}
+    step-up:
+      # The bundled Keycloak realm has no otpPolicy, so no token it issues carries an
+      # acr/amr step-up claim and break-glass would be unusable. Refused in prod.
+      dev-bypass: ${STEP_UP_DEV_BYPASS:true}
+    malware-scan:
+      mode: ${MALWARE_SCAN_MODE:heuristic}
+
+blockchain:
+  # Demo testnet key for the Amoy contract. Treat as public — it is committed.
+  private-key: ${BLOCKCHAIN_PRIVATE_KEY:0xb33ccddddcc977a89620e89e06d5f578f0f8e018d296cd361488d5bb9a19309d}
+
+# The API surface is on show during a demo.
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:true}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:true}
