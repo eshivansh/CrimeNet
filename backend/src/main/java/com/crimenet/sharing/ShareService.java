@@ -29,12 +29,56 @@ public class ShareService {
     private final com.crimenet.documents.DocumentVersionRepository documentVersionRepository;
     private final com.crimenet.documents.DocumentRepository documentRepository;
     private final UserService userService;
+    private final com.crimenet.identity.AppUserRepository appUserRepository;
+    private final com.crimenet.security.StepUpVerificationService stepUpVerificationService;
+    private final com.crimenet.security.SecurityEventService securityEventService;
+
+    /** Ceiling on how long a share package may live, whatever the caller asked for. */
+    @org.springframework.beans.factory.annotation.Value("${crimenet.sharing.max-lifetime-days:30}")
+    private long maxLifetimeDays;
+
+    /** Operator acknowledgement that VIEW_ONLY recipients receive unwatermarked originals. */
+    @org.springframework.beans.factory.annotation.Value("${crimenet.sharing.allow-unwatermarked-view-only:true}")
+    private boolean allowUnwatermarkedViewOnly;
+
+    private static final java.util.Set<String> VALID_RIGHTS =
+            java.util.Set.of("VIEW_ONLY", "DOWNLOAD");
 
     @Transactional
     public SharePackage createShare(CreateShareRequest request) {
         policyService.enforceCasePermission(request.caseId(), "SHARE", "CREATE");
 
         AppUser currentUser = userService.getCurrentUser();
+
+        // The recipient, the expiry and the rights all used to be copied from the request
+        // body unchecked, which let a share name any user in any organization, never
+        // expire, and carry an empty scope that downstream treated as "everything".
+        AppUser recipient = appUserRepository.findById(request.recipientId())
+                .orElseThrow(() -> new EntityNotFoundException("Recipient not found: " + request.recipientId()));
+
+        if (!currentUser.getOrgId().equals(recipient.getOrgId())) {
+            securityEventService.denied("SHARE_CROSS_TENANT_RECIPIENT", currentUser.getId(), request.caseId(),
+                    "Attempted to share case material with a recipient in organization " + recipient.getOrgId());
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Cross-organization sharing must go through a formal transfer, not a share package.");
+        }
+        if (!"ACTIVE".equalsIgnoreCase(recipient.getStatus())) {
+            throw new IllegalArgumentException(
+                    "Recipient " + recipient.getId() + " is " + recipient.getStatus() + " and cannot receive shares.");
+        }
+
+        Instant expiresAt = clampExpiry(request.expiresAt());
+
+        String rights = request.rights() != null ? request.rights().toUpperCase(java.util.Locale.ROOT) : "VIEW_ONLY";
+        if (!VALID_RIGHTS.contains(rights)) {
+            throw new IllegalArgumentException("rights must be one of " + VALID_RIGHTS);
+        }
+
+        if (request.scope() == null || request.scope().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "An explicit scope is required: list the document ids, version ids or document types "
+                            + "this package covers. An empty scope is treated as deny-all, not allow-all.");
+        }
 
         SharePackage pkg = SharePackage.builder()
                 .caseId(request.caseId())
@@ -43,10 +87,11 @@ public class ShareService {
                 .recipientEmail(request.recipientEmail())
                 .purpose(request.purpose())
                 .scope(request.scope())
-                .rights(request.rights() != null ? request.rights() : "VIEW_ONLY")
-                .watermarkEnabled(request.watermarkEnabled() != null ? request.watermarkEnabled() : true)
-                .mfaRequired(request.mfaRequired() != null ? request.mfaRequired() : true)
-                .expiresAt(request.expiresAt())
+                .rights(rights)
+                // Watermarking and step-up are organizational policy, not caller preference.
+                .watermarkEnabled(true)
+                .mfaRequired(true)
+                .expiresAt(expiresAt)
                 .build();
 
         pkg = sharePackageRepository.save(pkg);
@@ -54,10 +99,29 @@ public class ShareService {
         auditService.record("SHARE_CREATED", currentUser.getId(), pkg.getId(), request.caseId(),
                 Map.of("recipientId", String.valueOf(request.recipientId()),
                         "purpose", request.purpose(), "rights", pkg.getRights(),
-                        "expiresAt", request.expiresAt().toString()));
+                        "scopeEntries", String.valueOf(request.scope().size()),
+                        "expiresAt", expiresAt.toString()));
 
-        log.info("Share package created for case {} to recipient {}", request.caseId(), request.recipientId());
+        log.info("Share package created for case {} to recipient {}, expires {}",
+                request.caseId(), request.recipientId(), expiresAt);
         return pkg;
+    }
+
+    private Instant clampExpiry(Instant requested) {
+        Instant ceiling = Instant.now().plus(java.time.Duration.ofDays(maxLifetimeDays));
+        if (requested == null) {
+            throw new IllegalArgumentException(
+                    "expiresAt is required; a share package with no expiry never expires.");
+        }
+        if (requested.isBefore(Instant.now())) {
+            throw new IllegalArgumentException("expiresAt is in the past.");
+        }
+        if (requested.isAfter(ceiling)) {
+            log.info("Requested share expiry {} exceeds the {}-day ceiling; clamped to {}",
+                    requested, maxLifetimeDays, ceiling);
+            return ceiling;
+        }
+        return requested;
     }
 
     @Transactional
@@ -96,22 +160,24 @@ public class ShareService {
         return sharePackageRepository.findByCaseIdAndStatus(caseId, "ACTIVE");
     }
 
-    public ShareDownloadResponse generateDownloadUrl(UUID shareId, UUID documentVersionId, String mfaToken) {
+    /**
+     * Read-write on purpose: this method persists a {@link ShareAccess} row. Inheriting
+     * the class-level {@code readOnly = true} put Hibernate in MANUAL flush mode, so that
+     * insert was silently discarded and the share-access forensic trail was empty.
+     */
+    @Transactional
+    public ShareDownloadResponse generateDownloadUrl(UUID shareId, UUID documentVersionId) {
         SharePackage pkg = getShare(shareId);
 
-        if (!"ACTIVE".equals(pkg.getStatus()) || (pkg.getExpiresAt() != null && pkg.getExpiresAt().isBefore(Instant.now()))) {
+        // A null expiresAt used to mean "never expires"; new packages cannot be created
+        // that way, and any legacy row without one is treated as expired.
+        if (!"ACTIVE".equals(pkg.getStatus()) || pkg.getExpiresAt() == null
+                || pkg.getExpiresAt().isBefore(Instant.now())) {
             throw new IllegalStateException("Share link has expired or is revoked");
         }
 
-        // Validate MFA if required
         if (pkg.isMfaRequired()) {
-            if (mfaToken == null || mfaToken.isBlank()) {
-                throw new SecurityException("MFA token is required to access this share package");
-            }
-            // Validate structured token pattern (TOTP / WebAuthn step-up claim)
-            if (!mfaToken.matches("^MFA-[A-Za-z0-9_\\-]{6,64}$")) {
-                throw new SecurityException("Invalid or malformed MFA step-up token");
-            }
+            stepUpVerificationService.requireStepUp("download from share package " + shareId);
         }
 
         // Verify user is recipient or creator, or has case access
@@ -130,19 +196,47 @@ public class ShareService {
             throw new IllegalArgumentException("Document does not belong to shared case");
         }
 
-        if (pkg.getScope() != null && !pkg.getScope().isEmpty()) {
-            boolean inScope = pkg.getScope().contains(doc.getId().toString())
-                    || pkg.getScope().contains(documentVersionId.toString())
-                    || (doc.getDocType() != null && pkg.getScope().contains(doc.getDocType()));
-            if (!inScope) {
-                throw new SecurityException("Requested document is not within the scope of this share package");
-            }
+        // Empty scope is deny-all. It previously fell through as allow-all, which turned
+        // an unset field into unrestricted access to every document on the case.
+        if (pkg.getScope() == null || pkg.getScope().isEmpty()) {
+            securityEventService.denied("SHARE_EMPTY_SCOPE_DOWNLOAD", currentUser.getId(), pkg.getCaseId(),
+                    "Share package " + shareId + " has no scope; download refused");
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "This share package defines no scope and grants access to nothing.");
+        }
+        boolean inScope = pkg.getScope().contains(doc.getId().toString())
+                || pkg.getScope().contains(documentVersionId.toString())
+                || (doc.getDocType() != null && pkg.getScope().contains(doc.getDocType()));
+        if (!inScope) {
+            securityEventService.denied("SHARE_OUT_OF_SCOPE", currentUser.getId(), pkg.getCaseId(),
+                    "Requested document " + doc.getId() + " is outside share package " + shareId);
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Requested document is not within the scope of this share package");
         }
 
-        // Generate short-lived pre-signed URL
+        // VIEW_ONLY promises a restriction the system cannot deliver: a pre-signed URL is
+        // the unmodified original, and no watermarking code exists. Rather than hand out
+        // an unwatermarked original under a watermark:true flag the client is trusted to
+        // honour, VIEW_ONLY is refused unless the operator has explicitly accepted that.
+        boolean downloadRights = "DOWNLOAD".equals(pkg.getRights());
+        if (!downloadRights && !allowUnwatermarkedViewOnly) {
+            throw new UnsupportedOperationException(
+                    "This package grants VIEW_ONLY rights, and server-side watermarked streaming "
+                            + "is not implemented. Issue a DOWNLOAD package, or set "
+                            + "crimenet.sharing.allow-unwatermarked-view-only=true to accept that "
+                            + "VIEW_ONLY recipients receive unwatermarked originals.");
+        }
+        if (!downloadRights) {
+            log.warn("SHARE_VIEW_ONLY_UNWATERMARKED: package {} served an unwatermarked original to {}",
+                    shareId, currentUser.getId());
+        }
+
         auditService.record("SHARE_DOWNLOADED", currentUser.getId(), documentVersionId, pkg.getCaseId(),
-                Map.of("shareId", shareId.toString(), "watermarked", pkg.isWatermarkEnabled()));
-                
+                Map.of("shareId", shareId.toString(),
+                        "rights", pkg.getRights(),
+                        // What actually happened, not what the package requested.
+                        "watermarkApplied", false));
+
         ShareAccess access = ShareAccess.builder()
                 .sharePackageId(shareId)
                 .accessedBy(currentUser.getId())
@@ -150,13 +244,14 @@ public class ShareService {
                 .resourceId(documentVersionId)
                 .build();
         shareAccessRepository.save(access);
-        
-        // Pass un-mutilated SigV4 pre-signed URL to avoid signature mismatch
-        String url = minioStorageService.generatePresignedUrl("crimenet-documents", version.getObjectKey(), 300);
-        
+
+        String url = minioStorageService.generatePresignedUrl(
+                "crimenet-documents", version.getObjectKey(), 300, doc.getTitle());
+
         return new ShareDownloadResponse(
                 url,
-                pkg.isWatermarkEnabled(),
+                // The response no longer claims a watermark that was never applied.
+                false,
                 currentUser.getId().toString()
         );
     }
@@ -167,15 +262,32 @@ public class ShareService {
             String watermarkUser
     ) {}
 
+    /**
+     * watermarkEnabled and mfaRequired are deliberately absent: they are organizational
+     * policy, and letting the caller set mfaRequired=false was a way to opt out of the
+     * step-up requirement on the package they were creating.
+     */
     public record CreateShareRequest(
+            @jakarta.validation.constraints.NotNull(message = "caseId is required")
             UUID caseId,
+
+            @jakarta.validation.constraints.NotNull(message = "recipientId is required")
             UUID recipientId,
+
+            @jakarta.validation.constraints.Email(message = "recipientEmail must be a valid address")
             String recipientEmail,
+
+            @jakarta.validation.constraints.NotBlank(message = "A purpose is required for the disclosure record")
+            @jakarta.validation.constraints.Size(max = 1000)
             String purpose,
+
+            @jakarta.validation.constraints.NotEmpty(message = "An explicit scope is required; empty scope grants nothing")
             List<String> scope,
+
             String rights,
-            Boolean watermarkEnabled,
-            Boolean mfaRequired,
+
+            @jakarta.validation.constraints.NotNull(message = "expiresAt is required")
+            @jakarta.validation.constraints.Future(message = "expiresAt must be in the future")
             Instant expiresAt
     ) {}
 }

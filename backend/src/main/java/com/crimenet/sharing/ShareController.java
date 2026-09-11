@@ -18,7 +18,8 @@ public class ShareController {
     private final ShareService shareService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<SharePackage>> create(@RequestBody ShareService.CreateShareRequest request) {
+    public ResponseEntity<ApiResponse<SharePackage>> create(
+            @jakarta.validation.Valid @RequestBody ShareService.CreateShareRequest request) {
         SharePackage pkg = shareService.createShare(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(pkg));
     }
@@ -38,12 +39,15 @@ public class ShareController {
         return ResponseEntity.ok(ApiResponse.ok(shareService.listSharesForCase(caseId)));
     }
 
+    /**
+     * The mfaToken query parameter is gone. Step-up is read from the bearer token's own
+     * claims, so nothing sensitive rides in a URL that lands in access and proxy logs.
+     */
     @GetMapping("/{id}/download/{documentVersionId}")
     public ResponseEntity<ApiResponse<ShareService.ShareDownloadResponse>> download(
             @PathVariable UUID id,
-            @PathVariable UUID documentVersionId,
-            @RequestParam(required = false) String mfaToken) {
-        ShareService.ShareDownloadResponse response = shareService.generateDownloadUrl(id, documentVersionId, mfaToken);
+            @PathVariable UUID documentVersionId) {
+        ShareService.ShareDownloadResponse response = shareService.generateDownloadUrl(id, documentVersionId);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 }

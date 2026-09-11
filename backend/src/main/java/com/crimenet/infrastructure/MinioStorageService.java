@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * MinIO storage operations — upload, download, and pre-signed URL generation.
@@ -99,11 +100,12 @@ public class MinioStorageService {
      * Download a document from the documents bucket.
      */
     public byte[] downloadDocument(String objectKey) {
-        try {
-            GetObjectResponse response = minioClient.getObject(GetObjectArgs.builder()
-                    .bucket(documentsBucket)
-                    .object(objectKey)
-                    .build());
+        // try-with-resources: GetObjectResponse wraps a live HTTP connection, and leaving
+        // it unclosed leaked one OkHttp connection per download.
+        try (GetObjectResponse response = minioClient.getObject(GetObjectArgs.builder()
+                .bucket(documentsBucket)
+                .object(objectKey)
+                .build())) {
             return response.readAllBytes();
         } catch (Exception e) {
             log.error("Failed to download from MinIO: {}/{}", documentsBucket, objectKey, e);
@@ -211,12 +213,38 @@ public class MinioStorageService {
      * Generate a pre-signed URL for secure, time-bound download.
      */
     public String generatePresignedUrl(String bucketName, String objectKey, int expirySeconds) {
+        return generatePresignedUrl(bucketName, objectKey, expirySeconds, null);
+    }
+
+    /**
+     * Generate a pre-signed URL for secure, time-bound download.
+     *
+     * <p>The object is served straight off the storage origin, which does not pass
+     * through the application's security headers. The response overrides below force the
+     * browser to save rather than render: without them, an object whose stored content
+     * type came from the client's own multipart header renders inline on the MinIO origin.
+     *
+     * @param downloadFilename suggested filename, or null to serve as a generic download
+     */
+    public String generatePresignedUrl(String bucketName, String objectKey, int expirySeconds,
+                                       String downloadFilename) {
         try {
+            String disposition = "attachment";
+            if (downloadFilename != null && !downloadFilename.isBlank()) {
+                String safe = downloadFilename.replaceAll("[^a-zA-Z0-9._\\-]", "_");
+                disposition = "attachment; filename=\"" + safe + "\"";
+            }
+
+            Map<String, String> responseHeaders = new java.util.HashMap<>();
+            responseHeaders.put("response-content-disposition", disposition);
+            responseHeaders.put("response-content-type", "application/octet-stream");
+
             return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(io.minio.http.Method.GET)
                     .bucket(bucketName)
                     .object(objectKey)
                     .expiry(expirySeconds, java.util.concurrent.TimeUnit.SECONDS)
+                    .extraQueryParams(responseHeaders)
                     .build());
         } catch (Exception e) {
             log.error("Failed to generate presigned URL for {}/{}: {}", bucketName, objectKey, e.getMessage());

@@ -36,6 +36,8 @@ public class DocumentService {
     private final AuditService auditService;
     private final MalwareScannerService malwareScannerService;
     private final RabbitMqPublisher rabbitMqPublisher;
+    private final com.crimenet.common.IdentifierSequenceService identifierSequenceService;
+    private final UploadFailureRecorder uploadFailureRecorder;
 
     @Value("${crimenet.documents.max-size-bytes:52428800}")
     private long maxSizeBytes;
@@ -99,8 +101,17 @@ public class DocumentService {
         String objectKey = buildObjectKey(currentUser.getOrgId(), caseId, doc.getId(), 1, contentHash);
         String quarantineKey = "quarantine/" + objectKey;
 
-        // Check for deduplication (§20)
-        java.util.Optional<DocumentVersion> existingVersion = documentVersionRepository.findByContentHash(contentHash).stream().findFirst();
+        // Deduplication (§20), scoped to this organization and to versions that committed.
+        //
+        // The lookup used to be global and unfiltered, with three consequences. A document
+        // in one organization pointed at another organization's object key, so a retention
+        // purge on their case destroyed this one's bytes, and the presigned URL disclosed a
+        // path carrying the other tenant's org, case and document ids. And because a
+        // rejected upload leaves a row carrying its content hash, re-uploading the identical
+        // bytes under a different filename matched that row and jumped straight to
+        // COMMITTED, skipping quarantine and the malware scan entirely.
+        java.util.Optional<DocumentVersion> existingVersion =
+                findReusableVersion(contentHash, currentUser.getOrgId());
         boolean isDuplicate = existingVersion.isPresent();
 
         DocumentVersion version = DocumentVersion.builder()
@@ -117,24 +128,29 @@ public class DocumentService {
         version = documentVersionRepository.save(version);
 
         if (!isDuplicate) {
-            // Upload to Quarantine (outside DB transaction boundary)
+            // On failure handling below: setting a status, saving, then throwing inside the
+            // same transaction rolled that row back along with everything else, so the
+            // documented FAILED / FAILED_MALWARE outbox states never persisted and a
+            // rejected malware upload left no trace for forensic review. Terminal failures
+            // are now recorded in their own transaction.
             try {
                 storageService.uploadToQuarantine(quarantineKey, content, contentType);
             } catch (Exception e) {
                 log.error("MinIO quarantine upload failed for document {}: {}", doc.getId(), e.getMessage());
-                version.setUploadStatus("FAILED");
-                documentVersionRepository.save(version);
-                throw new RuntimeException("File upload failed", e);
+                uploadFailureRecorder.recordFailure(version.getId(), "FAILED",
+                        "Quarantine upload failed: " + e.getMessage());
+                throw new StorageUnavailableException("File upload failed", e);
             }
 
-            // Malware Scan
+            // isClean now reads the content; a file that cannot be scanned raises
+            // MalwareScanUnavailableException rather than being treated as clean.
             if (!malwareScannerService.isClean(content, originalFilename)) {
                 storageService.deleteFromQuarantine(quarantineKey);
-                version.setUploadStatus("FAILED_MALWARE");
-                documentVersionRepository.save(version);
+                uploadFailureRecorder.recordFailure(version.getId(), "FAILED_MALWARE",
+                        "Malware detected in " + (originalFilename != null ? originalFilename : "unknown"));
                 auditService.record("MALWARE_DETECTED", currentUser.getId(), doc.getId(), caseId,
                         Map.of("filename", originalFilename != null ? originalFilename : "unknown", "mimeType", contentType));
-                throw new RuntimeException("Upload rejected: Malware detected");
+                throw new MalwareDetectedException("Upload rejected: the file did not pass malware scanning.");
             }
 
             // Move to Documents Bucket
@@ -144,9 +160,9 @@ public class DocumentService {
                 version.setUploadStatus("COMMITTED");
             } catch (Exception e) {
                 log.error("MinIO move to documents failed for document {}: {}", doc.getId(), e.getMessage());
-                version.setUploadStatus("FAILED");
-                documentVersionRepository.save(version);
-                throw new RuntimeException("File processing failed", e);
+                uploadFailureRecorder.recordFailure(version.getId(), "FAILED",
+                        "Move out of quarantine failed: " + e.getMessage());
+                throw new StorageUnavailableException("File processing failed", e);
             }
         } else {
             // Duplicate content: reuse existing verified object without hitting quarantine
@@ -170,7 +186,12 @@ public class DocumentService {
                 "contentHash", contentHash,
                 "sizeBytes", content.length, 
                 "mimeType", contentType,
-                "objectKey", objectKey
+                // The key the row actually points at. On a deduplicated upload this differs
+                // from the computed objectKey, so the audit trail used to record a location
+                // the bytes were never stored at - and the OCR worker, which downloads
+                // payload.objectKey, requested a nonexistent object and redelivered forever.
+                "objectKey", version.getObjectKey(),
+                "deduplicated", isDuplicate
         );
         auditService.record("DOCUMENT_VERSION_CREATED", currentUser.getId(), doc.getId(), caseId, auditPayload);
 
@@ -222,7 +243,8 @@ public class DocumentService {
         String quarantineKey = "quarantine/" + objectKey;
 
         // Check deduplication
-        java.util.Optional<DocumentVersion> existingVersion = documentVersionRepository.findByContentHash(contentHash).stream().findFirst();
+        java.util.Optional<DocumentVersion> existingVersion =
+                findReusableVersion(contentHash, doc.getOrgId());
         boolean isDuplicate = existingVersion.isPresent();
 
         DocumentVersion version = DocumentVersion.builder()
@@ -243,18 +265,17 @@ public class DocumentService {
                 storageService.uploadToQuarantine(quarantineKey, content, contentType);
             } catch (Exception e) {
                 log.error("MinIO quarantine upload failed for document {} version {}: {}", doc.getId(), nextVersionNo, e.getMessage());
-                version.setUploadStatus("FAILED");
-                documentVersionRepository.save(version);
-                throw new RuntimeException("File upload failed", e);
+                uploadFailureRecorder.recordFailure(version.getId(), "FAILED", e.getMessage());
+                throw new StorageUnavailableException("File upload failed", e);
             }
 
             if (!malwareScannerService.isClean(content, originalFilename)) {
                 storageService.deleteFromQuarantine(quarantineKey);
-                version.setUploadStatus("FAILED_MALWARE");
-                documentVersionRepository.save(version);
+                uploadFailureRecorder.recordFailure(version.getId(), "FAILED_MALWARE",
+                        "Malware detected in " + (originalFilename != null ? originalFilename : "unknown"));
                 auditService.record("MALWARE_DETECTED", currentUser.getId(), doc.getId(), doc.getCaseId(),
                         Map.of("filename", originalFilename != null ? originalFilename : "unknown", "mimeType", contentType, "versionNo", nextVersionNo));
-                throw new RuntimeException("Upload rejected: Malware detected");
+                throw new MalwareDetectedException("Upload rejected: the file did not pass malware scanning.");
             }
 
             try {
@@ -263,9 +284,8 @@ public class DocumentService {
                 version.setUploadStatus("COMMITTED");
             } catch (Exception e) {
                 log.error("MinIO move to documents failed for document {} version {}: {}", doc.getId(), nextVersionNo, e.getMessage());
-                version.setUploadStatus("FAILED");
-                documentVersionRepository.save(version);
-                throw new RuntimeException("File processing failed", e);
+                uploadFailureRecorder.recordFailure(version.getId(), "FAILED", e.getMessage());
+                throw new StorageUnavailableException("File processing failed", e);
             }
         } else {
             version.setUploadStatus("COMMITTED");
@@ -288,7 +308,12 @@ public class DocumentService {
                 "contentHash", contentHash,
                 "sizeBytes", content.length,
                 "mimeType", contentType,
-                "objectKey", objectKey
+                // The key the row actually points at. On a deduplicated upload this differs
+                // from the computed objectKey, so the audit trail used to record a location
+                // the bytes were never stored at - and the OCR worker, which downloads
+                // payload.objectKey, requested a nonexistent object and redelivered forever.
+                "objectKey", version.getObjectKey(),
+                "deduplicated", isDuplicate
         );
         auditService.record("DOCUMENT_VERSION_CREATED", currentUser.getId(), doc.getId(), doc.getCaseId(), auditPayload);
         rabbitMqPublisher.publishDocumentVersionCreated(auditPayload);
@@ -350,10 +375,17 @@ public class DocumentService {
 
             return new IntegrityCheckResult(documentId, currentVersion.getVersionNo(),
                     currentVersion.getContentHash(), recomputedHash, matches);
+        } catch (StorageUnavailableException e) {
+            throw e;
         } catch (Exception e) {
-            log.error("Integrity check failed for document {}: {}", documentId, e.getMessage());
-            return new IntegrityCheckResult(documentId, currentVersion.getVersionNo(),
-                    currentVersion.getContentHash(), null, false);
+            // A storage outage is not tamper evidence. This used to return valid=false with
+            // a null recomputed hash — byte-for-byte the same result as a genuine mismatch —
+            // so a MinIO restart made every document in the system look tampered, and unlike
+            // the mismatch branch it recorded no audit event either.
+            log.error("Integrity check could not complete for document {}: {}", documentId, e.getMessage());
+            throw new StorageUnavailableException(
+                    "Integrity verification is unavailable: the stored object could not be read. "
+                            + "This is not an integrity failure.", e);
         }
     }
 
@@ -376,7 +408,8 @@ public class DocumentService {
         auditService.record("DOCUMENT_DOWNLOADED", currentUser.getId(), targetVersionId, doc.getCaseId(),
                 Map.of("documentId", documentId.toString(), "contentHash", version.getContentHash()));
 
-        return storageService.generatePresignedUrl("crimenet-documents", version.getObjectKey(), 300);
+        return storageService.generatePresignedUrl(
+                "crimenet-documents", version.getObjectKey(), 300, doc.getTitle());
     }
 
     private String sanitizeFilename(String filename) {
@@ -393,9 +426,29 @@ public class DocumentService {
         return clean.isBlank() ? "document.bin" : clean;
     }
 
+    /**
+     * A committed version in the same organization whose stored object may be reused.
+     *
+     * <p>Both filters matter. Without the status filter, a row left behind by a rejected
+     * upload becomes a dedup target and lets the next upload of those bytes skip scanning.
+     * Without the organization filter, two tenants share one physical object and either
+     * one's retention purge destroys the other's evidence.
+     */
+    private java.util.Optional<DocumentVersion> findReusableVersion(String contentHash, UUID orgId) {
+        if (orgId == null) {
+            return java.util.Optional.empty();
+        }
+        return documentVersionRepository.findByContentHash(contentHash).stream()
+                .filter(v -> "COMMITTED".equals(v.getUploadStatus()))
+                .filter(v -> documentRepository.findById(v.getDocumentId())
+                        .map(d -> orgId.equals(d.getOrgId()))
+                        .orElse(false))
+                .findFirst();
+    }
+
     private String generateBusinessId() {
-        long count = documentRepository.count() + 1;
-        return String.format("DOC-UP-%s-%06d", Year.now().getValue(), count);
+        long serial = identifierSequenceService.next("document_business_seq");
+        return String.format("DOC-UP-%s-%06d", Year.now().getValue(), serial);
     }
 
     private String buildObjectKey(UUID orgId, UUID caseId, UUID docId, int versionNo, String hash) {
