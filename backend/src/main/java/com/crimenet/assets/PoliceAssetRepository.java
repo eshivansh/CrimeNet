@@ -22,15 +22,18 @@ public interface PoliceAssetRepository extends JpaRepository<PoliceAsset, UUID> 
 
     List<PoliceAsset> findByCategory(String category);
 
+    /** Tenant scoping is mandatory and applied in the query, not by the caller. */
     @Query("""
         SELECT a FROM PoliceAsset a
-        WHERE (:category IS NULL OR a.category = :category)
+        WHERE a.orgId = :orgId
+          AND (:category IS NULL OR a.category = :category)
           AND (:status IS NULL OR a.status = :status)
           AND (:caseId IS NULL OR a.caseId = :caseId)
           AND (:custodianId IS NULL OR a.custodianId = :custodianId)
         ORDER BY a.createdAt DESC
     """)
     List<PoliceAsset> searchAssets(
+            @Param("orgId") UUID orgId,
             @Param("category") String category,
             @Param("status") String status,
             @Param("caseId") UUID caseId,

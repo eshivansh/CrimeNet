@@ -18,12 +18,19 @@ public class AuditController {
 
     private final AuditService auditService;
 
+    /** An unbounded size parameter let one request materialise the whole table. */
+    private static final int MAX_PAGE_SIZE = 200;
+
+    private static int clampSize(int size) {
+        return Math.min(Math.max(size, 1), MAX_PAGE_SIZE);
+    }
+
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<AuditEvent>>> list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
         Page<AuditEvent> result = auditService.listEvents(
-                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")));
+                PageRequest.of(Math.max(page, 0), clampSize(size), Sort.by(Sort.Direction.DESC, "createdAt")));
         return ResponseEntity.ok(ApiResponse.ok(toPageResponse(result)));
     }
 
@@ -33,7 +40,7 @@ public class AuditController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
         Page<AuditEvent> result = auditService.listEventsByCase(caseId,
-                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")));
+                PageRequest.of(Math.max(page, 0), clampSize(size), Sort.by(Sort.Direction.DESC, "createdAt")));
         return ResponseEntity.ok(ApiResponse.ok(toPageResponse(result)));
     }
 
@@ -43,7 +50,7 @@ public class AuditController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
         Page<AuditEvent> result = auditService.listEventsByType(eventType,
-                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")));
+                PageRequest.of(Math.max(page, 0), clampSize(size), Sort.by(Sort.Direction.DESC, "createdAt")));
         return ResponseEntity.ok(ApiResponse.ok(toPageResponse(result)));
     }
 

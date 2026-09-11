@@ -43,7 +43,19 @@ public class RlsAspect {
      */
     private static final ThreadLocal<Boolean> BINDING_IN_PROGRESS = new ThreadLocal<>();
 
-    @Around("@annotation(org.springframework.transaction.annotation.Transactional)")
+    /**
+     * Advises class-level {@code @Transactional} as well as method-level.
+     *
+     * <p>The pointcut was {@code @annotation(...)} alone, which matches annotated methods
+     * only. Nine services declare {@code @Transactional} on the class, so every method they
+     * inherit it from ran with {@code app.current_user_id} unbound. It happened to work
+     * today only because CasePersonService annotates each method and because nested calls
+     * into {@code UserService.getCurrentUser} bound the variable as a side effect — meaning
+     * the security boundary was established non-deterministically, by an unrelated call.
+     * Adding an RLS policy to document or evidence would have silently done nothing.
+     */
+    @Around("@annotation(org.springframework.transaction.annotation.Transactional)"
+            + " || @within(org.springframework.transaction.annotation.Transactional)")
     public Object enforceRls(ProceedingJoinPoint joinPoint) throws Throwable {
         if (TransactionSynchronizationManager.isActualTransactionActive()
                 && !Boolean.TRUE.equals(BINDING_IN_PROGRESS.get())) {

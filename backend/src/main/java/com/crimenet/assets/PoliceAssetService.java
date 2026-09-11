@@ -42,6 +42,7 @@ public class PoliceAssetService {
                 .status("AVAILABLE")
                 .department(request.department())
                 .caseId(request.caseId())
+                .orgId(currentUser.getOrgId())
                 .metadata(request.metadata() != null ? request.metadata() : new HashMap<>())
                 .createdBy(currentUser.getId())
                 .build();
@@ -67,6 +68,7 @@ public class PoliceAssetService {
 
         PoliceAsset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new EntityNotFoundException("Asset not found: " + assetId));
+        requireSameOrg(asset);
 
         if ("DECOMMISSIONED".equalsIgnoreCase(asset.getStatus())) {
             throw new IllegalStateException("Cannot assign a decommissioned asset");
@@ -101,6 +103,18 @@ public class PoliceAssetService {
 
         PoliceAsset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new EntityNotFoundException("Asset not found: " + assetId));
+        requireSameOrg(asset);
+
+        // ASSET.UPDATE is seeded for investigators, and this method cleared the custodian on
+        // any asset id with no ownership check — so any investigator could return a firearm
+        // recorded to a different officer.
+        if (asset.getCustodianId() != null
+                && !asset.getCustodianId().equals(currentUser.getId())
+                && !policyService.hasRole("SUPERVISOR")
+                && !policyService.hasRole("ADMIN")) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Only the recorded custodian or a supervisor may return this asset.");
+        }
 
         String returnedBy = asset.getCustodianBadge();
         asset.setCustodianId(null);
@@ -134,6 +148,7 @@ public class PoliceAssetService {
 
         PoliceAsset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new EntityNotFoundException("Asset not found: " + assetId));
+        requireSameOrg(asset);
 
         String oldStatus = asset.getStatus();
         asset.setStatus(status.toUpperCase());
@@ -159,15 +174,33 @@ public class PoliceAssetService {
         return asset;
     }
 
+    /**
+     * Both read paths previously performed no permission check and no tenant scoping,
+     * behind a controller that required only authentication.
+     */
     @Transactional(readOnly = true)
     public PoliceAsset getAsset(UUID assetId) {
-        return assetRepository.findById(assetId)
+        policyService.enforcePermission("ASSET", "READ");
+        PoliceAsset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new EntityNotFoundException("Asset not found: " + assetId));
+        requireSameOrg(asset);
+        return asset;
     }
 
     @Transactional(readOnly = true)
     public List<PoliceAsset> listAssets(String category, String status, UUID caseId, UUID custodianId) {
-        return assetRepository.searchAssets(category, status, caseId, custodianId);
+        policyService.enforcePermission("ASSET", "READ");
+        return assetRepository.searchAssets(
+                userService.getCurrentUser().getOrgId(), category, status, caseId, custodianId);
+    }
+
+    /** An asset belonging to another agency is not visible, whatever the caller's role. */
+    private void requireSameOrg(PoliceAsset asset) {
+        UUID callerOrg = userService.getCurrentUser().getOrgId();
+        if (asset.getOrgId() != null && !asset.getOrgId().equals(callerOrg)) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "This asset belongs to another organization.");
+        }
     }
 
     public record RegisterAssetRequest(

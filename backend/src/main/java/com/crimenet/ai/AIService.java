@@ -70,10 +70,17 @@ public class AIService {
                 .build();
         job = aiJobRepository.save(job);
 
-        // 3. Search with pre-retrieval ABAC filter (§14 — the critical part)
-        //    Only documents from cases this user is assigned to are candidates.
+        // 3. Search with pre-retrieval ABAC filter (§14 — the critical part), restricted to
+        //    the case this query was authorized against.
+        //
+        //    Retrieval used to span context.getAssignedCaseIds() — every case the user is
+        //    assigned to — even though the authorization above named a single case. A query
+        //    issued against case A therefore returned, and permanently recorded as
+        //    ai_reference citations, documents belonging to cases B and C, contaminating the
+        //    per-case provenance record this module exists to produce. It also meant a user
+        //    holding break-glass on the case rather than an assignment got zero results.
         List<SearchResponseDto> searchResults = searchService.searchDocuments(
-                queryText, context.getAssignedCaseIds());
+                queryText, List.of(caseId));
 
         // 4. Mock RAG generation (real implementation would call an LLM API)
         String generatedResponse = mockRagGeneration(queryText, searchResults);

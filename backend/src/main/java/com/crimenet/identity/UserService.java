@@ -29,8 +29,20 @@ public class UserService {
         Jwt jwt = getCurrentJwt();
         String subject = jwt.getSubject();
 
-        return appUserRepository.findByKeycloakSubject(subject)
+        AppUser user = appUserRepository.findByKeycloakSubject(subject)
                 .orElseGet(() -> userProvisioningService.provision(jwt));
+
+        // AppUser.status was stored and never consulted by any code path, so suspending or
+        // terminating an officer here changed nothing: they kept full case, evidence and
+        // document access for as long as their Keycloak token remained valid.
+        if (user.getStatus() != null && !"ACTIVE".equalsIgnoreCase(user.getStatus())) {
+            log.warn("INACTIVE_USER_REJECTED: subject {} resolved to user {} with status {}",
+                    subject, user.getId(), user.getStatus());
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "This account is " + user.getStatus() + " and cannot access CrimeNet.");
+        }
+
+        return user;
     }
 
     /**

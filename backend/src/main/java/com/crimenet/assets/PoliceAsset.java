@@ -25,6 +25,17 @@ public class PoliceAsset extends BaseEntity {
     @Column(name = "case_id")
     private UUID caseId;
 
+    /**
+     * Owning organization.
+     *
+     * <p>The table had no tenant column at all, and neither the read paths nor the
+     * controller applied any scoping — so any authenticated user of any agency could
+     * enumerate every firearm, bodycam and vehicle in the system together with its current
+     * custodian, badge number and linked case id, which also leaked case participation.
+     */
+    @Column(name = "org_id", nullable = false)
+    private UUID orgId;
+
     @Column(name = "asset_tag", nullable = false, unique = true)
     private String assetTag;
 

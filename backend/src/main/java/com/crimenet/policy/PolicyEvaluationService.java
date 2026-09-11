@@ -98,8 +98,12 @@ public class PolicyEvaluationService {
     public void enforceCaseAccess(UUID caseId) {
         AppUser user = userService.getCurrentUser();
         if (hasRole("ADMIN")) {
-            com.crimenet.cases.CaseRecord caseRecord = caseRepository.findById(caseId).orElse(null);
-            if (caseRecord == null || user.getOrgId().equals(caseRecord.getOrgId())) {
+            // A missing case used to satisfy "caseRecord == null || sameOrg" and return
+            // success, so a nonexistent case id was allowed rather than reported as absent.
+            com.crimenet.cases.CaseRecord caseRecord = caseRepository.findById(caseId)
+                    .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException(
+                            "Case not found: " + caseId));
+            if (user.getOrgId().equals(caseRecord.getOrgId())) {
                 return;
             }
             log.warn("POLICY_DENIED: Admin {} from org {} attempted cross-tenant access to case {}",
