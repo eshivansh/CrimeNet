@@ -1,0 +1,32 @@
+version: 2
+
+# Advisories arrive against dependencies that have not changed, and nothing here was
+# watching for them: the build carried a Critical Tomcat RCE and two Spring Security
+# authorization-bypass CVEs, all of them transitive through the Spring Boot parent.
+
+updates:
+  - package-ecosystem: maven
+    directory: /backend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      spring:
+        patterns:
+          - "org.springframework*"
+          - "org.springframework.boot*"
+
+  - package-ecosystem: npm
+    directory: /contracts
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
